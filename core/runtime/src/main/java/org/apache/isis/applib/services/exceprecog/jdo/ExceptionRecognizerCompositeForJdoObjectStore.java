@@ -24,7 +24,6 @@ import javax.annotation.PostConstruct;
 
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.services.exceprecog.ExceptionRecognizer;
 import org.apache.isis.applib.services.exceprecog.ExceptionRecognizerComposite;
 import org.apache.isis.commons.internal.base._Strings;
@@ -51,7 +50,6 @@ public class ExceptionRecognizerCompositeForJdoObjectStore extends ExceptionReco
             "isis.services.ExceptionRecognizerCompositeForJdoObjectStore.disable";
 
     @Override
-    @Programmatic
     @PostConstruct
     public void init() {
         
