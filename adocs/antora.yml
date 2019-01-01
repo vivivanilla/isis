@@ -1,0 +1,6 @@
+name: isis
+version: '1.x'
+title: Apache Isis
+nav:
+- modules/ROOT/nav.adoc
+#  - modules/_example-module/nav.adoc

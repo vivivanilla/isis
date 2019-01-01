@@ -1,0 +1,17 @@
+* xref:page-A.adoc[Page A]
+
+//* xref:index.adoc[Playbook]
+////*** xref:playbook-formats.adoc[File Formats]
+//** xref:playbook-schema.adoc[Configuration Schema]
+//*** xref:configure-site.adoc[Site]
+//*** xref:configure-content-sources.adoc[Content Sources]
+//**** xref:private-repository-auth.adoc[Private Repository Authentication]
+//*** xref:configure-asciidoc.adoc[AsciiDoc]
+//*** xref:configure-ui.adoc[UI]
+////*** xref:configure-redirects.adoc[Configure Redirects]
+//*** xref:configure-output.adoc[Output]
+//*** xref:configure-runtime.adoc[Runtime]
+//// ** Create a Playbook
+//** xref:author-mode.adoc[Create an Author Workspace]
+////** xref:playbook-project.adoc[Playbook Projects]
+//** xref:use-an-existing-playbook-project.adoc[Use an Existing Project]

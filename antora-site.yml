@@ -1,0 +1,17 @@
+site:
+  title: Apache Isis
+  # the 404 page and sitemap files only get generated when the url property is set
+  # url: https://isis.apache.org/antora
+  # start_page: _example-module::pages/page-A.adoc
+content:
+  sources:
+    - url: ./
+      start_path: adocs
+      branches: [2062-antora]
+runtime:
+  fetch: true
+  cache_dir: ./.cache/antora
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/master/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true

@@ -1,0 +1,36 @@
+= notes
+
+I'm thinking that initially we just use antora for the reference and user guides, but leave the top-level as is.
+
+The table-of-contents could probably become the ROOT module.
+
+
+
+
+== docs.antora.org
+
+Looking at how docs.antora.org works:
+
+* playbook in https://gitlab.com/antora/docs.antora.org[]
+
+** named (`antora-playbook.yml` rather than the usual `site.yml`, so build using `antora antora-playbook.yml`
+
+** also includes `docsearch` for their nice search capability
+
+* single module (multiple branches) is the codebase itself, ie https://gitlab.com/antora/antora[]
+
+** in particular, https://gitlab.com/antora/antora/tree/master/docs[/tree/master/docs] subdir.
+
+** holds `antora.yml` which is the module descriptor
+
+
+In the module we see the required (opinionated) module structure.
+
+
+== couchbase docs
+
+https://github.com/couchbase/docs-ui
+
+ui:
+  bundle:
+    url: https://github.com/couchbase/docs-ui/releases/download/v194/ui-bundle.zip
