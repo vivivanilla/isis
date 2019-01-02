@@ -48,3 +48,4 @@ rebel.xml
 
 .flattened-pom.xml
 .cache/
+build/
