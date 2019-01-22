@@ -38,7 +38,6 @@ public interface MetaModelService {
     Sort sortOf(Bookmark bookmark, Mode mode);
 
     AppManifest getAppManifest();                       // <7>
-    AppManifest2 getAppManifest2();
 
     CommandDtoProcessor commandDtoProcessorFor(         // <8>
                         String memberIdentifier);
@@ -68,7 +67,6 @@ public interface MetaModelService {
 <6> whether to throw an exception or return `Sort.UNKNOWN` if the object type is not recognized.  (The overloads with no `Mode` parameter default to strict mode).
 
 <7> returns the `AppManifest` used to bootstrap the application.
-If an `AppManifest2` was used (from a `Module`), then this is also returned (else just `null`).
 
 <8> obtain an implementation of `CommandDtoProcessor` (if any) as per an xref:../rgant/rgant.adoc#_rgant-Action_command[`@Action#commandDtoProcessor()`] or xref:../rgant/rgant.adoc#_rgant-Property_command[`@Property#commandDtoProcessor()`].
 +

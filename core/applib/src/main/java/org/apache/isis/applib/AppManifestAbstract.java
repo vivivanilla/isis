@@ -19,10 +19,12 @@
 package org.apache.isis.applib;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.commons.internal.collections._Lists;
 import org.apache.isis.commons.internal.collections._Maps;
@@ -38,8 +40,9 @@ public abstract class AppManifestAbstract implements AppManifest {
     private final List<Class<? extends FixtureScript>> fixtureClasses;
     private final Map<String, String> configurationProperties;
 
-    public AppManifestAbstract(final BuilderAbstract<?> builder) {
+    private final Module module;
 
+    public AppManifestAbstract(final AppManifestAbstract.Builder builder) {
         final List<Class<?>> builderModules = builder.getAllAdditionalModules();
         overrideModules(builderModules);
         this.modules = builderModules;
@@ -58,6 +61,8 @@ public abstract class AppManifestAbstract implements AppManifest {
                 builder.getAllIndividualConfigProps(),
                 builder.getAllFallbackConfigProps(),
                 this.fixtureClasses);
+
+        this.module = builder.getModule();
     }
 
     private String determineAuthMechanism(final ModuleOrBuilderAbstract<?> builder) {
@@ -79,8 +84,8 @@ public abstract class AppManifestAbstract implements AppManifest {
         if(builder instanceof Builder) {
             return ((Builder) builder).authMechanism;
         }
-        if(builder instanceof AppManifestAbstract2.Builder) {
-            return ((AppManifestAbstract2.Builder) builder).authMechanism;
+        if(builder instanceof AppManifestAbstract.Builder) {
+            return ((AppManifestAbstract.Builder) builder).authMechanism;
         }
         return null;
     }
@@ -89,8 +94,8 @@ public abstract class AppManifestAbstract implements AppManifest {
         if(builder instanceof Builder) {
             return ((Builder) builder).fixtures;
         }
-        if(builder instanceof AppManifestAbstract2.Builder) {
-            return ((AppManifestAbstract2.Builder) builder).fixtures;
+        if(builder instanceof AppManifestAbstract.Builder) {
+            return ((AppManifestAbstract.Builder) builder).fixtures;
         }
         return _Lists.newArrayList();
     }
@@ -208,6 +213,88 @@ public abstract class AppManifestAbstract implements AppManifest {
         // default implementation does nothing.
     }
 
+
+
+    @Override
+    @Programmatic
+    public Module getModule() {
+        return module;
+    }
+
+    @Override
+    @Programmatic
+    public FixtureScript getRefDataSetupFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                List<Module> modules = Module.Util.transitiveDependenciesOf(module);
+                for (Module module : modules) {
+                    FixtureScript fixtureScript = module.getRefDataSetupFixture();
+                    if(fixtureScript != null) {
+                        executionContext.executeChild(this, fixtureScript);
+                    }
+                }
+            }
+        };
+    }
+
+    @Override
+    @Programmatic
+    public FixtureScript getTeardownFixture() {
+        return new FixtureScript() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                List<Module> modules = Module.Util.transitiveDependenciesOf(module);
+                Collections.reverse(modules);
+                for (Module module : modules) {
+                    final FixtureScript fixtureScript = module.getTeardownFixture();
+                    if(fixtureScript != null) {
+                        executionContext.executeChild(this, fixtureScript);
+                    }
+                }
+            }
+        };
+    }
+
+
+    public static class Builder extends AppManifestAbstract.BuilderAbstract<Builder> {
+
+        /**
+         * Factory method.
+         */
+        public static AppManifestAbstract.Builder forModule(Module module) {
+            return new Builder(module);
+        }
+
+        private final Module module;
+
+        private Builder(Module module) {
+            this.module = module;
+            withTransitiveFrom(module);
+        }
+
+        public Module getModule() {
+            return module;
+        }
+
+        /**
+         * Factory method.
+         */
+        public static AppManifestAbstract.Builder forModules(final List<Class<?>> modules) {
+            return new AppManifestAbstract.Builder(new ModuleAbstract() {
+            }).withAdditionalModules(modules);
+        }
+        public static AppManifestAbstract.Builder forModules(final Class<?>... modules) {
+            return forModules(Arrays.asList(modules));
+        }
+
+        @Override
+        public AppManifest build() {
+            return new AppManifestAbstract.Default(this);
+        }
+    }
+
+
     /**
      * Default implementation of {@link AppManifestAbstract} that is built using a {@link Builder}.
      */
@@ -264,23 +351,7 @@ public abstract class AppManifestAbstract implements AppManifest {
 
     }
 
-    public static class Builder extends BuilderAbstract<Builder> {
 
-        /**
-         * Factory method.
-         */
-        public static AppManifestAbstract.Builder forModules(final List<Class<?>> modules) {
-            return new AppManifestAbstract.Builder().withAdditionalModules(modules);
-        }
-        public static AppManifestAbstract.Builder forModules(final Class<?>... modules) {
-            return forModules(Arrays.asList(modules));
-        }
 
-        @Override
-        public AppManifest build() {
-            return new AppManifestAbstract.Default(this);
-        }
-
-    }
 
 }

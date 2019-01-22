@@ -18,14 +18,14 @@
  */
 package domainapp.application.manifest;
 
-import org.apache.isis.applib.AppManifestAbstract2;
+import org.apache.isis.applib.AppManifestAbstract;
 
 import domainapp.application.DomainAppApplicationModule;
 
 /**
  * Bootstrap the application.
  */
-public class DomainAppAppManifest extends AppManifestAbstract2 {
+public class DomainAppAppManifest extends AppManifestAbstract {
 
     public static final Builder BUILDER = Builder
             .forModule(new DomainAppApplicationModule())

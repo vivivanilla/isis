@@ -29,15 +29,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.AppManifest;
-import org.apache.isis.applib.AppManifestAbstract2;
+import org.apache.isis.applib.AppManifestAbstract;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.PropertyResource;
 import org.apache.isis.commons.internal.collections._Sets;
 import org.apache.isis.commons.internal.context._Context;
 import org.apache.isis.config.ConfigurationConstants;
 import org.apache.isis.config.IsisConfiguration;
-import org.apache.isis.config.NotFoundPolicy;
 import org.apache.isis.config.IsisConfiguration.ContainsPolicy;
+import org.apache.isis.config.NotFoundPolicy;
 import org.apache.isis.config.resource.ResourceStreamSource;
 import org.apache.isis.config.resource.ResourceStreamSourceChainOfResponsibility;
 import org.apache.isis.config.resource.ResourceStreamSourceFileSystem;
@@ -56,9 +56,9 @@ import org.apache.isis.core.commons.exceptions.IsisException;
  *
  * <p>
  * Mutable/immutable pair with the {@link IsisConfiguration}. To obtain the
- * configuration, use {@link #getConfiguration()}.
+ * configuration, use {@link #build()}.
  *
- * @see {@link IsisConfiguration} for more details on the mutable/immutable pair pattern.
+ * @see <code>IsisConfiguration</code> for more details on the mutable/immutable pair pattern.
  *
  */
 final class IsisConfigurationBuilderDefault implements IsisConfigurationBuilder {
@@ -202,7 +202,7 @@ final class IsisConfigurationBuilderDefault implements IsisConfigurationBuilder 
      * {@link NotFoundPolicy} determines whether an exception is thrown or not.
      *
      * <p>
-     * Must be called before {@link IsisConfigurationBuilderDefault#getConfiguration()}.
+     * Must be called before {@link IsisConfigurationBuilderDefault#build()}.
      */
     @Override
     public IsisConfigurationBuilder addConfigurationResource(
@@ -291,9 +291,9 @@ final class IsisConfigurationBuilderDefault implements IsisConfigurationBuilder 
     
     @Override
     public IsisConfigurationBuilder addTopModule(Module topModule) {
-        final AppManifestAbstract2.Builder manifestBuilder = AppManifestAbstract2.Builder
+        final AppManifestAbstract.Builder manifestBuilder = AppManifestAbstract.Builder
                 .forModule(topModule);
-        final AppManifestAbstract2 manifest = new AppManifestAbstract2(manifestBuilder) {};
+        final AppManifestAbstract manifest = new AppManifestAbstract(manifestBuilder) {};
         addAppManifest(manifest);
         return this;
     }

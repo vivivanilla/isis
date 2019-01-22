@@ -21,10 +21,7 @@ package org.apache.isis.core.metamodel.services.metamodel;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
-
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
@@ -32,7 +29,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.AppManifest;
-import org.apache.isis.applib.AppManifest2;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -268,12 +264,6 @@ public class MetaModelServiceDefault implements MetaModelService {
             return null;
         }
         return commandFacet.getProcessor();
-    }
-
-    @Override
-    public AppManifest2 getAppManifest2() {
-        AppManifest appManifest = getAppManifest();
-        return appManifest instanceof AppManifest2 ? (AppManifest2) appManifest : null;
     }
 
     @Override

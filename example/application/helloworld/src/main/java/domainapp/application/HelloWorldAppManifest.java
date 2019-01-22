@@ -18,7 +18,7 @@
  */
 package domainapp.application;
 
-import org.apache.isis.applib.AppManifestAbstract2;
+import org.apache.isis.applib.AppManifestAbstract;
 import org.apache.isis.config.AppConfig;
 import org.apache.isis.config.IsisConfiguration;
 
@@ -28,7 +28,7 @@ import domainapp.dom.HelloWorldModule;
  * Bootstrap the application.
  */
 @javax.ejb.Singleton // only if you want AppConfig to be managed by CDI (if available), otherwise not required
-public class HelloWorldAppManifest extends AppManifestAbstract2 implements AppConfig {
+public class HelloWorldAppManifest extends AppManifestAbstract implements AppConfig {
 
     public static final Builder BUILDER = Builder
             .forModule(new HelloWorldModule())

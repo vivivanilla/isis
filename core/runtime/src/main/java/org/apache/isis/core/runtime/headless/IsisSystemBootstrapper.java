@@ -26,14 +26,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import org.apache.isis.applib.AppManifest;
-import org.apache.isis.applib.AppManifest2;
 import org.apache.isis.applib.fixtures.TickingFixtureClock;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.fixturescripts.FixtureScripts;
 import org.apache.isis.applib.services.jdosupport.IsisJdoSupport;
 import org.apache.isis.applib.services.metamodel.MetaModelService;
 import org.apache.isis.applib.services.registry.ServiceRegistry;
-import org.apache.isis.commons.internal.collections._Sets;
 import org.apache.isis.config.IsisConfiguration;
 import org.apache.isis.core.commons.ensure.Ensure;
 import org.apache.isis.core.runtime.headless.logging.LeveledLogger;
@@ -46,7 +44,7 @@ public class IsisSystemBootstrapper {
     private static final Logger LOG = LoggerFactory.getLogger(IsisSystemBootstrapper.class);
 
     /**
-     * The {@link AppManifest2} used to bootstrap the {@link IsisSystem} (on the thread-local)
+     * The {@link AppManifest} used to bootstrap the {@link IsisSystem} (on the thread-local)
      */
     private static ThreadLocal<AppManifest> isftAppManifest = new ThreadLocal<>();
 
@@ -79,7 +77,7 @@ public class IsisSystemBootstrapper {
      */
     public void setupModuleRefData() {
         MetaModelService metaModelService = lookupService(MetaModelService.class);
-        FixtureScript refDataSetupFixture = metaModelService.getAppManifest2().getRefDataSetupFixture();
+        FixtureScript refDataSetupFixture = metaModelService.getAppManifest().getRefDataSetupFixture();
         runFixtureScript(refDataSetupFixture);
     }
 
@@ -173,9 +171,9 @@ public class IsisSystemBootstrapper {
     }
 
     public void tearDownAllModules() {
-        final MetaModelService metaModelService4 = lookupService(MetaModelService.class);
+        final MetaModelService metaModelService = lookupService(MetaModelService.class);
 
-        FixtureScript fixtureScript = metaModelService4.getAppManifest2().getTeardownFixture();
+        FixtureScript fixtureScript = metaModelService.getAppManifest().getTeardownFixture();
         runFixtureScript(fixtureScript);
     }
 

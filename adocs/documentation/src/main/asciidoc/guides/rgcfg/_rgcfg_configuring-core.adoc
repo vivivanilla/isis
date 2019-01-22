@@ -431,7 +431,7 @@ See also `isis.reflector.facets.ignoreDeprecated`.
 (`true`)
 |Whether to check that all domain objects discovered reside under the top-level module of the app manifest.
 
-Note that the application must be bootstrapped using an `AppManifest2`.
+Note that the application must be bootstrapped using an `AppManifest`.
 
 |`isis.reflector.validator.` +
 `ensureUniqueObjectTypes`

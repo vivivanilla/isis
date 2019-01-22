@@ -18,8 +18,6 @@
  */
 package org.apache.isis.core.metamodel.specloader.validator;
 
-import static org.apache.isis.commons.internal.base._NullSafe.stream;
-
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -27,13 +25,13 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.apache.isis.applib.AppManifest;
-import org.apache.isis.applib.AppManifest2;
 import org.apache.isis.applib.Module;
 import org.apache.isis.applib.services.metamodel.MetaModelService;
-import org.apache.isis.commons.internal.base._NullSafe;
 import org.apache.isis.commons.internal.collections._Lists;
 import org.apache.isis.commons.internal.collections._Maps;
 import org.apache.isis.core.metamodel.spec.ObjectSpecification;
+
+import static org.apache.isis.commons.internal.base._NullSafe.stream;
 
 public class MetaModelValidatorToCheckModuleExtent extends MetaModelValidatorComposite {
 
@@ -53,8 +51,8 @@ public class MetaModelValidatorToCheckModuleExtent extends MetaModelValidatorCom
             return;
         }
 
-        AppManifest2 appManifest = specificationLoader.getServicesInjector()
-                .lookupServiceElseFail(MetaModelService.class).getAppManifest2();
+        AppManifest appManifest = specificationLoader.getServicesInjector()
+                .lookupServiceElseFail(MetaModelService.class).getAppManifest();
         if(appManifest == null) {
             return;
         }
@@ -100,8 +98,8 @@ public class MetaModelValidatorToCheckModuleExtent extends MetaModelValidatorCom
             @Override
             public void summarize(final ValidationFailures validationFailures) {
 
-                AppManifest2 appManifest = specificationLoader.getServicesInjector()
-                        .lookupServiceElseFail(MetaModelService.class).getAppManifest2();
+                AppManifest appManifest = specificationLoader.getServicesInjector()
+                        .lookupServiceElseFail(MetaModelService.class).getAppManifest();
                 if(appManifest == null) {
                     return;
                 }

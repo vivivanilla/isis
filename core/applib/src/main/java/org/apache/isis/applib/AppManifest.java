@@ -29,6 +29,7 @@ import java.util.UUID;
 import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.DomainService;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 
 /**
@@ -151,6 +152,15 @@ public interface AppManifest {
      * Overrides for any other configuration properties.
      */
     public Map<String,String> getConfigurationProperties();
+
+    @Programmatic
+    Module getModule();
+
+    @Programmatic
+    FixtureScript getRefDataSetupFixture();
+
+    @Programmatic
+    FixtureScript getTeardownFixture();
 
     /**
      * Holds the set of domain services, persistent entities and fixture scripts.services
@@ -283,6 +293,18 @@ public interface AppManifest {
         }
 
         @Override public Map<String, String> getConfigurationProperties() {
+            return null;
+        }
+
+        @Override public Module getModule() {
+            return null;
+        }
+
+        @Override public FixtureScript getRefDataSetupFixture() {
+            return null;
+        }
+
+        @Override public FixtureScript getTeardownFixture() {
             return null;
         }
     };

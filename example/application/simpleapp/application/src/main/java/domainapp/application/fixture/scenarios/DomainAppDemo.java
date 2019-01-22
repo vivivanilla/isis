@@ -20,7 +20,7 @@ package domainapp.application.fixture.scenarios;
 
 import javax.inject.Inject;
 
-import org.apache.isis.applib.AppManifest2;
+import org.apache.isis.applib.AppManifest;
 import org.apache.isis.applib.fixturescripts.FixtureScript;
 import org.apache.isis.applib.services.metamodel.MetaModelService;
 
@@ -34,9 +34,9 @@ public class DomainAppDemo extends FixtureScript {
 
     @Override
     protected void execute(final ExecutionContext ec) {
-        AppManifest2 appManifest2 = metaModelService.getAppManifest2();
-        ec.executeChild(this, appManifest2.getTeardownFixture());
-        ec.executeChild(this, appManifest2.getRefDataSetupFixture());
+        AppManifest appManifest = metaModelService.getAppManifest();
+        ec.executeChild(this, appManifest.getTeardownFixture());
+        ec.executeChild(this, appManifest.getRefDataSetupFixture());
         ec.executeChild(this, new SimpleObject_persona.PersistAll());
     }
 
