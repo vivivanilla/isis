@@ -1,7 +1,5 @@
 package org.apache.isis.core.commons.collections;
 
-import static org.apache.isis.commons.internal.base._With.requires;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -16,6 +14,8 @@ import javax.annotation.Nullable;
 import javax.enterprise.inject.Instance;
 
 import org.apache.isis.commons.internal.base._NullSafe;
+
+import static org.apache.isis.commons.internal.base._With.requires;
 
 import lombok.val;
 
@@ -55,7 +55,7 @@ public interface Bin<T> extends Iterable<T> {
 		return Bin_Singleton.of(element);
 	}
 	
-	public static <T> Bin<T> ofCollection(@Nullable Collection<T> collection){
+	public static <T> Bin<T> ofCollection(@Nullable Collection<T> collection) {
 		
 		if(_NullSafe.size(collection)==0) {
 			return empty();
@@ -79,8 +79,35 @@ public interface Bin<T> extends Iterable<T> {
 			return ofSingleton(((List<T>)nonNullElements).get(0));
 		}
 		
+		//nonNullElements.sort(AnnotationAwareOrderComparator.INSTANCE);
+		
 		return Bin_Multiple.of(nonNullElements);
 	}
+	
+	public static <T> Bin<T> ofStream(@Nullable Stream<T> stream) {
+        
+        if(stream==null) {
+            return empty();
+        }
+        
+        val nonNullElements = stream
+                .filter(_NullSafe::isPresent)
+                .collect(Collectors.toCollection(()->new ArrayList<>()));        
+        
+        val size = nonNullElements.size();
+        
+        if(size==0) {
+            return empty();
+        }
+        
+        if(size==1) {
+            return ofSingleton(((List<T>)nonNullElements).get(0));
+        }
+        
+        //nonNullElements.sort(AnnotationAwareOrderComparator.INSTANCE);
+        
+        return Bin_Multiple.of(nonNullElements);
+    }
 	
 	public static <T> Bin<T> ofInstance(@Nullable Instance<T> instance) {
 		if(instance==null || instance.isUnsatisfied()) {
@@ -91,6 +118,8 @@ public interface Bin<T> extends Iterable<T> {
 		}
 		val nonNullElements = instance.stream()
 				.collect(Collectors.toCollection(()->new ArrayList<>()));
+		
+		//nonNullElements.sort(AnnotationAwareOrderComparator.INSTANCE);
 		
 		return Bin_Multiple.of(nonNullElements);
 		

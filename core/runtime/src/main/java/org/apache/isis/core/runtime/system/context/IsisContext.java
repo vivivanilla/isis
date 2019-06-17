@@ -191,6 +191,11 @@ public interface IsisContext {
     public static ServicesInjector getServicesInjector() {
         return getSessionFactory().getServicesInjector();
     }
+    
+    public static ServicesInjector getServiceRegistry() {
+        return getSessionFactory().getServicesInjector();
+    }
+    
 
     public static StringBuilder dumpConfig() {
         
