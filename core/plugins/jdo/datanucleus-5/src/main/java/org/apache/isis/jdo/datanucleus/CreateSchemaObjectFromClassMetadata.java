@@ -25,6 +25,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Map;
 
+import org.apache.isis.config.IsisConfiguration;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.enhancer.EnhancementNucleusContextImpl;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -39,15 +40,12 @@ import lombok.extern.log4j.Log4j2;
  * Implementation note: the methods in this class are <tt>protected</tt> to allow for easy subclassing.
  */
 @Log4j2
-public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, DataNucleusPropertiesAware {
+public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, DataNucleusPropertiesAware, IsisConfigurationAware {
 
     // -- persistenceManagerFactory, properties
 
     private Map<String, String> properties;
-    protected Map<String, String> getProperties() {
-        return properties;
-    }
-
+    private IsisConfiguration isisConfiguration;
 
     // -- loaded (API)
 
@@ -62,9 +60,9 @@ public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, Da
         Connection connection = null;
         Statement statement = null;
 
-        final String driverName = properties.get("javax.jdo.option.ConnectionDriverName");
-        final String url = properties.get("javax.jdo.option.ConnectionURL");
-        final String userName = properties.get("javax.jdo.option.ConnectionUserName");
+        final String driverName = isisConfiguration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionDriverName();
+        final String url = isisConfiguration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionUrl();
+        final String userName = isisConfiguration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionUserName();
         final String password = getConnectionPassword();
 
         if(_Strings.isNullOrEmpty(driverName) || _Strings.isNullOrEmpty(url)) {
@@ -144,7 +142,7 @@ public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, Da
         // db vendors without requiring lots of complex configuration of DataNucleus
         //
 
-        String url = getProperties().get("javax.jdo.option.ConnectionURL");
+        String url = isisConfiguration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionUrl();
 
         if(url.contains("postgres")) {
             // in DN 4.0, was forcing lower case:
@@ -184,10 +182,10 @@ public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, Da
      * @return Password
      */
     private String getConnectionPassword() {
-        String password = properties.get("javax.jdo.option.ConnectionPassword");
+        String password = isisConfiguration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionPassword();
         if (password != null)
         {
-            String decrypterName = properties.get("datanucleus.ConnectionPasswordDecrypter");
+            String decrypterName = isisConfiguration.getPersistor().getDatanucleus().getImpl().getDatanucleus().getConnectionPasswordDecrypter();
             if (decrypterName != null)
             {
                 // Decrypt the password using the provided class
@@ -209,11 +207,22 @@ public class CreateSchemaObjectFromClassMetadata implements MetaDataListener, Da
 
 
     // -- injected dependencies
+
+    @Override
+    public void setIsisConfiguration(IsisConfiguration isisConfiguration) {
+        this.isisConfiguration = isisConfiguration;
+    }
+
+    /**
+     *
+     * @param properties
+     *
+     * @deprecated  - should be able to obtain these from {@link IsisConfiguration}, instead
+     */
+    @Deprecated
     @Override
     public void setDataNucleusProperties(final Map<String, String> properties) {
         this.properties = properties;
+
     }
-
-
-
 }

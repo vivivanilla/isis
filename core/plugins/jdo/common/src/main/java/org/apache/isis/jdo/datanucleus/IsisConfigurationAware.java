@@ -20,11 +20,9 @@ package org.apache.isis.jdo.datanucleus;
 
 import java.util.Map;
 
-/**
- * @deprecated - should be able to replace with {@link IsisConfigurationAware} instead.
- */
-@Deprecated
-public interface DataNucleusPropertiesAware {
+import org.apache.isis.config.IsisConfiguration;
 
-    public void setDataNucleusProperties(final Map<String, String> properties);
+public interface IsisConfigurationAware {
+
+    void setIsisConfiguration(IsisConfiguration isisConfiguration);
 }

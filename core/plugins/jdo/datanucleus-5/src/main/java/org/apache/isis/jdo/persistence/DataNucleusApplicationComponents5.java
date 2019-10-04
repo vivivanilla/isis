@@ -126,7 +126,7 @@ public class DataNucleusApplicationComponents5 implements ApplicationScopedCompo
             final Set<String> persistableClassNameSet, 
             final Map<String, String> datanucleusProps) {
 
-        final DNStoreManagerType dnStoreManagerType = DNStoreManagerType.typeOf(datanucleusProps);
+        final DNStoreManagerType dnStoreManagerType = DNStoreManagerType.typeOf(datanucleusProps, configuration);
 
         PersistenceManagerFactory persistenceManagerFactory;
 
@@ -134,7 +134,8 @@ public class DataNucleusApplicationComponents5 implements ApplicationScopedCompo
 
             // rather than reinvent too much of the wheel, we reuse the same property that DN would check
             // for if it were doing the auto-creation itself (read from isis.properties)
-            final boolean createSchema = isSet(datanucleusProps, PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_ALL);
+            final boolean createSchema =
+                    configuration.getPersistor().getDatanucleus().getImpl().getDatanucleus().getSchema().isAutoCreateAll();
 
             if(createSchema) {
 
@@ -205,10 +206,6 @@ public class DataNucleusApplicationComponents5 implements ApplicationScopedCompo
         }
 
         schemaAwareStoreManager.createSchemaForClasses(persistableClassNameSet, asProperties(datanucleusProps));
-    }
-
-    private boolean isSet(final Map<String, String> props, final String key) {
-        return Boolean.parseBoolean( props.get(key) );
     }
 
     private void registerMetadataListener(

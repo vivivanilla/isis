@@ -21,6 +21,7 @@ package org.apache.isis.jdo.persistence;
 import java.util.Map;
 import java.util.function.Function;
 
+import org.apache.isis.config.IsisConfiguration;
 import org.datanucleus.PersistenceNucleusContext;
 import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
 import org.datanucleus.store.StoreManager;
@@ -42,13 +43,13 @@ enum DNStoreManagerType {
     Other
     ;
 
-    public static DNStoreManagerType typeOf(Map<String,String> datanucleusProps) {
+    public static DNStoreManagerType typeOf(Map<String, String> datanucleusProps, IsisConfiguration configuration) {
 
         if(hasSecondaryDataStore(datanucleusProps)) {
             return Federated; 
         } 
 
-        if(isKnownSchemaAwareStoreManagerIfNotFederated(datanucleusProps)) {
+        if(isKnownSchemaAwareStoreManagerIfNotFederated(configuration)) {
             return SchemaAware;
         }
 
@@ -91,12 +92,12 @@ enum DNStoreManagerType {
         return hasSecondaryDataStore;
     }
 
-    private static boolean isKnownSchemaAwareStoreManagerIfNotFederated(Map<String,String> datanucleusProps) {
+    private static boolean isKnownSchemaAwareStoreManagerIfNotFederated(IsisConfiguration configuration) {
 
         // this saves some time, but also avoids the (still undiagnosed) issue that instantiating the
         // PMF can cause the ClassMetadata for the entity classes to be loaded in and cached prior to
         // registering the CreateSchemaObjectFromClassData (to invoke 'create schema' first)
-        final String connectionUrl = datanucleusProps.get("javax.jdo.option.ConnectionURL");
+        final String connectionUrl = configuration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionUrl();
         if(connectionUrl != null) {
             for(String magic : knownSchemaAwareIfNotFederated) {
                 if (connectionUrl.startsWith(magic)) {

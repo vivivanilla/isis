@@ -26,15 +26,11 @@ import javax.enterprise.inject.Vetoed;
 import javax.jdo.PersistenceManagerFactory;
 import javax.jdo.listener.StoreLifecycleListener;
 
-import org.datanucleus.PropertyNames;
-import org.datanucleus.api.jdo.JDOPersistenceManagerFactory;
-
 import org.apache.isis.commons.internal.base._Blackhole;
 import org.apache.isis.commons.internal.base._Lazy;
 import org.apache.isis.commons.internal.components.ApplicationScopedComponent;
 import org.apache.isis.config.IsisConfiguration;
 import org.apache.isis.jdo.datanucleus.DataNucleusSettings;
-import org.apache.isis.jdo.datanucleus.JDOStateManagerForIsis;
 import org.apache.isis.jdo.entities.JdoEntityTypeRegistry;
 import org.apache.isis.jdo.lifecycles.JdoStoreLifecycleListenerForIsis;
 import org.apache.isis.metamodel.specloader.SpecificationLoader;
@@ -72,6 +68,7 @@ implements PersistenceSessionFactory, ApplicationScopedComponent, FixturesInstal
     @Override
     public void init() {
         this.configuration = IsisContext.getConfiguration();
+
         // need to eagerly build, ... must be completed before catalogNamedQueries().
         // Why? because that method causes entity classes to be loaded which register with DN's EnhancementHelper,
         // which are then cached in DN.  It results in our CreateSchema listener not firing.
@@ -88,17 +85,10 @@ implements PersistenceSessionFactory, ApplicationScopedComponent, FixturesInstal
 
     private DataNucleusApplicationComponents5 createDataNucleusApplicationComponents() {
 
-        this.configuration = IsisContext.getConfiguration();
-        
         val dnSettings = IsisContext.getServiceRegistry().lookupServiceElseFail(DataNucleusSettings.class);
-        
-        //val dataNucleusConfig = configuration.subsetWithNamesStripped(DATANUCLEUS_CONFIG_PREFIX);
-        val datanucleusProps = dnSettings.getAsMap(); 
-                //dataNucleusConfig.copyToMap();
-        
-        System.out.println("############## " + datanucleusProps);
+        val datanucleusProps = dnSettings.getAsMap();
 
-        addDataNucleusPropertiesIfRequired(datanucleusProps);
+        addDataNucleusPropertiesIfRequired(datanucleusProps, configuration);
 
         val classesToBePersisted = JdoEntityTypeRegistry.current().getEntityTypes();
 
@@ -114,33 +104,12 @@ implements PersistenceSessionFactory, ApplicationScopedComponent, FixturesInstal
         DataNucleusApplicationComponents5.catalogNamedQueries(classesToBePersisted, specificationLoader);
     }
 
-//    private static HashMap<String, String> toMap(Properties props) {
-//        val map = _Maps.<String, String>newHashMap();
-//        for (val name: props.stringPropertyNames()) {
-//            map.put(name, props.getProperty(name));
-//        }
-//        return map;
-//    }
-    
-    private static void addDataNucleusPropertiesIfRequired(Map<String, String> props) {
+    private static void addDataNucleusPropertiesIfRequired(Map<String, String> props, IsisConfiguration configuration) {
 
-        // new feature in DN 3.2.3; enables dependency injection into entities
-        putIfNotPresent(props, PropertyNames.PROPERTY_OBJECT_PROVIDER_CLASS_NAME, JDOStateManagerForIsis.class.getName());
-
-        putIfNotPresent(props, "javax.jdo.PersistenceManagerFactoryClass", JDOPersistenceManagerFactory.class.getName());
-
-        // previously we defaulted this property to "true", but that could cause the target database to be modified
-        putIfNotPresent(props, PropertyNames.PROPERTY_SCHEMA_AUTOCREATE_DATABASE, Boolean.FALSE.toString());
-
-        putIfNotPresent(props, PropertyNames.PROPERTY_SCHEMA_VALIDATE_ALL, Boolean.TRUE.toString());
-        putIfNotPresent(props, PropertyNames.PROPERTY_CACHE_L2_TYPE, "none");
-
-        putIfNotPresent(props, PropertyNames.PROPERTY_PERSISTENCE_UNIT_LOAD_CLASSES, Boolean.TRUE.toString());
-
-        String connectionFactoryName = props.get(PropertyNames.PROPERTY_CONNECTION_FACTORY_NAME);
+        String connectionFactoryName = configuration.getPersistor().getDatanucleus().getImpl().getDatanucleus().getConnectionFactoryName();
         if(connectionFactoryName != null) {
-            String connectionFactory2Name = props.get(PropertyNames.PROPERTY_CONNECTION_FACTORY2_NAME);
-            String transactionType = props.get("javax.jdo.option.TransactionType");
+            String connectionFactory2Name = configuration.getPersistor().getDatanucleus().getImpl().getDatanucleus().getConnectionFactory2Name();
+            IsisConfiguration.Persistor.Datanucleus.Impl.DataNucleus.TransactionTypeEnum transactionType = configuration.getPersistor().getDatanucleus().getImpl().getDatanucleus().getTransactionType();
             // extended logging
             if(transactionType == null) {
                 log.info("found config properties to use non-JTA JNDI datasource ({})", connectionFactoryName);
@@ -168,10 +137,8 @@ implements PersistenceSessionFactory, ApplicationScopedComponent, FixturesInstal
 
             if(log.isInfoEnabled()) {
                 log.info("using JDBC connection '{}'", 
-                        props.get("javax.jdo.option.ConnectionURL"));
+                        configuration.getPersistor().getDatanucleus().getImpl().getJavax().getJdo().getOption().getConnectionUrl());
             }
-
-
         }
     }
 
