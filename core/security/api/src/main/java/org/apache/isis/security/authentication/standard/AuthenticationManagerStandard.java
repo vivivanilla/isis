@@ -142,6 +142,12 @@ public class AuthenticationManagerStandard implements AuthenticationManager {
 
     @Override
     public final boolean isSessionValid(final AuthenticationSession session) {
+        if(session instanceof SimpleSession) {
+            final SimpleSession simpleSession = (SimpleSession) session;
+            if(simpleSession.getType() == AuthenticationSession.Type.EXTERNAL) {
+                return true;
+            }
+        }
         final String userName = userByValidationCode.get(session.getValidationCode());
         return session.hasUserNameOf(userName);
     }
