@@ -26,7 +26,6 @@ import javax.xml.bind.annotation.XmlTransient;
 import javax.xml.bind.annotation.XmlType;
 
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -57,22 +56,32 @@ import lombok.Setter;
 @XmlAccessorType(XmlAccessType.FIELD)
 public class FixtureResult {
 
-    @PropertyLayout(named="Fixture script")
     @Property(optionality = Optionality.OPTIONAL)
+    @PropertyLayout(named="Fixture script")
     @Getter @Setter
     private String fixtureScriptClassName;
 
     @Getter(onMethod = @__(@Programmatic)) @Setter
     private String fixtureScriptQualifiedName;
 
-    @PropertyLayout(named="Result key")
     @Title(sequence="1", append=": ")
-    @Getter @Setter
+    //@Getter @Setter
     private String key;
+
+    @Property
+    @PropertyLayout(named="Result key")
+    public String getKey() {
+        return key;
+    }
+
+    public void setKey(final String key) {
+        this.key = key;
+    }
 
     @Getter(onMethod = @__(@Programmatic)) @Setter
     private String objectBookmark;
 
+    @Property
     @PropertyLayout(named="Result")
     @Title(sequence="2")
     public Object getObject() {
@@ -83,8 +92,8 @@ public class FixtureResult {
         this.objectBookmark = bookmarkService.bookmarkFor(object).toString();
     }
 
+    @Property
     @PropertyLayout(named="Result class")
-    @MemberOrder(sequence="3")
     public String getClassName() {
         return getObjectBookmark() != null? getObject().getClass().getName(): null;
     }
