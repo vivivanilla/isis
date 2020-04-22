@@ -20,6 +20,7 @@ package org.apache.isis.viewer.wicket.ui.components.scalars.jodatime;
 
 import org.apache.wicket.util.convert.ConversionException;
 import org.joda.time.DateTime;
+import org.joda.time.DateTimeZone;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 import org.joda.time.format.DateTimeFormat;
@@ -28,6 +29,7 @@ import org.joda.time.format.DateTimeFormatter;
 import org.apache.isis.viewer.wicket.ui.components.scalars.DateConverterAbstract;
 
 import java.util.Locale;
+import java.util.TimeZone;
 
 abstract class DateConverterForJodaAbstract<T> extends DateConverterAbstract<T> {
     
@@ -47,7 +49,9 @@ abstract class DateConverterForJodaAbstract<T> extends DateConverterAbstract<T> 
     protected String doConvertToString(T value, Locale locale) {
         // for JodaLocalDate, the date time pattern is same as date pattern, so can use either to convert to string.
         T t = plusDays(value, adjustBy);
-        return toString(t, getFormatterForDateTimePattern());
+        final DateTimeFormatter formatterForDateTimePattern = getFormatterForDateTimePattern().withZone(DateTimeZone.forTimeZone(
+                TimeZone.getTimeZone("Europe/Amsterdam"))); // INCSUP-538: setting this hard would probably be a hack. Is there a means to get this from the browser?
+        return toString(t, formatterForDateTimePattern);
     }
 
 
