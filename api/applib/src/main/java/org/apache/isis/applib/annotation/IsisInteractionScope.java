@@ -25,6 +25,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import org.springframework.context.annotation.Scope;
+import org.springframework.context.annotation.ScopedProxyMode;
 
 /**
  * {@code @IsisInteractionScope} is a specialization of {@link Scope @Scope} for a
@@ -46,7 +47,7 @@ import org.springframework.context.annotation.Scope;
 @Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Documented
-@Scope("isis-interaction")
+@Scope(value = "isis-interaction", proxyMode = ScopedProxyMode.TARGET_CLASS)
 public @interface IsisInteractionScope {
 
 }
