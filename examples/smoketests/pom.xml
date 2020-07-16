@@ -1,366 +1,364 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
-	license agreements. See the NOTICE file distributed with this work for additional 
-	information regarding copyright ownership. The ASF licenses this file to 
-	you under the Apache License, Version 2.0 (the "License"); you may not use 
-	this file except in compliance with the License. You may obtain a copy of 
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
-	by applicable law or agreed to in writing, software distributed under the 
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
-	OF ANY KIND, either express or implied. See the License for the specific 
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
+	license agreements. See the NOTICE file distributed with this work for additional
+	information regarding copyright ownership. The ASF licenses this file to
+	you under the Apache License, Version 2.0 (the "License"); you may not use
+	this file except in compliance with the License. You may obtain a copy of
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
+	by applicable law or agreed to in writing, software distributed under the
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
+	OF ANY KIND, either express or implied. See the License for the specific
 	language governing permissions and limitations under the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>org.apache.isis.app</groupId>
-		<artifactId>isis-app-starter-parent</artifactId>
-		<version>2.0.0-SNAPSHOT</version>
-		<relativePath>../../starters/pom.xml</relativePath>
-	</parent>
+    <parent>
+        <groupId>org.apache.isis.app</groupId>
+        <artifactId>isis-app-starter-parent</artifactId>
+        <version>2.0.0-SNAPSHOT</version>
+        <relativePath>../../starters/pom.xml</relativePath>
+    </parent>
 
-	<artifactId>smoketests</artifactId>
+    <artifactId>smoketests</artifactId>
 
-	<name>Apache Isis App - Smoketests</name>
-	<packaging>pom</packaging>
+    <name>Apache Isis App - Smoketests</name>
+    <packaging>pom</packaging>
 
-	<properties>
-		<!--  mvn clean install -Dskip.smokeTests=true -->
-		<skip.smokeTests>false</skip.smokeTests>
-		<skipTests>${skip.smokeTests}</skipTests>
-		<maven-war-plugin.warName>${project.artifactId}</maven-war-plugin.warName>
-	</properties>
+    <properties>
+        <!--  mvn clean install -Dskip.smokeTests=true -->
+        <skip.smokeTests>false</skip.smokeTests>
+        <skipTests>${skip.smokeTests}</skipTests>
+        <maven-war-plugin.warName>${project.artifactId}</maven-war-plugin.warName>
+    </properties>
 
-	<build>
-		<resources>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/resources</directory>
-			</resource>
-			<resource>
-				<filtering>false</filtering>
-				<directory>src/main/java</directory>
-				<includes>
-					<include>**</include>
-				</includes>
-				<excludes>
-					<exclude>**/*.java</exclude>
-				</excludes>
-			</resource>
-		</resources>
-		<plugins>
-		
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<forkMode>always</forkMode>
-					<excludes>
-						<exclude>**/Unstable*</exclude>
-					</excludes>
-				</configuration>
-			</plugin>
-		
-<!-- is not working yet 		
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<parallel>suites</parallel>
-					<forkCount>1.0C</forkCount>
-					<reuseForks>false</reuseForks>
-					<excludes>
-						<exclude>**/Unstable*</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<id>auditing</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.auditing.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>bootstrapping</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.bootstrapping.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>command</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.command.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>commandexecution</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.commandexecution.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>config</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.config.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>domainmodel</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.domainmodel.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>eventhandling</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.eventhandling.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>injecting</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.injecting.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>ldap</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.ldap.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>logging</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.logging.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>publishing</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.publishing.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>rest</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.rest.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>shiro</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.shiro.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>timestamping</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.timestamping.*</include>
-							</includes>
-						</configuration>
-					</execution>
-					<execution>
-						<id>transactions</id>
-						<goals>
-							<goal>test</goal>
-						</goals>
-						<configuration>
-							<includes>
-								<include>org.apache.isis.testdomain.transactions.*</include>
-							</includes>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
--->			
-			
-		</plugins>
-	</build>
+    <build>
+        <resources>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/resources</directory>
+            </resource>
+            <resource>
+                <filtering>false</filtering>
+                <directory>src/main/java</directory>
+                <includes>
+                    <include>**</include>
+                </includes>
+                <excludes>
+                    <exclude>**/*.java</exclude>
+                </excludes>
+            </resource>
+        </resources>
+        <plugins>
 
-	<dependencies>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <forkCount>10</forkCount>
+                    <excludes>
+                        <exclude>**/Unstable*</exclude>
+                    </excludes>
+                </configuration>
+            </plugin>
 
-		<dependency>
-			<groupId>org.apache.isis.mavendeps</groupId>
-			<artifactId>isis-mavendeps-webapp</artifactId>
-			<type>pom</type>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.isis.mavendeps</groupId>
-			<artifactId>isis-mavendeps-jdk11</artifactId>
-			<type>pom</type>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.isis.security</groupId>
-			<artifactId>isis-security-shiro</artifactId>
-		</dependency>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <parallel>suites</parallel>
+                    <forkCount>1.0C</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <excludes>
+                        <exclude>**/Unstable*</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>auditing</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.auditing.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>bootstrapping</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.bootstrapping.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>command</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.command.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>commandexecution</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.commandexecution.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>config</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.config.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>domainmodel</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.domainmodel.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>eventhandling</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.eventhandling.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>injecting</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.injecting.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>ldap</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.ldap.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>logging</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.logging.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>publishing</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.publishing.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>rest</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.rest.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
 
-		<dependency>
-			<groupId>org.apache.isis.viewer</groupId>
-			<artifactId>isis-viewer-common</artifactId>
-		</dependency>
+                    <execution>
+                        <id>shiro</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.shiro.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>timestamping</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.timestamping.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>transactions</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                        <configuration>
+                            <includes>
+                                <include>org.apache.isis.testdomain.transactions.*</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
 
-		<dependency>
-			<groupId>org.apache.isis.testing</groupId>
-			<artifactId>isis-testing-fixtures-applib</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.mappings</groupId>
-			<artifactId>isis-mappings-restclient-api</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-modelannotation</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-secman-model</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-secman-encryption-jbcrypt</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-secman-persistence-jdo</artifactId>
-		</dependency>
-<!--TODO 		<dependency> -->
-<!-- 			<groupId>org.apache.isis.extensions</groupId> -->
-<!-- 			<artifactId>isis-extensions-secman-persistence-jpa</artifactId> -->
-<!-- 		</dependency> -->
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-secman-shiro-realm</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-shiro-realm-ldap-impl</artifactId>
-		</dependency>
+        </plugins>
+    </build>
 
-		<!-- TEST DEPENDENCIES -->
+    <dependencies>
 
-		<dependency>
-		    <groupId>org.glassfish.jersey.ext</groupId>
-		    <artifactId>jersey-spring5</artifactId>
-		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.glassfish</groupId>
-		    <artifactId>javax.json</artifactId>
-		    <version>1.1.4</version>
-		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.eclipse.persistence</groupId>
-		    <artifactId>org.eclipse.persistence.moxy</artifactId>
-		    <version>2.7.5</version>
-		    <scope>test</scope>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.isis.mavendeps</groupId>
-			<artifactId>isis-mavendeps-integtests</artifactId>
-			<scope>test</scope>
-			<type>pom</type>
-		</dependency>
-		
-		<dependency>
-			<groupId>org.apache.directory.server</groupId>
-			<artifactId>apacheds-test-framework</artifactId>
-			<version>2.0.0.AM25</version>
-			<scope>test</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.isis.mavendeps</groupId>
+            <artifactId>isis-mavendeps-webapp</artifactId>
+            <type>pom</type>
+        </dependency>
 
-		<dependency>
-			<groupId>org.projectlombok</groupId>
-			<artifactId>lombok</artifactId>
-			<scope>provided</scope>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.isis.mavendeps</groupId>
+            <artifactId>isis-mavendeps-jdk11</artifactId>
+            <type>pom</type>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-jpa</artifactId>
-		</dependency>
-	</dependencies>
-	
-	<modules>
-		<module>stable</module>
-<!-- 		<module>incubating</module> -->
-	</modules>
+        <dependency>
+            <groupId>org.apache.isis.security</groupId>
+            <artifactId>isis-security-shiro</artifactId>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.isis.viewer</groupId>
+            <artifactId>isis-viewer-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.isis.testing</groupId>
+            <artifactId>isis-testing-fixtures-applib</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.mappings</groupId>
+            <artifactId>isis-mappings-restclient-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-modelannotation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-secman-model</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-secman-encryption-jbcrypt</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-secman-persistence-jdo</artifactId>
+        </dependency>
+        <!--TODO 		<dependency> -->
+        <!-- 			<groupId>org.apache.isis.extensions</groupId> -->
+        <!-- 			<artifactId>isis-extensions-secman-persistence-jpa</artifactId> -->
+        <!-- 		</dependency> -->
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-secman-shiro-realm</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.isis.extensions</groupId>
+            <artifactId>isis-extensions-shiro-realm-ldap-impl</artifactId>
+        </dependency>
+
+        <!-- TEST DEPENDENCIES -->
+
+        <dependency>
+            <groupId>org.glassfish.jersey.ext</groupId>
+            <artifactId>jersey-spring5</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.glassfish</groupId>
+            <artifactId>javax.json</artifactId>
+            <version>1.1.4</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.persistence</groupId>
+            <artifactId>org.eclipse.persistence.moxy</artifactId>
+            <version>2.7.5</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.isis.mavendeps</groupId>
+            <artifactId>isis-mavendeps-integtests</artifactId>
+            <scope>test</scope>
+            <type>pom</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.directory.server</groupId>
+            <artifactId>apacheds-test-framework</artifactId>
+            <version>2.0.0.AM25</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-jpa</artifactId>
+        </dependency>
+    </dependencies>
+
+    <modules>
+        <module>stable</module>
+        <!-- 		<module>incubating</module> -->
+    </modules>
 
 </project>
