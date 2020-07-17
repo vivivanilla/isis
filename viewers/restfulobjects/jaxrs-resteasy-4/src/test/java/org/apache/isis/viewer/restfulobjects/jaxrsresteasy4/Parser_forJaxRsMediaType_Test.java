@@ -18,8 +18,6 @@
  */
 package org.apache.isis.viewer.restfulobjects.jaxrsresteasy4;
 
-import org.apache.isis.viewer.restfulobjects.applib.util.Parser_forJaxRsMediaType_ContractTest;
-
 public class Parser_forJaxRsMediaType_Test extends Parser_forJaxRsMediaType_ContractTest {
 
 }

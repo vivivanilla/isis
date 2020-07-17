@@ -22,15 +22,14 @@ package org.apache.isis.legacy.metamodel.facets.value;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
-
 import org.apache.isis.core.metamodel.context.MetaModelContextAware;
 import org.apache.isis.core.metamodel.facetapi.FacetHolder;
 import org.apache.isis.core.metamodel.facetapi.FacetHolderImpl;
-import org.apache.isis.core.metamodel.facets.value.ValueSemanticsProviderAbstractTestCase;
 import org.apache.isis.legacy.applib.value.Percentage;
 import org.apache.isis.legacy.metamodel.facets.value.percentage.PercentageValueSemanticsProvider;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class PercentageValueSemanticsProviderTest extends ValueSemanticsProviderAbstractTestCase {
     private PercentageValueSemanticsProvider adapter;
@@ -44,7 +43,7 @@ public class PercentageValueSemanticsProviderTest extends ValueSemanticsProvider
         allowMockAdapterToReturn(percentage);
 
         holder = new FacetHolderImpl();
-        ((MetaModelContextAware)holder).setMetaModelContext(super.metaModelContext);
+        ((MetaModelContextAware) holder).setMetaModelContext(super.metaModelContext);
 
         setValue(adapter = new PercentageValueSemanticsProvider(holder));
     }

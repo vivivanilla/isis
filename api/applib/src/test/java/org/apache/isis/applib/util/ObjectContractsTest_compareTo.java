@@ -22,7 +22,6 @@ import org.junit.Before;
 
 import org.apache.isis.core.internaltestsupport.contract.ComparableContractTest_compareTo;
 
-
 public class ObjectContractsTest_compareTo extends ComparableContractTest_compareTo<InvoiceItem> {
 
     private Invoice inv123;

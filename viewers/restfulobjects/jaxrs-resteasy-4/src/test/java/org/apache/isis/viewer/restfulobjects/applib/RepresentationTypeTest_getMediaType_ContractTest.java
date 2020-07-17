@@ -16,10 +16,30 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.viewer.restfulobjects.jaxrsresteasy4;
 
-import org.apache.isis.viewer.restfulobjects.applib.RepresentationTypeTest_lookup_ContractTest;
+//TODO ISIS-2374 refactor copy
+package org.apache.isis.viewer.restfulobjects.applib;
 
-public class RepresentationTypeTest_lookup extends RepresentationTypeTest_lookup_ContractTest {
+import org.junit.Test;
+
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.nullValue;
+import static org.junit.Assert.assertThat;
+
+/**
+ * contract test.
+ */
+public abstract class RepresentationTypeTest_getMediaType_ContractTest {
+
+    @Test
+    public void whenHasProfile() {
+        assertThat(RepresentationType.GENERIC.getMediaTypeProfile(), is(nullValue()));
+    }
+
+    @Test
+    public void whenHasNoProfile() {
+        assertThat(RepresentationType.GENERIC.getMediaTypeProfile(), is(nullValue()));
+    }
+
 
 }

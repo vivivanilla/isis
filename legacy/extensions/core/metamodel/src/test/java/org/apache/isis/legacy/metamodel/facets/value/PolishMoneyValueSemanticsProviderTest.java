@@ -25,23 +25,22 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
-
-import org.apache.isis.legacy.applib.value.Money;
-import org.apache.isis.legacy.metamodel.facets.value.money.MoneyValueSemanticsProvider;
 import org.apache.isis.core.metamodel.context.MetaModelContextAware;
 import org.apache.isis.core.metamodel.facetapi.FacetHolder;
 import org.apache.isis.core.metamodel.facetapi.FacetHolderImpl;
 import org.apache.isis.core.metamodel.facets.object.parseable.TextEntryParseException;
-import org.apache.isis.core.metamodel.facets.value.ValueSemanticsProviderAbstractTestCase;
+import org.apache.isis.legacy.applib.value.Money;
+import org.apache.isis.legacy.metamodel.facets.value.money.MoneyValueSemanticsProvider;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 @Ignore
 // TODO once the semantics provider has a way to reset the formatters for the new
 // local then this test can be reinstated.
 public class PolishMoneyValueSemanticsProviderTest extends ValueSemanticsProviderAbstractTestCase {
 
-    
+
     private static final String CURRENCY_SPACE = "\u00a0";
     private static final String ZLOTYCH_SYMBOL = "\u007a\u0142";
     private static final String EURO_SYMBOL = "\u20AC";
@@ -51,12 +50,12 @@ public class PolishMoneyValueSemanticsProviderTest extends ValueSemanticsProvide
 
     @Before
     public void setUpObjects() throws Exception {
-        
+
         Locale.setDefault(new Locale("pl", "PL"));
         originalMoney = new Money(10.50, "pln");
         holder = new FacetHolderImpl();
         ((MetaModelContextAware)holder).setMetaModelContext(super.metaModelContext);
-        
+
         super.setValue(adapter = new MoneyValueSemanticsProvider(holder));
     }
 

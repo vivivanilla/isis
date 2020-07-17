@@ -25,6 +25,7 @@ dependencies {
         exclude(module: 'byte-buddy')
     }
     testCompile (Libs.assertjCore)
+    testCompile project(':isis-parent:isis:isis-core-internaltestsupport')
 }
 
 task packageTests(type: Jar) {
