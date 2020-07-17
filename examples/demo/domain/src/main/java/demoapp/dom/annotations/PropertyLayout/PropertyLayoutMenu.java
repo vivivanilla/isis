@@ -19,6 +19,7 @@
 package demoapp.dom.annotations.PropertyLayout;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.DomainService;
 import org.apache.isis.applib.annotation.NatureOfService;
 import org.apache.isis.applib.annotation.SemanticsOf;
@@ -28,28 +29,32 @@ import lombok.extern.log4j.Log4j2;
 
 import demoapp.dom.annotations.PropertyLayout.cssClass.PropertyLayoutCssClassVm;
 import demoapp.dom.annotations.PropertyLayout.describedAs.PropertyLayoutDescribedAsVm;
-import demoapp.dom.annotations.PropertyLayout.hidden.PropertyLayoutHiddenChildVm;
 import demoapp.dom.annotations.PropertyLayout.hidden.PropertyLayoutHiddenVm;
+import demoapp.dom.annotations.PropertyLayout.hidden.child.PropertyLayoutHiddenChildVm;
 import demoapp.dom.annotations.PropertyLayout.multiLine.PropertyLayoutMultiLineVm;
 import demoapp.dom.annotations.PropertyLayout.named.PropertyLayoutNamedVm;
+import demoapp.dom.annotations.PropertyLayout.navigable.FileNodeVm;
 
 @DomainService(nature=NatureOfService.VIEW, objectType = "demo.PropertyLayoutMenu")
 @Log4j2
 public class PropertyLayoutMenu {
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-css3", describedAs = "HTML styling")
     public PropertyLayoutCssClassVm cssClass(){
         return new PropertyLayoutCssClassVm();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-comment", describedAs = "shown as Tooltips")
     public PropertyLayoutDescribedAsVm describedAs(){
         return new PropertyLayoutDescribedAsVm();
     }
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-glasses", describedAs = "Visibility of properties, eg in tables")
     public PropertyLayoutHiddenVm hidden() {
-        val vm = new PropertyLayoutHiddenVm("value");
+        val vm = new PropertyLayoutHiddenVm();
         vm.getChildren().add(new PropertyLayoutHiddenChildVm("child 1", vm));
         vm.getChildren().add(new PropertyLayoutHiddenChildVm("child 2", vm));
         vm.getChildren().add(new PropertyLayoutHiddenChildVm("child 3", vm));
@@ -57,6 +62,7 @@ public class PropertyLayoutMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-align-justify", describedAs = "Textboxes")
     public PropertyLayoutMultiLineVm multiLine(){
         val vm = new PropertyLayoutMultiLineVm();
         vm.setPropertyUsingAnnotation(
@@ -76,8 +82,15 @@ public class PropertyLayoutMenu {
     }
 
     @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-signature", describedAs = "Customised labels")
     public PropertyLayoutNamedVm named(){
         return new PropertyLayoutNamedVm();
+    }
+
+    @Action(semantics = SemanticsOf.SAFE)
+    @ActionLayout(cssClassFa="fa-sitemap", describedAs = "Breadcrumbs (and trees)")
+    public FileNodeVm navigable(){
+        return new FileNodeVm();
     }
 
 

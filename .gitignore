@@ -20,6 +20,14 @@ webpack.generated.js
 node/
 node_modules/
 
+#Gradle
+.gradle
+gradlew
+gradlew.*
+
+#Lombok (don't accept config alterations, might lead to a maintenance hell)
+lombok.config
+
 *.exe
 *~
 *.swp
@@ -30,6 +38,7 @@ target/
 target-ide/
 logs/
 .factorypath
+tmp/
 
 JArchitectOut/
 *.jdproj
