@@ -7,7 +7,12 @@ buildscript {
     }
 }
 
-apply from: 'dependencies.gradle'
+apply from: './dependencies.gradle'
+def javaVersion = JavaVersion.current()
+
+task test {
+	println "Using JDK version: $javaVersion"
+}
 
 allprojects {
     apply plugin: "io.freefair.lombok"
@@ -37,7 +42,7 @@ subprojects {
     }
 
     test {
-        ignoreFailures = true
+        ignoreFailures = false
     }
 
 }

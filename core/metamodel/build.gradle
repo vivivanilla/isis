@@ -1,8 +1,32 @@
 description = 'Apache Isis Core - MetaModel'
+
+apply plugin: 'java'
+
+compileTestJava {
+    options.compilerArgs << '-parameters'
+}
+
+sourceSets {
+	main {
+        resources {
+            srcDirs += "src/main/java"
+            include "**/*"
+            exclude "**/*.java"
+        }
+    }
+    test {
+        resources {
+            srcDirs += "src/test/java"
+            include "**/*"
+            exclude "**/*.java"
+        }
+    }
+}
+
 dependencies {
-    compile project(':isis-parent:isis-applib')
-    compile project(':isis-parent:isis:isis-core-config')
-    compile project(':isis-parent:isis:isis-core-security')
+    compile project(':isis-applib')
+    compile project(':isis-core-config')
+    compile project(':isis-core-security')
     compile(Libs.swaggerCore) {
         exclude(module: 'guava')
         exclude(module: 'validation-api')
@@ -10,12 +34,9 @@ dependencies {
         exclude(module: 'slf4j-api')
         exclude(module: 'commons-lang3')
     }
-    compile project(':isis-parent:isis:isis-core-commons')
+    compile project(':isis-core-commons')
 
-    testCompile project(':isis-parent:isis:isis-core-config')
-    testCompile project(':isis-parent:isis-applib')
-    testCompile project(':isis-parent:isis:isis-core-internaltestsupport')
-    testCompile project(':isis-parent:isis:isis-core-runtimeservices')
+    testCompile project(':isis-core-internaltestsupport')
 
     testCompile(Libs.junitJupiterApi)
     testCompile(Libs.junitJupiterEngine)
@@ -26,6 +47,7 @@ dependencies {
         exclude(module: 'byte-buddy')
     }
     testCompile(Libs.hibernateValidator)
+
 }
 
 task packageTests(type: Jar) {

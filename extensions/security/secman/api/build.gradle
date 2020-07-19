@@ -3,10 +3,10 @@ description = 'Apache Isis Ext - Sec Man API'
 apply plugin: 'war'
 
 dependencies {
-    compile project(':isis-parent:isis:isis-core-commons')
-    compile project(':isis-parent:isis-applib')
-    compile project(':isis-parent:isis:isis-extensions:isis-extensions-secman')
-    compile project(':isis-parent:isis:isis-core-metamodel')
+    compile project(':isis-core-commons')
+    compile project(':isis-applib')
+    compile project(':isis-extensions:isis-extensions-secman')
+    compile project(':isis-core-metamodel')
 }
 
 task packageTests(type: Jar) {

@@ -19,8 +19,6 @@
 
 package org.apache.isis.legacy.metamodel.facets.value;
 
-//TODO ISIS-2374 refactor copy
-
 import java.util.Locale;
 
 import org.jmock.Expectations;

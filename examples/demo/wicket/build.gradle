@@ -1,20 +1,25 @@
 group = 'org.apache.isis.examples.apps'
 description = 'Apache Isis App - Demo (Wicket)'
+apply plugin: 'war'
 
 dependencies {
-    compile project(':isis-parent:isis-applib')
-    compile project(':isis-parent:isis:isis-core-commons')
     compile project(':isis-app-starter-parent:demo-parent:demo-domain')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-applib')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-ui')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
+    compile project(':isis-applib')
+    compile project(':isis-core-commons')
+    compile project(':isis-mavendeps:isis-mavendeps-webapp')
+    compile project(':isis-valuetypes-asciidoc-metamodel')
+    compile project(':isis-valuetypes-asciidoc-persistence-jdo-dn5')
+    compile project(':isis-valuetypes:isis-valuetypes-asciidoc')
+    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-ui')
+    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-ui:isis-valuetypes-asciidoc-ui-wkt')
+    compile project(':isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-applib')
+    compile project(':isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-ui')
+    compile project(':isis-valuetypes:isis-valuetypes-sse:isis-valuetypes-sse-ui')
+    compile project(':isis-valuetypes:isis-valuetypes-sse:isis-valuetypes-sse-ui:isis-valuetypes-sse-ui-wkt')
+    compile project(':isis-viewer-wicket:isis-viewer-wicket-viewer')
     compile(Libs.springBootStarterLog4j2) {
         exclude(module: 'slf4j-api')
     }
-    compile project(':isis-parent:isis:isis-mavendeps:isis-mavendeps-webapp')
-    compile project(':isis-parent:isis:isis-viewer-wicket:isis-viewer-wicket-viewer')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-ui:isis-valuetypes-asciidoc-ui-wkt')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-ui')
-    compile project(':isis-parent:isis:isis-valuetypes:isis-valuetypes-asciidoc')
 }
 

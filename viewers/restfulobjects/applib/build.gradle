@@ -1,10 +1,9 @@
 group = 'org.apache.isis.viewer'
 description = 'Apache Isis Viewer - RO (AppLib)'
 dependencies {
-    compile project(':isis-parent:isis-applib')
+    compile project(':isis-applib')
     compile(Libs.jacksonDatabind)
-    testCompile project(':isis-parent:isis:isis-core-metamodel')
-    testCompile project(':isis-parent:isis:isis-core-internaltestsupport')
+    testCompile project(':isis-core-internaltestsupport')
 }
 
 task packageTests(type: Jar) {

@@ -706,24 +706,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-internaltestsupport</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
 				<artifactId>isis-applib</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
 				<type>jar</type>
 				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-applib</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
@@ -734,24 +720,10 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-config</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
 				<artifactId>isis-schema</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
 				<type>jar</type>
 				<scope>compile</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-schema</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
@@ -762,22 +734,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-metamodel</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
 				<artifactId>isis-core-runtime</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-runtime</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
@@ -786,22 +744,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-runtimeservices</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
 				<artifactId>isis-core-webapp</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.core</groupId>
-				<artifactId>isis-core-webapp</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
@@ -810,22 +754,8 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-common</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-restfulobjects-applib</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-restfulobjects-applib</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
@@ -834,22 +764,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-restfulobjects-rendering</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-restfulobjects-viewer</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-restfulobjects-viewer</artifactId>
+				<artifactId>isis-viewer-restfulobjects-testing</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
-				<type>test-jar</type>
-				<scope>test</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.core</groupId>
@@ -908,34 +829,13 @@
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-wicket-model</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<scope>test</scope>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-wicket-ui</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-wicket-ui</artifactId>
-				<version>2.0.0-SNAPSHOT</version>
-				<scope>test</scope>
-				<type>test-jar</type>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.isis.viewer</groupId>
-				<artifactId>isis-viewer-wicket-viewer</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.viewer</groupId>
 				<artifactId>isis-viewer-wicket-viewer</artifactId>
 				<version>2.0.0-SNAPSHOT</version>
-				<scope>test</scope>
-				<type>test-jar</type>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.isis.mavendeps</groupId>

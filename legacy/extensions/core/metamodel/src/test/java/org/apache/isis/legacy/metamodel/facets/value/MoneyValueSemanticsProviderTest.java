@@ -46,7 +46,7 @@ public class MoneyValueSemanticsProviderTest extends ValueSemanticsProviderAbstr
     public void setUpObjects() throws Exception {
         Locale.setDefault(Locale.UK);
         holder = new FacetHolderImpl();
-        ((MetaModelContextAware) holder).setMetaModelContext(super.metaModelContext);
+        ((MetaModelContextAware)holder).setMetaModelContext(super.metaModelContext);
 
         setValue(adapter = new MoneyValueSemanticsProvider(holder));
     }

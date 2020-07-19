@@ -68,15 +68,7 @@
             <artifactId>jackson-module-jaxb-annotations</artifactId>
         </dependency>
 
-
-        <!-- TEST DEPENDENCIES -->
-        
-		<dependency>
-            <groupId>org.apache.isis.core</groupId>
-            <artifactId>isis-core-metamodel</artifactId>
-            <type>test-jar</type>
-            <scope>test</scope>
-        </dependency>
+        <!-- TESTING -->
         
         <dependency>
             <groupId>org.apache.isis.core</groupId>

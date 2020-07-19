@@ -1,0 +1,13 @@
+group = 'org.apache.isis.valuetypes'
+description = 'Apache Isis Val - Markdown (persistence)'
+dependencies {
+    compile(Libs.datanucleusCore)
+    compile project(':isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-applib')
+    compile project(':isis-core-metamodel')
+}
+
+task packageTests(type: Jar) {
+    from sourceSets.test.output
+    classifier = 'tests'
+}
+artifacts.archives packageTests

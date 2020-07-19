@@ -2,7 +2,7 @@ description = 'Apache Isis Core - Unit Test Support'
 apply plugin: 'war'
 
 dependencies {
-    compile project(':isis-parent:isis:isis-core-commons')
+    compile project(':isis-core-commons')
     compile(Libs.junitJupiterApi)
     compile(Libs.junitJupiterEngine)
     compile(Libs.junitVintageEngine)
@@ -12,7 +12,7 @@ dependencies {
         exclude(module: 'byte-buddy')
         exclude(module: 'byte-buddy-agent')
     }
-    compile project(':isis-parent:isis:isis-core-codegen-bytebuddy')
+    compile project(':isis-core-codegen-bytebuddy')
     compile(Libs.hamcrestLibrary)
     compile(Libs.slf4jApi)
     compile(Libs.springBootStarterTest) {
@@ -33,6 +33,9 @@ dependencies {
         exclude(module: 'byte-buddy')
     }
     compileOnly(Libs.javaxJdo)
+    compile project(':isis-core-config')
+    compile project(':isis-applib')
+    compile project(':isis-core-metamodel')
 }
 
 task packageTests(type: Jar) {

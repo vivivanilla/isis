@@ -1,13 +1,11 @@
 description = 'Apache Isis Core - Runtime'
 dependencies {
-    compile project(':isis-parent:isis:isis-core-metamodel')
+    compile project(':isis-core-metamodel')
     compile(Libs.commonsEmail) {
         exclude(module: 'javax.mail')
         exclude(module: 'activation')
     }
-    testCompile project(':isis-parent:isis:isis-core-internaltestsupport')
-    testCompile project(':isis-parent:isis-applib')
-    testCompile project(':isis-parent:isis:isis-core-metamodel')
+    testCompile project(':isis-core-internaltestsupport')
 }
 
 task packageTests(type: Jar) {

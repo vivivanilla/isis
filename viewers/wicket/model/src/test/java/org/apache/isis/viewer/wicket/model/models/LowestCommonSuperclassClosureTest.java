@@ -24,26 +24,15 @@ import java.util.List;
 
 import org.junit.Test;
 
-import org.apache.isis.testing.unittestsupport.applib.dom.matchers.IsisMatchers;
-
-import static org.junit.Assert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class LowestCommonSuperclassClosureTest {
 
-    static class Animal {
-    }
-
-    static class Mineral {
-    }
-
-    static class Vegetable {
-    }
-
-    static class Mammal extends Animal {
-    }
-
-    static class Lion extends Mammal {
-    }
+    static class Animal {}
+    static class Mineral {}
+    static class Vegetable {}
+    static class Mammal extends Animal {}
+    static class Lion extends Mammal {}
 
     @Test
     public void nothingInCommon() {
@@ -61,10 +50,11 @@ public class LowestCommonSuperclassClosureTest {
     }
 
     private static void assertLowestCommonOfListIs(List<Object> list, Class<?> expected) {
-        Util.LowestCommonSuperclassFinder finder =
+        Util.LowestCommonSuperclassFinder finder = 
                 new Util.LowestCommonSuperclassFinder();
         list.forEach(finder::collect);
-        assertThat(finder.getLowestCommonSuperclass().get(), IsisMatchers.classEqualTo(expected));
+        assertEquals(expected, finder.getLowestCommonSuperclass().get());
     }
+
 
 }
