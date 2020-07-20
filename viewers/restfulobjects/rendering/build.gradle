@@ -2,7 +2,7 @@ group = 'org.apache.isis.viewer'
 description = 'Apache Isis Viewer - RO (Rendering)'
 dependencies {
     compile project(':isis-core-runtime')
-    compile project('::isis-viewer-restfulobjects:isis-viewer-restfulobjects-applib')
+    compile project('::isis-viewer-restfulobjects-applib')
     testCompile project('::isis-core-internaltestsupport')
 }
 

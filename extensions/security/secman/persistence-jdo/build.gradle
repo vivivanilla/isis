@@ -5,8 +5,8 @@ dependencies {
     compile project(':isis-testing-fixtures-applib')
     providedCompile project(':isis-persistence-jdo-datanucleus5')
     providedCompile project(':isis-core-runtime')
-    providedCompile project(':isis-extensions-secman:isis-extensions-secman-api')
-    providedCompile project(':isis-extensions-secman:isis-extensions-secman-model')
+    providedCompile project(':isis-extensions-secman-api')
+    providedCompile project(':isis-extensions-secman-model')
 }
 
 task packageTests(type: Jar) {

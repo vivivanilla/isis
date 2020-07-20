@@ -3,7 +3,7 @@ description = 'Apache Isis App - Demo (Wicket)'
 apply plugin: 'war'
 
 dependencies {
-    compile project(':demo-parent:demo-domain')
+    compile project(':demo-domain')
     compile project(':isis-applib')
     compile project(':isis-core-commons')
     compile project(':isis-mavendeps-webapp')

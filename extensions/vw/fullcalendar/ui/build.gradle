@@ -1,7 +1,7 @@
 group = 'org.apache.isis.extensions'
 description = 'Apache Isis Ext - Wicket Viewer - fullcalendar (ui)'
 dependencies {
-    compile project(':isis-extensions-fullcalendar:isis-extensions-fullcalendar-applib')
+    compile project(':isis-extensions-fullcalendar-applib')
     compile project(':isis-viewer-wicket-ui')
     compile(Libs.wicketFullCalendarCore)
 }

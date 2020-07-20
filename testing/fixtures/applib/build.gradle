@@ -3,7 +3,7 @@ description = 'Apache Isis Tst - Fixtures (applib)'
 apply plugin: 'war'
 dependencies {
     compile compile(Libs.jodaTime)
-    compile project(':isis-subdomains-spring:isis-subdomains-spring-applib')
+    compile project(':isis-subdomains-spring-applib')
     providedCompile project(':isis-testing-integtestsupport:isis-testing-integtestsupport-applib')
     compileOnly(Libs.javaxJdo)
     providedCompile project(':isis-persistence-jdo-applib')

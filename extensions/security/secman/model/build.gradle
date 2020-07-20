@@ -2,7 +2,7 @@ group = 'org.apache.isis.extensions'
 description = 'Apache Isis Ext - Sec Man Model'
 apply plugin: 'war'
 dependencies {
-    compile project(':isis-extensions-secman:isis-extensions-secman-api')
+    compile project(':isis-extensions-secman-api')
     providedCompile project(':isis-core-runtime')
 }
 

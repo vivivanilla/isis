@@ -3,7 +3,7 @@ description = 'Apache Isis Viewer - RO (Viewer)'
 dependencies {
     compile project(':isis-core-webapp')
     compile project(':isis-viewer-common')
-    compile project(':isis-viewer-restfulobjects:isis-viewer-restfulobjects-rendering')
+    compile project(':isis-viewer-restfulobjects-rendering')
     compile(Libs.jacksonModuleJaxbAnnotations)
     testCompile project(':isis-core-internaltestsupport')
     compileOnly(Libs.javaxJdo)

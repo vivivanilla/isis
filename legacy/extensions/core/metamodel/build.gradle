@@ -4,7 +4,7 @@ apply plugin: 'war'
 dependencies {
     compile(Libs.guava)
     compile project(':isis-applib')
-    compile project(':isis-legacy:isis-legacy-applib')
+    compile project(':isis-legacy-applib')
     compile project(':isis-core-metamodel')
     testCompile project(':isis-core-internaltestsupport')
     compileOnly(Libs.javaxJdo)

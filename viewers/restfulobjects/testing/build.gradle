@@ -4,7 +4,7 @@ apply plugin: 'war'
 dependencies {
 
     compile project(':isis-core-runtime')
-    compile project('::isis-viewer-restfulobjects:isis-viewer-restfulobjects-viewer')
+    compile project('::isis-viewer-restfulobjects-viewer')
     compile project('::isis-core-internaltestsupport')
 
 }

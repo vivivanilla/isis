@@ -4,7 +4,7 @@ apply plugin: 'war'
 dependencies {
     providedCompile project(':isis-security-shiro')
     providedCompile project(':isis-core-runtime')
-    providedCompile project(':isis-extensions-secman:isis-extensions-secman-api')
+    providedCompile project(':isis-extensions-secman-api')
 }
 
 task packageTests(type: Jar) {

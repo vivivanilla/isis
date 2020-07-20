@@ -1,7 +1,7 @@
 group = 'org.apache.isis.extensions'
 description = 'Apache Isis Ext - Wicket Viewer - pdf.js (metamodel)'
 dependencies {
-    compile project(':isis-extensions-pdfjs:isis-extensions-pdfjs-applib')
+    compile project(':isis-extensions-pdfjs-applib')
     compile project(':isis-core-metamodel')
     compile(Libs.wicketBootstrapCore)
 }
