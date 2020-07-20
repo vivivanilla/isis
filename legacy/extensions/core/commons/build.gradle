@@ -7,7 +7,7 @@ dependencies {
     compile project(':isis-core-runtime')
     testCompile project(':isis-core-internaltestsupport')
     compileOnly(Libs.javaxJdo)
-    providedCompile project(':isis-persistence-jdo:isis-persistence-jdo-applib')
+    providedCompile project(':isis-persistence-jdo-applib')
 }
 
 task packageTests(type: Jar) {

@@ -26,8 +26,8 @@ dependencies {
 
     compile(Libs.javaxJdo)
 
-    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
-    testCompile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes-asciidoc-applib')
+    testCompile project(':isis-valuetypes-asciidoc-applib')
     testCompile project(':isis-applib')
 
     // These dependencies are required in order to build on jdk11

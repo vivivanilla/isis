@@ -1,7 +1,7 @@
 group = 'org.apache.isis.persistence'
 description = 'Apache Isis Persistence - JPA (model)'
 dependencies {
-    compile project(':isis-persistence-jpa:isis-persistence-jpa-applib')
+    compile project(':isis-persistence-jpa-applib')
     compile project(':isis-core-runtime')
     testCompile project(':isis-core-internaltestsupport')
 }

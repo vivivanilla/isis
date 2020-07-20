@@ -28,26 +28,26 @@ sourceSets {
 }
 
 dependencies {
-    compile project(':isis-mavendeps:isis-mavendeps-webapp')
-    compile project(':isis-mavendeps:isis-mavendeps-jdk11')
+    compile project(':isis-mavendeps-webapp')
+    compile project(':isis-mavendeps-jdk11')
     compile project(':isis-security-shiro')
     compile project(':isis-viewer-restfulobjects:isis-viewer-restfulobjects-viewer')
     compile project(':isis-viewer-restfulobjects:isis-viewer-restfulobjects-jaxrsresteasy4')
-    compile project(':isis-testing:isis-testing-fixtures:isis-testing-fixtures-applib')
-    compile project(':isis-mappings:isis-mappings-restclient-api')
-    compile project(':isis-extensions:isis-extensions-modelannotation')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-model')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-encryption-jbcrypt')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-persistence-jdo')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-shiro-realm')
-    compile project(':isis-extensions:isis-extensions-shiro-realm-ldap:isis-extensions-shiro-realm-ldap-impl')
+    compile project(':isis-testing-fixtures-applib')
+    compile project(':isis-mappings-restclient-api')
+    compile project(':isis-extensions-modelannotation')
+    compile project(':isis-extensions-secman:isis-extensions-secman-model')
+    compile project(':isis-extensions-secman:isis-extensions-secman-encryption-jbcrypt')
+    compile project(':isis-extensions-secman:isis-extensions-secman-persistence-jdo')
+    compile project(':isis-extensions-secman:isis-extensions-secman-shiro-realm')
+    compile project(':isis-extensions-shiro-realm-ldap:isis-extensions-shiro-realm-ldap-impl')
     compile(Libs.springDataJpa)
     testCompile(Libs.jerseySpring5) {
         exclude(module: 'jersey-server')
     }
     testCompile(Libs.javaxJson)
     testCompile(Libs.moxy)
-    testCompile project(':isis-mavendeps:isis-mavendeps-integtests')
+    testCompile project(':isis-mavendeps-integtests')
     testCompile(Libs.apachedsTestFramework)
 }
 

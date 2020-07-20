@@ -7,7 +7,7 @@ dependencies {
     compile(Libs.xdocreportXwpf)
     compile(Libs.xdocreportPdf)
     compile(Libs.xdocreportCore)
-    testCompile project(':isis-testing:isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
+    testCompile project(':isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
     testCompile(Libs.guava)
 }
 

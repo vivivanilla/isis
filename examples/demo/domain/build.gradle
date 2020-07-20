@@ -17,19 +17,19 @@ apply plugin: "org.rm3l.datanucleus-gradle-plugin"
 dependencies {
     compile project(':isis-applib')
     compile project(':isis-core-commons')
-    compile project(':isis-testing:isis-testing-fixtures:isis-testing-fixtures-applib')
-    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
-    compile project(':isis-valuetypes:isis-valuetypes-markdown:isis-valuetypes-markdown-applib')
+    compile project(':isis-testing-fixtures-applib')
+    compile project(':isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes-markdown-applib')
 
     // ISIS-2374 compile('commons-httpclient:commons-httpclient:3.1')  // did not work for me
     compile(Libs.httpClient)
 
-    compile project(':isis-extensions:isis-extensions-exceldownload:isis-extensions-exceldownload-ui')
-    compile project(':isis-testing:isis-testing-h2console:isis-testing-h2console-ui')
+    compile project(':isis-extensions-exceldownload:isis-extensions-exceldownload-ui')
+    compile project(':isis-testing-h2console:isis-testing-h2console-ui')
     compile project(':isis-viewer-restfulobjects:isis-viewer-restfulobjects-jaxrsresteasy4')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-encryption-jbcrypt')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-persistence-jdo')
-    compile project(':isis-extensions:isis-extensions-secman:isis-extensions-secman-shiro-realm')
-    compile project(':isis-extensions:isis-extensions-modelannotation')
-    compile project(':isis-valuetypes:isis-valuetypes-sse-applib')
+    compile project(':isis-extensions-secman:isis-extensions-secman-encryption-jbcrypt')
+    compile project(':isis-extensions-secman:isis-extensions-secman-persistence-jdo')
+    compile project(':isis-extensions-secman:isis-extensions-secman-shiro-realm')
+    compile project(':isis-extensions-modelannotation')
+    compile project(':isis-valuetypes-sse-applib')
 }

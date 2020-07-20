@@ -1,7 +1,7 @@
 group = 'org.apache.isis.viewer'
 description = 'Apache Isis Viewer - Wicket (UI Components)'
 dependencies {
-    compile project(':isis-viewer-wicket:isis-viewer-wicket-model')
+    compile project(':isis-viewer-wicket-model')
     compile(Libs.wicketCore) {
         exclude(module: 'slf4j-api')
         exclude(module: 'commons-io')

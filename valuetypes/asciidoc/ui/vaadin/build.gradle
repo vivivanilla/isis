@@ -1,7 +1,7 @@
 description = 'Apache Isis Val - Asciidoctor (ui vaadin)'
 dependencies {
     compile project(':isis-incubator:isis-viewer-vaadin:isis-viewer-vaadin-ui')
-    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes-asciidoc-applib')
 }
 
 task packageTests(type: Jar) {

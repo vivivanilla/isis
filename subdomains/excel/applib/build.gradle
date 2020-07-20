@@ -3,7 +3,7 @@ description = 'Apache Isis Sub - Excel (applib)'
 dependencies {
     compile project(':isis-applib')
     compile project(':isis-core-runtime')
-    compile project(':isis-testing:isis-testing-fixtures:isis-testing-fixtures-applib')
+    compile project(':isis-testing-fixtures-applib')
     compile(Libs.guava)
     compile(Libs.datanucleusCore)
     compile(Libs.poiOoxml)

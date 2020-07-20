@@ -1,7 +1,7 @@
 group = 'org.apache.isis.persistence'
 description = 'Apache Isis Persistence - JDO (datanucleus 5)'
 dependencies {
-    compile project(':isis-persistence-jdo:isis-persistence-jdo-applib')
+    compile project(':isis-persistence-jdo-applib')
     compile project(':isis-core-runtime')
     compile(Libs.datanucleusCore)
     implementation(Libs.datanucleusApiJdo)

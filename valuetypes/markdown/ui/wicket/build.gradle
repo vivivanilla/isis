@@ -1,0 +1,20 @@
+group = 'org.apache.isis.valuetypes'
+description = 'Apache Isis Val - Markdown (ui-wkt)'
+dependencies {
+    compile project(':isis-core-commons')
+    compile project(':isis-viewer-wicket-ui')
+    compile project(':isis-valuetypes-markdown-applib')
+    compile(Libs.wicketCore) {
+        exclude(module: 'slf4j-api')
+        exclude(module: 'commons-io')
+    }
+    compile(Libs.wicketExtensions) {
+        exclude(module: 'slf4j-api')
+    }
+}
+
+task packageTests(type: Jar) {
+    from sourceSets.test.output
+    classifier = 'tests'
+}
+artifacts.archives packageTests

@@ -2,10 +2,10 @@ group = 'org.apache.isis.valuetypes'
 description = 'Apache Isis Val - Server Sent Events (ui-wkt)'
 
 dependencies {
-    compile project(':isis-valuetypes:isis-valuetypes-sse:isis-valuetypes-sse-metamodel')
+    compile project(':isis-valuetypes-sse-metamodel')
     compile project(':isis-core-metamodel')
     compile project(':isis-core-webapp')
-    compile project(':isis-viewer-wicket:isis-viewer-wicket-ui')
+    compile project(':isis-viewer-wicket-ui')
 }
 
 task packageTests(type: Jar) {

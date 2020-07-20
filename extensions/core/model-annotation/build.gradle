@@ -4,7 +4,7 @@ apply plugin: 'war'
 dependencies {
   compile project(':isis-core-metamodel')
   providedCompile project(':isis-core-webapp')
-  providedCompile project(':isis-viewer-wicket:isis-viewer-wicket-ui')
+  providedCompile project(':isis-viewer-wicket-ui')
 }
 
 task packageTests(type: Jar) {

@@ -5,7 +5,7 @@ apply plugin: 'war'
 dependencies {
     compile project(':isis-core-commons')
     compile project(':isis-applib')
-    compile project(':isis-extensions:isis-extensions-secman')
+    compile project(':isis-extensions-secman')
     compile project(':isis-core-metamodel')
 }
 

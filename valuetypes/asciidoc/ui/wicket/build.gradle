@@ -5,10 +5,10 @@ apply plugin: 'io.freefair.lombok'
 dependencies {
     compile project(':isis-applib')
     compile project(':isis-core-commons')
-    compile project(':isis-valuetypes:isis-valuetypes-asciidoc')
-    compile project(':isis-valuetypes:isis-valuetypes-asciidoc:isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes-asciidoc')
+    compile project(':isis-valuetypes-asciidoc-applib')
 
-    providedCompile project(':isis-viewer-wicket:isis-viewer-wicket-ui')
+    providedCompile project(':isis-viewer-wicket-ui')
 }
 
 task packageTests(type: Jar) {

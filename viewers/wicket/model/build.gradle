@@ -11,7 +11,7 @@ dependencies {
     compile project(':isis-core-webapp')
     compile project(':isis-viewer-common')
     testCompile project(':isis-core-internaltestsupport')
-    testCompile project(':isis-testing:isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
+    testCompile project(':isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
     testCompile(Libs.guava)
 }
 

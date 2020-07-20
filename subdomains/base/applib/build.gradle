@@ -7,7 +7,7 @@ dependencies {
     testCompile(Libs.reflections)
     testCompile project(':isis-core-metamodel')
     testCompile(Libs.javaxJdo)
-    testCompile project(':isis-testing:isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
+    testCompile project(':isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
 }
 
 task packageTests(type: Jar) {

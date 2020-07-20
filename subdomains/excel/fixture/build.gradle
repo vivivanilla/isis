@@ -1,11 +1,11 @@
 group = 'org.apache.isis.subdomains'
 description = 'Apache Isis Sub - Excel (Fixtures)'
 dependencies {
-    compile project(':isis-subdomains:isis-subdomains-excel:isis-subdomains-excel-applib')
-    compile project(':isis-subdomains:isis-subdomains-excel:isis-subdomains-excel-testing')
+    compile project(':isis-subdomains-excel-applib')
+    compile project(':isis-subdomains-excel-testing')
     compile project(':isis-applib')
-    compile project(':isis-testing:isis-testing-fixtures:isis-testing-fixtures-applib')
-    compile project(':isis-persistence-jdo:isis-persistence-jdo-datanucleus5')
+    compile project(':isis-testing-fixtures-applib')
+    compile project(':isis-persistence-jdo-datanucleus5')
 }
 
 task packageTests(type: Jar) {
