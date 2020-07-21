@@ -18,6 +18,7 @@
  */
 
 ext {
+    asciidoctorjVersion = "2.4.0"
     cucumberVersion = "5.1.2"
     jacksonVersion = "2.10.4"
     jaxApiVersion = "2.3.1"
@@ -33,7 +34,8 @@ ext {
     Libs = [
             apachedsTestFramework           : "org.apache.directory.server:apacheds-test-framework:2.0.0.AM25",
             approvaltests                   : "com.approvaltests:approvaltests:4.0.2",
-            asciidoctorjApi                 : "org.asciidoctor:asciidoctorj-api:2.1.0",
+            asciidoctorj                    : "org.asciidoctor:asciidoctorj:$asciidoctorjVersion",
+            asciidoctorjApi                 : "org.asciidoctor:asciidoctorj-api:$asciidoctorjVersion",
             assertjCore                     : "org.assertj:assertj-core:3.13.2",
             byteBuddy                       : "net.bytebuddy:byte-buddy:1.10.10",
             commonsEmail                    : "org.apache.commons:commons-email:1.5",
@@ -99,6 +101,7 @@ ext {
             springBootConfigurationProcessor: "org.springframework.boot:spring-boot-configuration-processor:$springBootVersion",
             springBootStarter               : "org.springframework.boot:spring-boot-starter:$springBootVersion",
             springBootStarterBatch          : "org.springframework.boot:spring-boot-starter-batch:$springBootVersion",
+            springBootStarterDataJpa        : "org.springframework.boot:spring-boot-starter-data-jpa:$springBootVersion",
             springBootStarterLog4j2         : "org.springframework.boot:spring-boot-starter-log4j2:$springBootVersion",
             springBootStarterTest           : "org.springframework.boot:spring-boot-starter-test:$springBootVersion",
             springBootStarterThymeleaf      : "org.springframework.boot:spring-boot-starter-thymeleaf:$springBootVersion",

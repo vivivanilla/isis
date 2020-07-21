@@ -100,22 +100,21 @@ include ':isis-testing-fakedata-integtests'
 include ':isis-testing-fixtures'
 include ':isis-testing-fixtures-applib'
 include ':isis-testing-h2console'
-include ':isis-testing-h2console:isis-testing-h2console-ui'
+include ':isis-testing-h2console-ui'
 include ':isis-testing-hsqldbmgr'
 include ':isis-testing-hsqldbmgr:isis-testing-hsqldbmgr-ui'
 include ':isis-testing-integtestsupport'
-include ':isis-testing-integtestsupport:isis-testing-integtestsupport-applib'
+include ':isis-testing-integtestsupport-applib'
 include ':isis-testing-specsupport'
 include ':isis-testing-specsupport:isis-testing-specsupport-applib'
 include ':isis-testing-unittestsupport'
-include ':isis-testing-unittestsupport:isis-testing-unittestsupport-applib'
+include ':isis-testing-unittestsupport-applib'
 include ':isis-valuetypes'
 include ':isis-valuetypes-asciidoc'
 include ':isis-valuetypes-asciidoc-applib'
 include ':isis-valuetypes-asciidoc-metamodel'
 include ':isis-valuetypes-asciidoc-persistence'
 include ':isis-valuetypes-asciidoc-persistence-jdo-dn5'
-include ':isis-valuetypes-asciidoc-ui'
 include ':isis-valuetypes-asciidoc-ui'
 include ':isis-valuetypes-asciidoc-ui-vaa'
 include ':isis-valuetypes-asciidoc-ui-vaa'
@@ -244,22 +243,21 @@ project(':isis-testing-fakedata-integtests').projectDir = "$rootDir/testing/fake
 project(':isis-testing-fixtures').projectDir = "$rootDir/testing/fixtures" as File
 project(':isis-testing-fixtures-applib').projectDir = "$rootDir/testing/fixtures/applib" as File
 project(':isis-testing-h2console').projectDir = "$rootDir/testing/h2console" as File
-project(':isis-testing-h2console:isis-testing-h2console-ui').projectDir = "$rootDir/testing/h2console/ui" as File
+project(':isis-testing-h2console-ui').projectDir = "$rootDir/testing/h2console/ui" as File
 project(':isis-testing-hsqldbmgr').projectDir = "$rootDir/testing/hsqldbmgr" as File
 project(':isis-testing-hsqldbmgr:isis-testing-hsqldbmgr-ui').projectDir = "$rootDir/testing/hsqldbmgr/ui" as File
 project(':isis-testing-integtestsupport').projectDir = "$rootDir/testing/integtestsupport" as File
-project(':isis-testing-integtestsupport:isis-testing-integtestsupport-applib').projectDir = "$rootDir/testing/integtestsupport/applib" as File
+project(':isis-testing-integtestsupport-applib').projectDir = "$rootDir/testing/integtestsupport/applib" as File
 project(':isis-testing-specsupport').projectDir = "$rootDir/testing/specsupport" as File
 project(':isis-testing-specsupport:isis-testing-specsupport-applib').projectDir = "$rootDir/testing/specsupport/applib" as File
 project(':isis-testing-unittestsupport').projectDir = "$rootDir/testing/unittestsupport" as File
-project(':isis-testing-unittestsupport:isis-testing-unittestsupport-applib').projectDir = "$rootDir/testing/unittestsupport/applib" as File
+project(':isis-testing-unittestsupport-applib').projectDir = "$rootDir/testing/unittestsupport/applib" as File
 project(':isis-valuetypes').projectDir = "$rootDir/valuetypes" as File
 project(':isis-valuetypes-asciidoc').projectDir = "$rootDir/valuetypes/asciidoc" as File
 project(':isis-valuetypes-asciidoc-applib').projectDir = "$rootDir/valuetypes/asciidoc/applib" as File
 project(':isis-valuetypes-asciidoc-metamodel').projectDir = "$rootDir/valuetypes/asciidoc/metamodel" as File
 project(':isis-valuetypes-asciidoc-persistence').projectDir = "$rootDir/valuetypes/asciidoc/persistence" as File
 project(':isis-valuetypes-asciidoc-persistence-jdo-dn5').projectDir = "$rootDir/valuetypes/asciidoc/persistence/jdo-dn5" as File
-project(':isis-valuetypes-asciidoc-ui').projectDir = "$rootDir/valuetypes/asciidoc/ui" as File
 project(':isis-valuetypes-asciidoc-ui').projectDir = "$rootDir/valuetypes/asciidoc/ui" as File
 project(':isis-valuetypes-asciidoc-ui-vaa').projectDir = "$rootDir/valuetypes/asciidoc/ui/vaadin" as File
 project(':isis-valuetypes-asciidoc-ui-vaa').projectDir = "$rootDir/valuetypes/asciidoc/ui/vaadin" as File

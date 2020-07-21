@@ -17,19 +17,23 @@ apply plugin: "org.rm3l.datanucleus-gradle-plugin"
 dependencies {
     compile project(':isis-applib')
     compile project(':isis-core-commons')
-    compile project(':isis-testing-fixtures-applib')
-    compile project(':isis-valuetypes-asciidoc-applib')
-    compile project(':isis-valuetypes-markdown-applib')
-
-    // ISIS-2374 compile('commons-httpclient:commons-httpclient:3.1')  // did not work for me
-    compile(Libs.httpClient)
-
+    compile project(':isis-extensions-cors-impl')
     compile project(':isis-extensions-exceldownload-ui')
-    compile project(':isis-testing-h2console:isis-testing-h2console-ui')
-    compile project(':isis-viewer-restfulobjects-jaxrsresteasy4')
+    compile project(':isis-extensions-modelannotation')
     compile project(':isis-extensions-secman-encryption-jbcrypt')
+    compile project(':isis-extensions-secman-model')
     compile project(':isis-extensions-secman-persistence-jdo')
     compile project(':isis-extensions-secman-shiro-realm')
-    compile project(':isis-extensions-modelannotation')
+    compile project(':isis-mavendeps-webapp')
+    compile project(':isis-persistence-jdo-datanucleus5')
+    compile project(':isis-testing-fixtures-applib')
+    compile project(':isis-testing-h2console-ui')
+    compile project(':isis-valuetypes-asciidoc-applib')
+    compile project(':isis-valuetypes-asciidoc-persistence-jdo-dn5')
+    compile project(':isis-valuetypes-markdown-applib')
+    compile project(':isis-valuetypes-markdown-persistence-jdo-dn5')
     compile project(':isis-valuetypes-sse-applib')
+    compile project(':isis-viewer-restfulobjects-jaxrsresteasy4')
+    implementation(Libs.h2)
+    implementation(Libs.httpClient)
 }

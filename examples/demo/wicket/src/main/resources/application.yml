@@ -17,11 +17,14 @@
 #
 # See also config/application.properties
 #
+server:
+  port: 8080
+
 cors:
   allowed:
-    origins: *
-    headers: *
-    methods: GET,POST,HEAD,PUT
+    origins: '*'
+    headers: '*'
+    methods: 'GET,POST,HEAD,PUT'
 
   exposed:
-    headers: *
+    headers: '*'

@@ -12,7 +12,7 @@ dependencies {
         exclude(module: 'snakeyaml')
     }
     compile(Libs.guava)
-    testCompile project(':isis-testing-unittestsupport:isis-testing-unittestsupport-applib')
+    testCompile project(':isis-testing-unittestsupport-applib')
 }
 
 task packageTests(type: Jar) {

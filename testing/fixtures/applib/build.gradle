@@ -4,7 +4,7 @@ apply plugin: 'war'
 dependencies {
     compile compile(Libs.jodaTime)
     compile project(':isis-subdomains-spring-applib')
-    providedCompile project(':isis-testing-integtestsupport:isis-testing-integtestsupport-applib')
+    providedCompile project(':isis-testing-integtestsupport-applib')
     compileOnly(Libs.javaxJdo)
     providedCompile project(':isis-persistence-jdo-applib')
     providedCompile project(':isis-core-runtime')
