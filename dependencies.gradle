@@ -20,6 +20,7 @@
 ext {
     asciidoctorjVersion = "2.4.0"
     cucumberVersion = "5.1.2"
+    datanucleusVersion = "5.2.3"
     jacksonVersion = "2.10.4"
     jaxApiVersion = "2.3.1"
     jmockVersion = "2.11.0"
@@ -47,10 +48,10 @@ ext {
             cucumberJava                    : "io.cucumber:cucumber-java:$cucumberVersion",
             cucumberSpring                  : "io.cucumber:cucumber-spring:$cucumberVersion",
             cucumberJunit                   : "io.cucumber:cucumber-junit:$cucumberVersion",
-            datanucleusCore                 : "org.datanucleus:datanucleus-core:5.2.2",
-            datanucleusApiJdo               : "org.datanucleus:datanucleus-api-jdo:5.2.2",
+            datanucleusCore                 : "org.datanucleus:datanucleus-core:$datanucleusVersion",
+            datanucleusApiJdo               : "org.datanucleus:datanucleus-api-jdo:$datanucleusVersion",
             datanucleusJdoQuery             : "org.datanucleus:datanucleus-jdo-query:5.0.9",
-            datanucleusRdbms                : "org.datanucleus:datanucleus-rdbms:5.2.1",
+            datanucleusRdbms                : "org.datanucleus:datanucleus-rdbms:$datanucleusVersion",
             datanucleusJodatime             : "org.datanucleus:datanucleus-jodatime:5.2.0-release",
             findbugsAnnotations             : "com.google.code.findbugs:annotations:2.0.1",
             flexmarkAll                     : "com.vladsch.flexmark:flexmark-all:0.34.32",

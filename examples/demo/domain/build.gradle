@@ -1,23 +1,33 @@
+plugins {
+    id 'java'
+    id "org.rm3l.datanucleus-gradle-plugin" version "1.5.0"
+}
+
 group = 'org.apache.isis.examples.apps'
 description = 'Apache Isis App - Demo (Domain)'
 
-buildscript {
-    repositories {
-        maven {
-            url "https://plugins.gradle.org/m2/"
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+sourceSets {
+    main {
+        resources {
+            srcDirs += "src/main/java"
+            include "**/*"
+            exclude "**/*.java"
         }
     }
-    dependencies {
-        classpath "org.rm3l:datanucleus-gradle-plugin:1.5.0"
+    test {
+        resources {
+            srcDirs += "src/test/java"
+            include "**/*"
+            exclude "**/*.java"
+        }
     }
 }
 
-apply plugin: "org.rm3l.datanucleus-gradle-plugin"
-
 dependencies {
-    compile project(':isis-applib')
-    compile project(':isis-core-commons')
-    compile project(':isis-extensions-cors-impl')
     compile project(':isis-extensions-exceldownload-ui')
     compile project(':isis-extensions-modelannotation')
     compile project(':isis-extensions-secman-encryption-jbcrypt')
@@ -25,15 +35,22 @@ dependencies {
     compile project(':isis-extensions-secman-persistence-jdo')
     compile project(':isis-extensions-secman-shiro-realm')
     compile project(':isis-mavendeps-webapp')
-    compile project(':isis-persistence-jdo-datanucleus5')
-    compile project(':isis-testing-fixtures-applib')
     compile project(':isis-testing-h2console-ui')
     compile project(':isis-valuetypes-asciidoc-applib')
-    compile project(':isis-valuetypes-asciidoc-persistence-jdo-dn5')
     compile project(':isis-valuetypes-markdown-applib')
-    compile project(':isis-valuetypes-markdown-persistence-jdo-dn5')
     compile project(':isis-valuetypes-sse-applib')
     compile project(':isis-viewer-restfulobjects-jaxrsresteasy4')
-    implementation(Libs.h2)
+    implementation(Libs.flexmarkAll)
     implementation(Libs.httpClient)
+//    testImplementation(Libs.assertjCore)
+}
+
+datanucleus {
+    enhance {
+        api 'JDO'
+        log4jConfiguration 'logging-dn-enhance.properties'
+        verbose true
+        persistenceUnitName 'PUinSupportOfGradleBuild'
+        //... other options are possible
+    }
 }

@@ -38,7 +38,7 @@ import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
 import demoapp.dom.types.jodatime.jodalocaldate.holder.JodaLocalDateHolder;
 
 //tag::class[]
-@PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
+//@PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
 @DatastoreIdentity(strategy = IdGeneratorStrategy.IDENTITY, column = "id")
 @DomainObject(
         objectType = "demo.JodaLocalDateJdo"
