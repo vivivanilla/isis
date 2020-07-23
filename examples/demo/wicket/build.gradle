@@ -31,3 +31,9 @@ task packageTests(type: Jar) {
     classifier = 'tests'
 }
 artifacts.archives packageTests
+
+tasks.withType(JavaExec) {
+    if (System.getProperty('DEBUG', 'false') == 'true') {
+        jvmArgs '-Xdebug', '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005'
+    }
+}
