@@ -50,24 +50,16 @@
 
 	<dependencies>
 
-		<!-- WEB APPLICATION DEPENDENCY BUNDLE -->
-
-		<dependency>
-			<groupId>org.apache.isis.mavendeps</groupId>
-			<artifactId>isis-mavendeps-webapp</artifactId>
-			<type>pom</type>
-		</dependency>
-
-
 		<!-- EXTENSIONS -->
 
 		<dependency>
 			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-modelannotation</artifactId>
+			<artifactId>isis-extensions-pdfjs-applib</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.isis.extensions</groupId>
-			<artifactId>isis-extensions-cors-impl</artifactId>
+			<artifactId>isis-extensions-modelannotation</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.isis.extensions</groupId>

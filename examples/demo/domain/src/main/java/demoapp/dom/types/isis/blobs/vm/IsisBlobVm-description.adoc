@@ -1,4 +1,4 @@
-JAXB supports `Blob` out-of-the-box, so no special annotations are required.
+The Apache Isis `Blob` value type provides its own implementation of `@XmlJavaTypeAdapter`, meaning that JAXB can serialize the state of this value type without any further annotations required on the view model itself:
 
 [source,java]
 ----
@@ -11,3 +11,5 @@ include::IsisBlobVm.java[tags=class]
 +
 This is the default for JAXB so no additional annotation required.
 
+
+include::../IsisBlobs-common.adoc[]

@@ -30,6 +30,7 @@ sourceSets {
 dependencies {
     compile project(':isis-extensions-exceldownload-ui')
     compile project(':isis-extensions-modelannotation')
+    compile project(':isis-extensions-pdfjs-applib')
     compile project(':isis-extensions-secman-encryption-jbcrypt')
     compile project(':isis-extensions-secman-model')
     compile project(':isis-extensions-secman-persistence-jdo')

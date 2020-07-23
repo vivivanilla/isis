@@ -20,7 +20,6 @@ package demoapp.dom.types.javalang.strings.holder;
 
 import org.apache.isis.applib.annotation.LabelPosition;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -28,22 +27,24 @@ import org.apache.isis.applib.annotation.Where;
 //tag::class[]
 public interface JavaLangStringHolder2 extends JavaLangStringHolder {
 
-    @Property
-    @PropertyLayout(                                                        // <.>
-            labelPosition = LabelPosition.LEFT,
-            describedAs = "labelPosition=LEFT",
-            hidden = Where.ALL_TABLES
+    @Property                                               // <.>
+    @PropertyLayout(
+        labelPosition = LabelPosition.LEFT,                 // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=LEFT)",
+        hidden = Where.ALL_TABLES
     )
-    @MemberOrder(name = "label-positions", sequence = "1")                  // <.>
+    @MemberOrder(name = "label-positions", sequence = "1")  // <.>
     default String getReadOnlyPropertyDerivedLabelPositionLeft() {
         return getReadOnlyProperty();
     }
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.TOP,
-            describedAs = "labelPosition=TOP",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.TOP,                  // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=TOP)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "2")
     default String getReadOnlyPropertyDerivedLabelPositionTop() {
@@ -52,9 +53,10 @@ public interface JavaLangStringHolder2 extends JavaLangStringHolder {
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.RIGHT,    // TODO: not honoured
-            describedAs = "labelPosition=RIGHT",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.RIGHT,                // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=RIGHT)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "3")
     default String getReadOnlyPropertyDerivedLabelPositionRight() {
@@ -63,9 +65,10 @@ public interface JavaLangStringHolder2 extends JavaLangStringHolder {
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.NONE,
-            describedAs = "labelPosition=NONE",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.NONE,                 // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=NONE)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "4")
     default String getReadOnlyPropertyDerivedLabelPositionNone() {

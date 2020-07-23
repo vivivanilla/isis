@@ -32,13 +32,13 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.JaxbAdapters;
+import org.apache.isis.applib.jaxb.JavaSqlJaxbAdapters;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder;
+import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder3;
 
 //tag::class[]
 @XmlRootElement(name = "root")
@@ -50,7 +50,7 @@ import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder;
 )
 @lombok.NoArgsConstructor                                                       // <.>
 public class JavaSqlDateVm
-        implements HasAsciiDocDescription, JavaSqlDateHolder {
+        implements HasAsciiDocDescription, JavaSqlDateHolder3 {
 
 //end::class[]
     public JavaSqlDateVm(java.sql.Date initialValue) {
@@ -62,26 +62,26 @@ public class JavaSqlDateVm
     @Title(prepend = "java.sql.Date view model: ")
     @MemberOrder(name = "read-only-properties", sequence = "1")
     @XmlElement(required = true)                                                // <.>
-    @XmlJavaTypeAdapter(JaxbAdapters.SqlDateAdapter.class)                      // <.>
+    @XmlJavaTypeAdapter(JavaSqlJaxbAdapters.DateToStringAdapter.class)                      // <.>
     @Getter @Setter
     private java.sql.Date readOnlyProperty;
 
     @Property(editing = Editing.ENABLED)                                        // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
     @XmlElement(required = true)
-    @XmlJavaTypeAdapter(JaxbAdapters.SqlDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaSqlJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.sql.Date readWriteProperty;
 
     @Property(optionality = Optionality.OPTIONAL)                               // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.SqlDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaSqlJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.sql.Date readOnlyOptionalProperty;
 
     @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "optional-properties", sequence = "2")
-    @XmlJavaTypeAdapter(JaxbAdapters.SqlDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaSqlJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.sql.Date readWriteOptionalProperty;
 

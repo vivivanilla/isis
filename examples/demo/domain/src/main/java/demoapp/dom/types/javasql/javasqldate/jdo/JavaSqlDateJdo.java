@@ -35,7 +35,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder;
+import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder3;
 
 //tag::class[]
 @PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
@@ -43,8 +43,8 @@ import demoapp.dom.types.javasql.javasqldate.holder.JavaSqlDateHolder;
 @DomainObject(
         objectType = "demo.JavaSqlDateJdo"
 )
-public class JavaSqlDateJdo                                          // <.>
-        implements HasAsciiDocDescription, JavaSqlDateHolder {
+public class JavaSqlDateJdo                                             // <.>
+        implements HasAsciiDocDescription, JavaSqlDateHolder3 {
 
 //end::class[]
     public JavaSqlDateJdo(java.sql.Date initialValue) {
@@ -55,19 +55,19 @@ public class JavaSqlDateJdo                                          // <.>
 //tag::class[]
     @Title(prepend = "java.sql.Date JDO entity: ")
     @MemberOrder(name = "read-only-properties", sequence = "1")
-    @Column(allowsNull = "false")                                               // <.>
+    @Column(allowsNull = "false")                                       // <.>
     @Getter @Setter
     private java.sql.Date readOnlyProperty;
 
-    @Property(editing = Editing.ENABLED)                                        // <.>
+    @Property(editing = Editing.ENABLED)                                // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
     @Column(allowsNull = "false")
     @Getter @Setter
     private java.sql.Date readWriteProperty;
 
-    @Property(optionality = Optionality.OPTIONAL)                               // <.>
+    @Property(optionality = Optionality.OPTIONAL)                       // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @Column(allowsNull = "true")                                                // <.>
+    @Column(allowsNull = "true")                                        // <.>
     @Getter @Setter
     private java.sql.Date readOnlyOptionalProperty;
 
@@ -76,6 +76,5 @@ public class JavaSqlDateJdo                                          // <.>
     @Column(allowsNull = "true")
     @Getter @Setter
     private java.sql.Date readWriteOptionalProperty;
-
 }
 //end::class[]

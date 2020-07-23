@@ -1,0 +1,14 @@
+group = 'org.apache.isis.examples.apps'
+description = 'Apache Isis App - Demo (Web)'
+
+apply plugin: 'java'
+
+dependencies {
+    compile project(':demo-domain')
+}
+
+task packageTests(type: Jar) {
+    from sourceSets.test.output
+    classifier = 'tests'
+}
+artifacts.archives packageTests

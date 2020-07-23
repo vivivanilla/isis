@@ -18,10 +18,11 @@
  */
 package org.apache.isis.core.metamodel.facets;
 
+import java.util.function.IntFunction;
+
 import org.apache.isis.core.commons.collections.Can;
 import org.apache.isis.core.commons.collections.ImmutableEnumSet;
 import org.apache.isis.core.metamodel.facetapi.FeatureType;
-import org.apache.isis.core.metamodel.facets.MethodLiteralConstants.SupportingMethodNamingConvention;
 import org.apache.isis.core.metamodel.progmodel.ProgrammingModel;
 import org.apache.isis.core.metamodel.spec.ObjectSpecification;
 import org.apache.isis.core.metamodel.spec.feature.Contributed;
@@ -35,11 +36,6 @@ import lombok.val;
 public abstract class MethodPrefixBasedFacetFactoryAbstract
 extends FacetFactoryAbstract
 implements MethodPrefixBasedFacetFactory {
-    
-    protected static final Can<SupportingMethodNamingConvention> PREFIX_BASED_NAMING = 
-            Can.of(
-                    SupportingMethodNamingConvention.PREFIX_PARAMNUM_ACTION,
-                    SupportingMethodNamingConvention.PREFIX_PARAMNAME_USING_PARAMETERS_RECORD); // new since v2 [ISIS-2362]
     
     @Getter(onMethod = @__(@Override))
     private final Can<String> prefixes;
@@ -60,6 +56,37 @@ implements MethodPrefixBasedFacetFactory {
         this.orphanValidation = orphanValidation;
         this.prefixes = prefixes;
     }
+    
+    // -- SUPPORTING METHOD NAMING CONVENTIONS
+
+    protected static final Can<String> getNamingConventionForActionSupport(
+            final ProcessMethodContext pmContext, 
+            final String prefix) {
+        val actionMethod = pmContext.getMethod();
+        val isMixin = pmContext.isMixinMain();
+        return MethodLiteralConstants.NAMING_ACTIONS
+                .map(naming->naming.getActionSupportingMethodName(actionMethod, prefix, isMixin));
+    }
+    
+    protected static final Can<IntFunction<String>> getNamingConventionForParameterSupport(
+            final ProcessMethodContext pmContext, 
+            final String prefix) {
+        val actionMethod = pmContext.getMethod();
+        val isMixin = pmContext.isMixinMain();
+        return MethodLiteralConstants.NAMING_PARAMETERS
+                .map(naming->naming.providerForParam(actionMethod, prefix, isMixin));
+    }
+    
+    protected static final Can<String> getNamingConventionForPropertyAndCollectionSupport(
+            final ProcessMethodContext pmContext, 
+            final String prefix) {
+        val actionMethod = pmContext.getMethod();
+        val isMixin = pmContext.isMixinMain();
+        return MethodLiteralConstants.NAMING_PROPERTIES_AND_COLLECTIONS
+                .map(naming->naming.getMemberSupportingMethodName(actionMethod, prefix, isMixin));
+    }
+    
+    // -- PROGRAMMING MODEL
     
     @Override
     public void refineProgrammingModel(ProgrammingModel programmingModel) {

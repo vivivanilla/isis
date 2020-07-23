@@ -32,6 +32,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
+import lombok.val;
+
 public class SheetPivoterTest {
 
     XSSFWorkbook workbook;
@@ -455,7 +459,7 @@ public class SheetPivoterTest {
                     // OK skip
                 } else {
                     if (c.getCellType() == CellType.NUMERIC) {
-                        Assertions.assertThat(c.getNumericCellValue()).isEqualTo(null);
+                        assertTrue(Double.isFinite(c.getNumericCellValue()));
                     } else {
                         Assertions.assertThat(c.getStringCellValue()).isEqualTo("");
                     }
@@ -466,10 +470,10 @@ public class SheetPivoterTest {
                 Assertions.assertThat(targetSheet.getRow(x).getCell(y).getStringCellValue()).isEqualTo(expectedValue);
             } else {
                 if (expectedValue.getClass() == Integer.class) {
-                    if (targetSheet.getRow(x).getCell(y) == null){
-                        Assertions.assertThat(targetSheet.getRow(x).getCell(y)).isEqualTo(Double.valueOf(expectedValue.toString()));
-                    } else {
-                        Assertions.assertThat(targetSheet.getRow(x).getCell(y).getNumericCellValue()).isEqualTo(Double.valueOf(expectedValue.toString()));
+                    val cellValue = targetSheet.getRow(x).getCell(y);
+                    if (cellValue != null){
+                        val expectedDouble = Double.valueOf(expectedValue.toString());  
+                        Assertions.assertThat(cellValue.getNumericCellValue()).isEqualTo(expectedDouble);
                     }
                 } else {
                     //fail!

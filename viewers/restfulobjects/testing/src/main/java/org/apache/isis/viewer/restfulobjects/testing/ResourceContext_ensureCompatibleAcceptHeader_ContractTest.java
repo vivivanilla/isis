@@ -35,7 +35,7 @@ import org.junit.Test;
 import org.springframework.web.context.WebApplicationContext;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.apache.isis.core.commons.internal.collections._Maps;
 import org.apache.isis.core.internaltestsupport.jmocking.JUnitRuleMockery2;
@@ -57,6 +57,8 @@ import lombok.val;
 
 public abstract class ResourceContext_ensureCompatibleAcceptHeader_ContractTest {
 
+    /*sonar-ignore-on*/
+    
     @Rule public JUnitRuleMockery2 context = 
             JUnitRuleMockery2.createFor(JUnitRuleMockery2.Mode.INTERFACES_AND_CLASSES);
 
@@ -212,5 +214,6 @@ public abstract class ResourceContext_ensureCompatibleAcceptHeader_ContractTest 
                 mockHttpServletRequest, null, null,
                 metaModelContext, null, null);
     }
-
+    
+    /*sonar-ignore-off*/
 }

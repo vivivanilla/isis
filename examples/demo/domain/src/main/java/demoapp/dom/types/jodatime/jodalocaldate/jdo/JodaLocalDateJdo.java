@@ -21,8 +21,6 @@ package demoapp.dom.types.jodatime.jodalocaldate.jdo;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
-import javax.jdo.annotations.IdentityType;
-import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -31,11 +29,10 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
+import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
+import demoapp.dom.types.jodatime.jodalocaldate.holder.JodaLocalDateHolder3;
 import lombok.Getter;
 import lombok.Setter;
-
-import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.jodatime.jodalocaldate.holder.JodaLocalDateHolder;
 
 //tag::class[]
 //@PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
@@ -44,7 +41,7 @@ import demoapp.dom.types.jodatime.jodalocaldate.holder.JodaLocalDateHolder;
         objectType = "demo.JodaLocalDateJdo"
 )
 public class JodaLocalDateJdo                                          // <.>
-        implements HasAsciiDocDescription, JodaLocalDateHolder {
+        implements HasAsciiDocDescription, JodaLocalDateHolder3 {
 
 //end::class[]
     public JodaLocalDateJdo(org.joda.time.LocalDate initialValue) {

@@ -32,13 +32,13 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.JaxbAdapters;
+import org.apache.isis.applib.jaxb.JavaTimeJaxbAdapters;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.javatime.javatimeoffsettime.holder.JavaTimeOffsetTimeHolder;
+import demoapp.dom.types.javatime.javatimeoffsettime.holder.JavaTimeOffsetTimeHolder3;
 
 //tag::class[]
 @XmlRootElement(name = "root")
@@ -50,7 +50,7 @@ import demoapp.dom.types.javatime.javatimeoffsettime.holder.JavaTimeOffsetTimeHo
 )
 @lombok.NoArgsConstructor                                                       // <.>
 public class JavaTimeOffsetTimeVm
-        implements HasAsciiDocDescription, JavaTimeOffsetTimeHolder {
+        implements HasAsciiDocDescription, JavaTimeOffsetTimeHolder3 {
 
 //end::class[]
     public JavaTimeOffsetTimeVm(java.time.OffsetTime initialValue) {
@@ -62,26 +62,26 @@ public class JavaTimeOffsetTimeVm
     @Title(prepend = "java.time.OffsetTime view model: ")
     @MemberOrder(name = "read-only-properties", sequence = "1")
     @XmlElement(required = true)                                                // <.>
-    @XmlJavaTypeAdapter(JaxbAdapters.OffsetTimeAdapter.class)               // <.>
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.OffsetTimeAdapter.class)               // <.>
     @Getter @Setter
     private java.time.OffsetTime readOnlyProperty;
 
     @Property(editing = Editing.ENABLED)                                        // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
     @XmlElement(required = true)
-    @XmlJavaTypeAdapter(JaxbAdapters.OffsetTimeAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.OffsetTimeAdapter.class)
     @Getter @Setter
     private java.time.OffsetTime readWriteProperty;
 
     @Property(optionality = Optionality.OPTIONAL)                               // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.OffsetTimeAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.OffsetTimeAdapter.class)
     @Getter @Setter
     private java.time.OffsetTime readOnlyOptionalProperty;
 
     @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "optional-properties", sequence = "2")
-    @XmlJavaTypeAdapter(JaxbAdapters.OffsetTimeAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.OffsetTimeAdapter.class)
     @Getter @Setter
     private java.time.OffsetTime readWriteOptionalProperty;
 

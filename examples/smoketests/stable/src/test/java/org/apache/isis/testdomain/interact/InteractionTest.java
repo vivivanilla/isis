@@ -225,7 +225,7 @@ class InteractionTest extends InteractionTestAbstract {
         val pendingArgs = managedAction.getInteractionHead().defaults();
      
         val expectedDefaults = Can.of(
-                new InteractionDemo_biArgEnabled(null).default0Act(),
+                new InteractionDemo_biArgEnabled(null).defaultA(null),
                 0);
         val actualDefaults = pendingArgs.getParamValues();
         
@@ -245,9 +245,9 @@ class InteractionTest extends InteractionTestAbstract {
      
         val mixin = new InteractionDemo_multiInt(null);
         val expectedDefaults = Can.<Integer>of(
-                mixin.default0Act(),
-                mixin.default1Act(),
-                mixin.default2Act());
+                mixin.defaultA(null),
+                mixin.defaultB(null),
+                mixin.defaultC(null));
         
         assertComponentWiseUnwrappedEquals(expectedDefaults, pendingArgs.getParamValues());
         
@@ -261,9 +261,9 @@ class InteractionTest extends InteractionTestAbstract {
         uiParam.simulateChoiceSelect(3); // select 4th choice
         
         val expectedParamsAfter = Can.<Integer>of(
-                mixin.choices0Act()[3],
-                mixin.default1Act(),
-                mixin.default2Act());
+                mixin.choicesA(null)[3],
+                mixin.defaultB(null),
+                mixin.defaultC(null));
         
         assertComponentWiseUnwrappedEquals(expectedParamsAfter, pendingArgs.getParamValues());
         
@@ -281,9 +281,9 @@ class InteractionTest extends InteractionTestAbstract {
      
         val mixin = new InteractionDemo_multiEnum(null);
         val expectedDefaults = Can.<DemoEnum>of(
-                mixin.default0Act(),
-                mixin.default1Act(),
-                mixin.default2Act());
+                mixin.defaultA(null),
+                mixin.defaultB(null),
+                mixin.defaultC(null));
         
         assertComponentWiseUnwrappedEquals(expectedDefaults, pendingArgs.getParamValues());
         
@@ -298,8 +298,8 @@ class InteractionTest extends InteractionTestAbstract {
         
         val expectedParamsAfter = Can.<DemoEnum>of(
                 DemoEnum.values()[3],
-                mixin.default1Act(),
-                mixin.default2Act());
+                mixin.defaultB(null),
+                mixin.defaultC(null));
         
         assertComponentWiseUnwrappedEquals(expectedParamsAfter, pendingArgs.getParamValues());
     }
@@ -322,7 +322,7 @@ class InteractionTest extends InteractionTestAbstract {
         
         assertTrue(param0Choices.getValue().isEmpty());
         
-        val expectedChoices = new InteractionDemo_biArgEnabled(null).choices1Act();
+        val expectedChoices = new InteractionDemo_biArgEnabled(null).choicesB(null);
         val actualChoices = param1Choices.getValue();
         
         assertComponentWiseUnwrappedEquals(expectedChoices, actualChoices);
@@ -339,15 +339,26 @@ class InteractionTest extends InteractionTestAbstract {
         
         val managedAction = actionInteraction.getManagedAction().get();
         val pendingArgs = managedAction.startParameterNegotiation();
-        final int choiceParamNr = 1;
         
-        //TODO also test param 0 ... SimulatedUiComponent<T>
+        final int firstParamNr = 0;
+        
+        SimulatedUiComponent uiParam0 = new SimulatedUiComponent();
+        uiParam0.bind(pendingArgs, firstParamNr); // bind to first param
+        
+        // UI component's value should be initialized to initial defaults
+        assertEquals(new InteractionDemo_biArgEnabled(null).defaultA(null), uiParam0.getValue().getPojo());
+        
+        uiParam0.simulateValueChange(6);
+        // simulated change should have been propagated to the backend/model
+        assertEquals(6, pendingArgs.getParamValue(firstParamNr).getPojo());
+        
+        final int choiceParamNr = 1;
         
         SimulatedUiChoices uiParam1 = new SimulatedUiChoices();
         uiParam1.bind(pendingArgs, choiceParamNr); // bind to param that has choices
         uiParam1.simulateChoiceSelect(2); // select 3rd choice
 
-        val expectedChoices = new InteractionDemo_biArgEnabled(null).choices1Act();
+        val expectedChoices = new InteractionDemo_biArgEnabled(null).choicesB(null);
         val expectedChoice = expectedChoices[2]; // actual 3rd choice
         
         Object actualChoiceAsSeenByBackend = pendingArgs.getParamValue(choiceParamNr).getPojo();

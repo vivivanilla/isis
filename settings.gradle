@@ -2,6 +2,7 @@ rootProject.name = 'isis-all'
 
 include ':demo-parent'
 include ':demo-domain'
+include ':demo-web'
 include ':demo-wicket'
 include ':isis'
 include ':isis-applib'
@@ -145,6 +146,7 @@ include ':isis-viewer-wicket-viewer'
 include ':smoketests'
 project(':demo-parent').projectDir = "$rootDir/examples/demo" as File
 project(':demo-domain').projectDir = "$rootDir/examples/demo/domain" as File
+project(':demo-web').projectDir = "$rootDir/examples/demo/web" as File
 project(':demo-wicket').projectDir = "$rootDir/examples/demo/wicket" as File
 project(':isis').projectDir = "$rootDir/core" as File
 project(':isis-applib').projectDir = "$rootDir/api/applib" as File

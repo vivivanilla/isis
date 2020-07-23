@@ -29,7 +29,7 @@ import org.junit.Test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.nullValue;
-import static org.junit.Assert.assertThat;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.apache.isis.core.internaltestsupport.jmocking.JUnitRuleMockery2;
 import org.apache.isis.viewer.restfulobjects.applib.JsonRepresentation;
@@ -53,11 +53,13 @@ public abstract class RestfulObjectsApplicationExceptionMapper_Test_Contract {
 
     @Before
     public void setUp() throws Exception {
+        /*sonar-ignore-on*/
         exceptionMapper = new ExceptionMapperForRestfulObjectsApplication() {
             {
                 httpHeaders = mockHttpHeaders;
             }
         };
+        /*sonar-ignore-off*/
     }
 
     @Test

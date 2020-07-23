@@ -30,7 +30,7 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.jodatime.jodalocaldatetime.holder.JodaLocalDateTimeHolder;
+import demoapp.dom.types.jodatime.jodalocaldatetime.holder.JodaLocalDateTimeHolder3;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -41,7 +41,7 @@ import lombok.Setter;
         objectType = "demo.JodaLocalDateTimeJdo"
 )
 public class JodaLocalDateTimeJdo                                          // <.>
-        implements HasAsciiDocDescription, JodaLocalDateTimeHolder {
+        implements HasAsciiDocDescription, JodaLocalDateTimeHolder3 {
 
 //end::class[]
     public JodaLocalDateTimeJdo(org.joda.time.LocalDateTime initialValue) {

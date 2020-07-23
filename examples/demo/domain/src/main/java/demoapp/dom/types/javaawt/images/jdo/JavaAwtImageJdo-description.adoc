@@ -1,4 +1,4 @@
-JDO supports `Image` out-of-the-box, so no special annotations are required.
+JDO supports `java.awt.Image` out-of-the-box, so no special annotations are required.
 
 [source,java]
 ----
@@ -13,3 +13,4 @@ Apache Isis assumes properties are mandatory, so no additional annotation is req
 <.> optional property as defined to JDO/DataNucleus
 
 
+include::../JavaAwtImages-common.adoc[]

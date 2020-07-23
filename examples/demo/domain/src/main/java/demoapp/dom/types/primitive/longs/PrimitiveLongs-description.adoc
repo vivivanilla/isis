@@ -7,53 +7,21 @@ From here you can:
 
 Because `long` is a primitive value, the properties on these domain objects are mandatory.
 
-== Common interface
+== Common interfaces
 
-These objects both implement a common interface, `PrimitiveLongHolder`:
+The entity and view model types both implement some common interfaces.
+
+=== PrimitiveLongHolder
+
+The `PrimitiveLongHolder` interface is used to contribute a number of mixins to both types:
 
 [source,java]
 ----
 include::holder/PrimitiveLongHolder.java[tags=class]
 ----
 
-There is also an extension of this interface, `PrimitiveLongHolder2`, with default methods demonstrating the use of label positions:
+=== PrimitiveLongHolder2
 
-[source,java]
-----
-include::holder/PrimitiveLongHolder2.java[tags=class]
-----
+The `PrimitiveLongHolder2` interface is used to demonstrate support for label positions using `@PropertyLayout(labelPosition=...)`.
 
-<.> The default methods have annotations that are automatically inherited.
-<.> Using `@MemberOrder` positions the properties into the appropriate `<field-set>` within the `Xxx.layout.xml` layout file.
-
-
-== Mixin actions
-
-A number of mixin actions contribute through this interface, demonstrate the use of `long` as a parameter and as a return type.
-For example:
-
-* the `updateReadOnlyProperty` action is:
-+
-[source,java]
-----
-include::holder/PrimitiveLongHolder_updateReadOnlyProperty.java[tags=class]
-----
-
-* the `actionReturning` action is:
-+
-[source,java]
-----
-include::holder/PrimitiveLongHolder_actionReturning.java[tags=class]
-----
-
-== Mixin properties
-
-We also use the interface to contribute a mixin property:
-
-* the `mixinProperty` property:
-+
-[source,java]
-----
-include::holder/PrimitiveLongHolder_mixinProperty.java[tags=class]
-----
-
+Further details, along with the effect of this annotation, can be seen on the entity and view model object pages.

@@ -23,10 +23,8 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import org.apache.isis.applib.value.Blob;
 import org.apache.isis.applib.value.Clob;
 import org.apache.isis.applib.value.NamedWithMimeType;
-import org.apache.isis.core.commons.internal.base._Bytes;
 import org.apache.isis.core.commons.internal.base._Strings;
 import org.apache.isis.core.commons.internal.resources._Resources;
 
@@ -41,7 +39,7 @@ public class IsisClobsSamples implements Samples<Clob> {
     @Override
     public Stream<Clob> stream() {
         return Stream.of(
-                "document.txt", "file-sample_100kB.rtf")
+                "document.txt", "file-sample_100kB.rtf", "all_well.xml")
                 .map(this::loadClob);
     }
 
@@ -54,6 +52,7 @@ public class IsisClobsSamples implements Samples<Clob> {
     private static NamedWithMimeType.CommonMimeType mimeTypeFor(String name) {
         if (name.endsWith(".txt")) return NamedWithMimeType.CommonMimeType.TXT;
         if (name.endsWith(".rtf")) return NamedWithMimeType.CommonMimeType.RTF;
+        if (name.endsWith(".xml")) return NamedWithMimeType.CommonMimeType.XML;
         throw new IllegalArgumentException(name);
     }
 

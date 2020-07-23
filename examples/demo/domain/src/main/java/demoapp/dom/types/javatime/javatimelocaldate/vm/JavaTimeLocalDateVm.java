@@ -32,13 +32,13 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.JaxbAdapters;
+import org.apache.isis.applib.jaxb.JavaTimeJaxbAdapters;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.javatime.javatimelocaldate.holder.JavaTimeLocalDateHolder;
+import demoapp.dom.types.javatime.javatimelocaldate.holder.JavaTimeLocalDateHolder3;
 
 //tag::class[]
 @XmlRootElement(name = "root")
@@ -50,7 +50,7 @@ import demoapp.dom.types.javatime.javatimelocaldate.holder.JavaTimeLocalDateHold
 )
 @lombok.NoArgsConstructor                                                       // <.>
 public class JavaTimeLocalDateVm
-        implements HasAsciiDocDescription, JavaTimeLocalDateHolder {
+        implements HasAsciiDocDescription, JavaTimeLocalDateHolder3 {
 
 //end::class[]
     public JavaTimeLocalDateVm(java.time.LocalDate initialValue) {
@@ -62,26 +62,26 @@ public class JavaTimeLocalDateVm
     @Title(prepend = "java.time.LocalDate view model: ")
     @MemberOrder(name = "read-only-properties", sequence = "1")
     @XmlElement(required = true)                                                // <.>
-    @XmlJavaTypeAdapter(JaxbAdapters.LocalDateAdapter.class)                    // <.>
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.LocalDateToStringAdapter.class)                    // <.>
     @Getter @Setter
     private java.time.LocalDate readOnlyProperty;
 
     @Property(editing = Editing.ENABLED)                                        // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
     @XmlElement(required = true)
-    @XmlJavaTypeAdapter(JaxbAdapters.LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.LocalDateToStringAdapter.class)
     @Getter @Setter
     private java.time.LocalDate readWriteProperty;
 
     @Property(optionality = Optionality.OPTIONAL)                               // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.LocalDateToStringAdapter.class)
     @Getter @Setter
     private java.time.LocalDate readOnlyOptionalProperty;
 
     @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "optional-properties", sequence = "2")
-    @XmlJavaTypeAdapter(JaxbAdapters.LocalDateAdapter.class)
+    @XmlJavaTypeAdapter(JavaTimeJaxbAdapters.LocalDateToStringAdapter.class)
     @Getter @Setter
     private java.time.LocalDate readWriteOptionalProperty;
 

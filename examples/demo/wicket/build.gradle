@@ -15,6 +15,8 @@ apply plugin: 'java'
 
 dependencies {
     compile project(':demo-domain')
+    compile project(':demo-web')
+    compile project(':isis-extensions-pdfjs-ui')
     compile project(':isis-valuetypes-asciidoc-metamodel')
     compile project(':isis-valuetypes-asciidoc-persistence-jdo-dn5')
     compile project(':isis-valuetypes-asciidoc-ui-wkt')

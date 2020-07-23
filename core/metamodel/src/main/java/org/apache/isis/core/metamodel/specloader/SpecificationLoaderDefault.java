@@ -39,6 +39,7 @@ import org.springframework.stereotype.Service;
 
 import org.apache.isis.applib.annotation.OrderPrecedence;
 import org.apache.isis.applib.services.registry.ServiceRegistry;
+import org.apache.isis.core.commons.internal.assertions._Assert;
 import org.apache.isis.core.commons.internal.base._Blackhole;
 import org.apache.isis.core.commons.internal.base._Lazy;
 import org.apache.isis.core.commons.internal.base._Timing;
@@ -230,7 +231,6 @@ public class SpecificationLoaderDefault implements SpecificationLoader {
 
         log.info(" - categorizing types from class-path scan");
 
-        val domainServiceSpecs = _Lists.<ObjectSpecification>newArrayList();
         val domainObjectSpecs = _Lists.<ObjectSpecification>newArrayList();
 
         typeRegistry.snapshotIntrospectableTypes().entrySet()
@@ -262,9 +262,7 @@ public class SpecificationLoaderDefault implements SpecificationLoader {
         log.info(" - introspecting {} value types", valueTypeSpecs.size());
         introspect(valueTypeSpecs, IntrospectionState.TYPE_AND_MEMBERS_INTROSPECTED);
 
-        log.info(" - introspecting {} domain services", domainServiceSpecs.size());
-        introspect(domainServiceSpecs, IntrospectionState.TYPE_AND_MEMBERS_INTROSPECTED);
-
+        log.info(" - introspecting {} managed beans contributing (aka domain services)", typeRegistry.getManagedBeansContributing().size());
         log.info(" - introspecting {} mixins", typeRegistry.getMixinTypes().size());
         log.info(" - introspecting {} entities", typeRegistry.getEntityTypes().size());
         log.info(" - introspecting {} view models", typeRegistry.getViewModelTypes().size());
@@ -414,7 +412,8 @@ public class SpecificationLoaderDefault implements SpecificationLoader {
         // validators might discover new specs 
         // to prevent deadlocks, we queue up validation requests to be processed later
         if(validationInProgress.get()) {
-            validationQueue.offer(objectSpec);
+            _Assert.assertTrue(validationQueue.offer(objectSpec), 
+                    "The Validation Queue is expected to never deadlock or grow beyond its capacity.");
             return; 
         }
         

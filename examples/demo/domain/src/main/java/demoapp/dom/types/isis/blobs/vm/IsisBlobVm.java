@@ -31,17 +31,13 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.annotation.Where;
-import org.apache.isis.applib.util.JaxbAdapters;
 import org.apache.isis.applib.value.Blob;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.isis.blobs.holder.IsisBlobHolder;
+import demoapp.dom.types.isis.blobs.holder.IsisBlobHolder2;
 
 //tag::class[]
 @XmlRootElement(name = "root")
@@ -53,7 +49,7 @@ import demoapp.dom.types.isis.blobs.holder.IsisBlobHolder;
 )
 @lombok.NoArgsConstructor                                                       // <.>
 public class IsisBlobVm
-        implements HasAsciiDocDescription, IsisBlobHolder {
+        implements HasAsciiDocDescription, IsisBlobHolder2 {
 
 //end::class[]
     public IsisBlobVm(Blob initialValue) {
@@ -67,27 +63,23 @@ public class IsisBlobVm
     }
 
     @MemberOrder(name = "read-only-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.BlobAdapter.class)                         // <.>
     @XmlElement(required = true)                                                // <.>
     @Getter @Setter
     private Blob readOnlyProperty;
 
     @Property(editing = Editing.ENABLED)                                        // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.BlobAdapter.class)
     @XmlElement(required = true)
     @Getter @Setter
     private Blob readWriteProperty;
 
     @Property(optionality = Optionality.OPTIONAL)                               // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.BlobAdapter.class)
     @Getter @Setter
     private Blob readOnlyOptionalProperty;
 
     @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "optional-properties", sequence = "2")
-    @XmlJavaTypeAdapter(JaxbAdapters.BlobAdapter.class)
     @Getter @Setter
     private Blob readWriteOptionalProperty;
 

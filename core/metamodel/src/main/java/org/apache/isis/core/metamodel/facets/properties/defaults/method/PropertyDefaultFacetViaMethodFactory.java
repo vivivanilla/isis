@@ -53,17 +53,19 @@ public class PropertyDefaultFacetViaMethodFactory extends MethodPrefixBasedFacet
 
         val getterOrMixinMain = processMethodContext.getMethod();
         val namingConvention = processMethodContext.isMixinMain() 
-                ? PREFIX_BASED_NAMING.map(naming->naming.providerForAction(getterOrMixinMain, PREFIX))
-                : PREFIX_BASED_NAMING.map(naming->naming.providerForMember(getterOrMixinMain, PREFIX)); // handles getters
+                ? getNamingConventionForActionSupport(processMethodContext, PREFIX)
+                : getNamingConventionForPropertyAndCollectionSupport(processMethodContext, PREFIX); // handles getters
 
         val cls = processMethodContext.getCls();
         val returnType = getterOrMixinMain.getReturnType();
         val method = MethodFinder2
                 .findMethod(
                     cls,
-                    namingConvention.map(x->x.get()), 
+                    namingConvention, 
                     returnType, 
-                    NO_ARG);
+                    NO_ARG)
+                .findFirst()
+                .orElse(null);
         if (method == null) {
             return;
         }

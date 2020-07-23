@@ -52,19 +52,20 @@ public class PropertyChoicesFacetViaMethodFactory extends MethodPrefixBasedFacet
         }
 
         val getterOrMixinMain = processMethodContext.getMethod();
-        
         val namingConvention = processMethodContext.isMixinMain() 
-                ? PREFIX_BASED_NAMING.map(naming->naming.providerForAction(getterOrMixinMain, PREFIX))
-                : PREFIX_BASED_NAMING.map(naming->naming.providerForMember(getterOrMixinMain, PREFIX)); // handles getters
+                ? getNamingConventionForActionSupport(processMethodContext, PREFIX)
+                : getNamingConventionForPropertyAndCollectionSupport(processMethodContext, PREFIX); // handles getters
 
         val cls = processMethodContext.getCls();
         val returnType = getterOrMixinMain.getReturnType();
         val choicesMethod = MethodFinder2
                 .findMethod(
                     cls, 
-                    namingConvention.map(x->x.get()), 
+                    namingConvention, 
                     NO_RETURN, 
-                    NO_ARG);
+                    NO_ARG)
+                .findFirst()
+                .orElse(null);
         if (choicesMethod == null) {
             return;
         }

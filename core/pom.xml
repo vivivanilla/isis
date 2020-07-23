@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor
-	license agreements. See the NOTICE file distributed with this work for additional
-	information regarding copyright ownership. The ASF licenses this file to
-	you under the Apache License, Version 2.0 (the "License"); you may not use
-	this file except in compliance with the License. You may obtain a copy of
-	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required
-	by applicable law or agreed to in writing, software distributed under the
-	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS
-	OF ANY KIND, either express or implied. See the License for the specific
+<!-- Licensed to the Apache Software Foundation (ASF) under one or more contributor 
+	license agreements. See the NOTICE file distributed with this work for additional 
+	information regarding copyright ownership. The ASF licenses this file to 
+	you under the Apache License, Version 2.0 (the "License"); you may not use 
+	this file except in compliance with the License. You may obtain a copy of 
+	the License at http://www.apache.org/licenses/LICENSE-2.0 Unless required 
+	by applicable law or agreed to in writing, software distributed under the 
+	License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS 
+	OF ANY KIND, either express or implied. See the License for the specific 
 	language governing permissions and limitations under the License. -->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -144,7 +144,7 @@
 
 		<maven-eclipse-plugin.version>2.10</maven-eclipse-plugin.version>
 		<maven-release-plugin.version>2.5.3</maven-release-plugin.version>		<!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
-
+		
 		<!-- See https://nodejs.org/en/download/ for latest node and npm (lts) versions -->
 		<node.version>v12.14.0</node.version>
 		<npm.version>6.13.1</npm.version>
@@ -164,8 +164,6 @@
 
 		<select2.version>4.0.10</select2.version>
 		<shiro.version>1.4.1</shiro.version>
-		<!--cors-filter.version>1.0.1</cors-filter.version-->
-		<cors-filter.version>2.9</cors-filter.version>
 		<simpleslackapi.version>1.2.0</simpleslackapi.version>
 		<slf4j-api.version>1.7.26</slf4j-api.version> <!-- as provided by spring-boot, needed to solve convergence issues -->
 		<spring-framework.version>5.2.7.RELEASE</spring-framework.version>
@@ -337,13 +335,13 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-surefire-report-plugin</artifactId>
 					<version>${maven-surefire-plugin.version}</version>
-					<!-- goal:report is a report so is configured in the reporting section;
+					<!-- goal:report is a report so is configured in the reporting section; 
 						invokes phase:test before running itself -->
 				</plugin>
 
 
 				<!-- Artifacts derived from code: javadoc; supports both build and report
-					goals; not included as a build plugin except through profiles (to speed up
+					goals; not included as a build plugin except through profiles (to speed up 
 					the build) -->
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -351,7 +349,7 @@
 					<version>${maven-javadoc-plugin.version}</version>
 					<inherited>true</inherited>
 					<configuration>
-						<!-- as per http://stackoverflow.com/a/16743137/56880; only if using
+						<!-- as per http://stackoverflow.com/a/16743137/56880; only if using 
 							java 8 to build -->
 						<!-- <additionalparam>-Xdoclint:none</additionalparam> -->
 						<debug>true</debug>
@@ -380,7 +378,7 @@
 						</additionalparam>
 -->
 					</configuration>
-					<!-- goal:aggregate (for aggregator modules) has no binding; explicitly
+					<!-- goal:aggregate (for aggregator modules) has no binding; explicitly 
 						bound in profiles -->
 					<!-- goal:jar (for non-aggregator modules) binds to phase:package -->
 					<!-- goal:test-jar (for non-aggregator modules) binds to phase:package -->
@@ -450,7 +448,7 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>${maven-jar-plugin.version}</version>
 					<!-- goal:jar binds to phase:package -->
-					<!-- goal:test-jar supposedly binds to phase:package, but seems to need
+					<!-- goal:test-jar supposedly binds to phase:package, but seems to need 
 						this explicit binding. -->
 					<executions>
 						<execution>
@@ -483,7 +481,7 @@
 								<SCM-Revision>${git.commit.id.abbrev}</SCM-Revision>
 								<!-- required for DN plugin.xml loading -->
 								<Bundle-SymbolicName>${jar-plugin.automaticModuleName}</Bundle-SymbolicName>
-								<!-- no requirement as of yet. <Bundle-ManifestVersion>2</Bundle-ManifestVersion>
+								<!-- no requirement as of yet. <Bundle-ManifestVersion>2</Bundle-ManifestVersion> 
 									<Bundle-Name>${jar-plugin.automaticModuleName}</Bundle-Name> <Bundle-Version>2.0.0-SNAPSHOT</Bundle-Version>
 									<Bundle-Vendor>Apache Isis™ Project</Bundle-Vendor> -->
 							</manifestEntries>
@@ -525,11 +523,11 @@
 						<pushChanges>false</pushChanges>
 						<waitBeforeTagging>1</waitBeforeTagging>
 					</configuration>
-					<!-- goal:clean (for aggregator modules) has no bindings; cleans up
+					<!-- goal:clean (for aggregator modules) has no bindings; cleans up 
 						release.properties and any backup POM files -->
-					<!-- goal:prepare (for aggregator modules) has no bindings; prepares
+					<!-- goal:prepare (for aggregator modules) has no bindings; prepares 
 						for release in SCM (modifying x.x-SNAPSHOT to x.x) -->
-					<!-- goal:update-versions (for aggregator modules) has no bindings;
+					<!-- goal:update-versions (for aggregator modules) has no bindings; 
 						updates versions eg to SNAPSHOT -->
 					<!-- etc; none of the goals has a binding. -->
 				</plugin>
@@ -548,12 +546,12 @@
 								<version>[1.8.0,)</version>
 							</requireJavaVersion>
 							<!-- seemingly not compatible with use of 2.0.0-SNAPSHOT placeholders
-								<requirePluginVersions> <message>All plugin versions must be defined!</message>
+								<requirePluginVersions> <message>All plugin versions must be defined!</message> 
 								<banLatest>true</banLatest> <banRelease>true</banRelease> </requirePluginVersions> -->
 							<DependencyConvergence />
 						</rules>
 					</configuration>
-					<!-- goal:enforce supposedly binds to phase:validate, but explicit binding
+					<!-- goal:enforce supposedly binds to phase:validate, but explicit binding 
 						seems to be required -->
 					<executions>
 						<execution>
@@ -595,10 +593,10 @@
 		</pluginManagement>
 
 
-		<!-- build plugins; apply to all inheriting modules. Note that some plugins
-			also come from the "super-POM" for the default bindings. For example, in
-			the 'default' lifecycle, the resources, compiler, surefire, jar, install
-			and deploy plugins are automatically included because they provide the default
+		<!-- build plugins; apply to all inheriting modules. Note that some plugins 
+			also come from the "super-POM" for the default bindings. For example, in 
+			the 'default' lifecycle, the resources, compiler, surefire, jar, install 
+			and deploy plugins are automatically included because they provide the default 
 			bindings. For the 'site' lifecycle, the site plugin is automatically included. -->
 		<plugins>
 			<plugin>
@@ -615,14 +613,14 @@
 							<goal>process</goal>
 						</goals>
 						<configuration>
-
+						
 						    <!-- Reference the supplemental-model artifact from module supplemental-model -->
 				            <supplementalModelArtifacts>
 				            	<supplementalModelArtifact>org.apache.isis:supplemental-model:1.0</supplementalModelArtifact>
 				            </supplementalModelArtifacts>
-
+						
 							<runOnlyAtExecutionRoot>true</runOnlyAtExecutionRoot>
-
+							
 							 <!-- Specify the path, relative to the JAR root, where the supplemental model file is located -->
 							<supplementalModels>
 								<supplementalModel>supplemental-models.xml</supplementalModel>
@@ -876,7 +874,7 @@
 				<artifactId>hibernate-validator</artifactId>
 				<version>${hibernate-validator.version}</version>
 			</dependency>
-
+			
 			<dependency>
 			    <groupId>joda-time</groupId>
 			    <artifactId>joda-time</artifactId>
@@ -1198,12 +1196,6 @@
 				<groupId>org.apache.shiro</groupId>
 				<artifactId>shiro-web</artifactId>
 				<version>${shiro.version}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>org.ebaysf.web</groupId>
-				<artifactId>cors-filter</artifactId>
-				<version>${cors-filter.version}</version>
 			</dependency>
 
 			<dependency>
@@ -1706,8 +1698,8 @@
 		</profile>
 
 		<profile>
-			<!-- as per https://stackoverflow.com/a/28860520/56880 allows -Dgpg.passphrase=
-				to be used rather than gpg.useagent inherited from parent. Note that this
+			<!-- as per https://stackoverflow.com/a/28860520/56880 allows -Dgpg.passphrase= 
+				to be used rather than gpg.useagent inherited from parent. Note that this 
 				requires gpg v2.1+ -->
 			<id>gpg</id>
 			<activation>
@@ -1815,7 +1807,7 @@
 	</profiles>
 
 	<modules>
-
+	
 		<module>../supplemental-model</module>
 
 		<module>../api/schema</module>

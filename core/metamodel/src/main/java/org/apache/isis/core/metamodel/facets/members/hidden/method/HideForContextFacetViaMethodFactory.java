@@ -49,14 +49,16 @@ extends MethodPrefixBasedFacetFactoryAbstract {
 
         final Method actionOrGetter = processMethodContext.getMethod();
         
-        val namingConvention = PREFIX_BASED_NAMING.map(naming->naming.providerForMember(actionOrGetter, PREFIX));
+        val namingConvention = getNamingConventionForPropertyAndCollectionSupport(processMethodContext, PREFIX);
         
         val cls = processMethodContext.getCls();
         Method hideMethod = MethodFinder2.findMethod(
                 cls, 
-                namingConvention.map(x->x.get()), 
+                namingConvention, 
                 boolean.class, 
-                NO_ARG);
+                NO_ARG)
+                .findFirst()
+                .orElse(null);
         if (hideMethod == null) {
 
             boolean noParamsOnly = getConfiguration().getCore().getMetaModel().getValidator().isNoParamsOnly();
@@ -64,9 +66,11 @@ extends MethodPrefixBasedFacetFactoryAbstract {
             if(searchExactMatch) {
                 hideMethod = MethodFinder2.findMethod(
                         cls, 
-                        namingConvention.map(x->x.get()), 
+                        namingConvention, 
                         boolean.class, 
-                        actionOrGetter.getParameterTypes());
+                        actionOrGetter.getParameterTypes())
+                        .findFirst()
+                        .orElse(null);
             }
         }
 

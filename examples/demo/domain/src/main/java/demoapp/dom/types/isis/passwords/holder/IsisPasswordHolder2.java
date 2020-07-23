@@ -20,7 +20,6 @@ package demoapp.dom.types.isis.passwords.holder;
 
 import org.apache.isis.applib.annotation.LabelPosition;
 import org.apache.isis.applib.annotation.MemberOrder;
-import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -29,22 +28,24 @@ import org.apache.isis.applib.value.Password;
 //tag::class[]
 public interface IsisPasswordHolder2 extends IsisPasswordHolder {
 
-    @Property
-    @PropertyLayout(                                                        // <.>
-            labelPosition = LabelPosition.LEFT,
-            describedAs = "labelPosition=LEFT",
-            hidden = Where.ALL_TABLES
+    @Property                                               // <.>
+    @PropertyLayout(
+        labelPosition = LabelPosition.LEFT,                 // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=LEFT)",
+        hidden = Where.ALL_TABLES
     )
-    @MemberOrder(name = "label-positions", sequence = "1")                  // <.>
+    @MemberOrder(name = "label-positions", sequence = "1")  // <.>
     default Password getReadOnlyPropertyDerivedLabelPositionLeft() {
         return getReadOnlyProperty();
     }
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.TOP,
-            describedAs = "labelPosition=TOP",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.TOP,                  // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=TOP)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "2")
     default Password getReadOnlyPropertyDerivedLabelPositionTop() {
@@ -53,9 +54,10 @@ public interface IsisPasswordHolder2 extends IsisPasswordHolder {
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.RIGHT,    // TODO: not honoured
-            describedAs = "labelPosition=RIGHT",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.RIGHT,                // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=RIGHT)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "3")
     default Password getReadOnlyPropertyDerivedLabelPositionRight() {
@@ -64,9 +66,10 @@ public interface IsisPasswordHolder2 extends IsisPasswordHolder {
 
     @Property
     @PropertyLayout(
-            labelPosition = LabelPosition.NONE,
-            describedAs = "labelPosition=NONE",
-            hidden = Where.ALL_TABLES
+        labelPosition = LabelPosition.NONE,                 // <.>
+        describedAs =
+            "@PropertyLayout(labelPosition=NONE)",
+        hidden = Where.ALL_TABLES
     )
     @MemberOrder(name = "label-positions", sequence = "4")
     default Password getReadOnlyPropertyDerivedLabelPositionNone() {

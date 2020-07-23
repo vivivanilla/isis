@@ -21,6 +21,8 @@ package demoapp.dom.types.jodatime.jodadatetime.jdo;
 import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
+import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.PersistenceCapable;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
@@ -29,10 +31,11 @@ import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
 
-import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.jodatime.jodadatetime.holder.JodaDateTimeHolder;
 import lombok.Getter;
 import lombok.Setter;
+
+import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
+import demoapp.dom.types.jodatime.jodadatetime.holder.JodaDateTimeHolder3;
 
 //tag::class[]
 //@PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
@@ -41,7 +44,7 @@ import lombok.Setter;
         objectType = "demo.JodaDateTimeJdo"
 )
 public class JodaDateTimeJdo                                          // <.>
-        implements HasAsciiDocDescription, JodaDateTimeHolder {
+        implements HasAsciiDocDescription, JodaDateTimeHolder3 {
 
 //end::class[]
     public JodaDateTimeJdo(org.joda.time.DateTime initialValue) {

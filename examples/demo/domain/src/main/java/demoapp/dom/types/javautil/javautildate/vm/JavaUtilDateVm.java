@@ -32,13 +32,13 @@ import org.apache.isis.applib.annotation.Nature;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.Title;
-import org.apache.isis.applib.util.JaxbAdapters;
+import org.apache.isis.applib.jaxb.JavaUtilJaxbAdapters;
 
 import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.javautil.javautildate.holder.JavaUtilDateHolder;
+import demoapp.dom.types.javautil.javautildate.holder.JavaUtilDateHolder3;
 
 //tag::class[]
 @XmlRootElement(name = "root")
@@ -50,7 +50,7 @@ import demoapp.dom.types.javautil.javautildate.holder.JavaUtilDateHolder;
 )
 @lombok.NoArgsConstructor                                                       // <.>
 public class JavaUtilDateVm
-        implements HasAsciiDocDescription, JavaUtilDateHolder {
+        implements HasAsciiDocDescription, JavaUtilDateHolder3 {
 
 //end::class[]
     public JavaUtilDateVm(java.util.Date initialValue) {
@@ -62,26 +62,26 @@ public class JavaUtilDateVm
     @Title(prepend = "java.util.Date view model: ")
     @MemberOrder(name = "read-only-properties", sequence = "1")
     @XmlElement(required = true)                                                // <.>
-    @XmlJavaTypeAdapter(JaxbAdapters.DateAdapter.class)                         // <.>
+    @XmlJavaTypeAdapter(JavaUtilJaxbAdapters.DateToStringAdapter.class)                         // <.>
     @Getter @Setter
     private java.util.Date readOnlyProperty;
 
     @Property(editing = Editing.ENABLED)                                        // <.>
     @MemberOrder(name = "editable-properties", sequence = "1")
     @XmlElement(required = true)
-    @XmlJavaTypeAdapter(JaxbAdapters.DateAdapter.class)
+    @XmlJavaTypeAdapter(JavaUtilJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.util.Date readWriteProperty;
 
     @Property(optionality = Optionality.OPTIONAL)                               // <.>
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @XmlJavaTypeAdapter(JaxbAdapters.DateAdapter.class)
+    @XmlJavaTypeAdapter(JavaUtilJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.util.Date readOnlyOptionalProperty;
 
     @Property(editing = Editing.ENABLED, optionality = Optionality.OPTIONAL)
     @MemberOrder(name = "optional-properties", sequence = "2")
-    @XmlJavaTypeAdapter(JaxbAdapters.DateAdapter.class)
+    @XmlJavaTypeAdapter(JavaUtilJaxbAdapters.DateToStringAdapter.class)
     @Getter @Setter
     private java.util.Date readWriteOptionalProperty;
 

@@ -31,7 +31,6 @@ import org.apache.isis.applib.annotation.MemberOrder;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Title;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.value.Markup;
@@ -40,7 +39,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import demoapp.dom._infra.asciidocdesc.HasAsciiDocDescription;
-import demoapp.dom.types.isis.markups.holder.IsisMarkupHolder;
+import demoapp.dom.types.isis.markups.holder.IsisMarkupHolder2;
 
 //tag::class[]
 @PersistenceCapable(identityType = IdentityType.DATASTORE, schema = "demo")
@@ -49,7 +48,7 @@ import demoapp.dom.types.isis.markups.holder.IsisMarkupHolder;
         objectType = "demo.IsisMarkupJdo"
 )
 public class IsisMarkupJdo                                          // <.>
-        implements HasAsciiDocDescription, IsisMarkupHolder {
+        implements HasAsciiDocDescription, IsisMarkupHolder2 {
 
 //end::class[]
     public IsisMarkupJdo(Markup initialValue) {
@@ -59,25 +58,26 @@ public class IsisMarkupJdo                                          // <.>
 
 //tag::class[]
     public String title() {
-    return "Markup JDO entity: " + bookmarkService.bookmarkFor(this).getIdentifier();
-}
+        return "Markup JDO entity: " +
+            bookmarkService.bookmarkFor(this).getIdentifier();
+    }
 
     @MemberOrder(name = "read-only-properties", sequence = "1")
-    @Column(allowsNull = "false", jdbcType = "CLOB")                            // <.>
+    @Column(allowsNull = "false", jdbcType = "CLOB")                // <.>
     @Getter @Setter
     private Markup readOnlyProperty;
 
-    @Property(editing = Editing.ENABLED)                                        // <.>
+    @Property(editing = Editing.ENABLED)                            // <.>
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @MemberOrder(name = "editable-properties", sequence = "1")
     @Column(allowsNull = "false", jdbcType = "CLOB")
     @Getter @Setter
     private Markup readWriteProperty;
 
-    @Property(optionality = Optionality.OPTIONAL)                               // <.>
+    @Property(optionality = Optionality.OPTIONAL)                   // <.>
     @PropertyLayout(hidden = Where.ALL_TABLES)
     @MemberOrder(name = "optional-properties", sequence = "1")
-    @Column(allowsNull = "true")                                                // <.>
+    @Column(allowsNull = "true")                                    // <.>
     @Getter @Setter
     private Markup readOnlyOptionalProperty;
 
