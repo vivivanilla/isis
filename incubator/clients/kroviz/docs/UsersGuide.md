@@ -27,7 +27,7 @@ Colours and dimensions can be influenced here, as well as images:
 .text-normal {
     color: black;
 }
-[...]
+/*...*/
 @font-face {
     font-family: Chicago;
     src: url('/fonts/ChicagoFLF.ttf');
