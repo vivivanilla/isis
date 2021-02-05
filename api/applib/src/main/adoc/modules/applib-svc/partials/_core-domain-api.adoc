@@ -14,7 +14,10 @@ The core/domain APIs provide general-purpose services to the domain objects, for
 |Implementation
 
 
-|xref:refguide:applib-svc:ClockService.adoc[ClockService]
+|xref:system:generated:index/applib/services/clock/ClockService.adoc[]
+// ISIS-2524: in the refguide, we remove the manually written ClockService.adoc completely, and instead just link to the generated index.
+
+
 |Access the current time (and for testing, allow the time to be changed)
 |
 * API is also implementation (concrete class).

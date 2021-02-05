@@ -3,7 +3,9 @@
 
 * xref:refguide:applib-ant:about.adoc[Annotations]
 
-** xref:refguide:applib-ant:Action.adoc[Action]
+** xref:system:generated:index/applib/annotation/Action.adoc[Action]
+// ISIS-2524: in the refguide, we remove the manually written Action.adoc completely, and instead just link to the generated index.
+
 ** xref:refguide:applib-ant:ActionLayout.adoc[ActionLayout]
 ** xref:refguide:applib-ant:Collection.adoc[Collection]
 ** xref:refguide:applib-ant:CollectionLayout.adoc[CollectionLayout]
