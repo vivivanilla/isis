@@ -3,13 +3,50 @@
 
 include::Action/_description.adoc[]
 
-== API
+// automatically included if it exists
+include::Action/hooks/_introductory_notes.adoc[]
 
 include::Action/_api.adoc[]
 
+== Class Members
 
-include::Action/associateWith.adoc[leveloffset=+1]
-include::Action/associateWithSequence.adoc[leveloffset=+1]
-include::Action/commandDtoProcessor.adoc[leveloffset=+1]
-include::Action/commandPublishing.adoc[leveloffset=+1]
-include::Action/domainEvent.adoc[leveloffset=+1]
+// ISIS-2524: we put the members down at the end.  I've decided to put them into their own section.
+
+include::Action/members/associateWith.adoc[leveloffset=+2]
+include::Action/members/associateWithSequence.adoc[leveloffset=+2]
+include::Action/members/commandDtoProcessor.adoc[leveloffset=+2]
+include::Action/members/commandPublishing.adoc[leveloffset=+2]
+include::Action/members/domainEvent.adoc[leveloffset=+2]
+
+
+== Configuration
+
+// ISIS-2524: if there is relevant configuration properties (automatically generated), then include them here
+
+include::Action/_configuration.adoc[]
+
+== Examples
+// ISIS-2524: if any example is found in src/test/java, then it is copied over to the examples folder and post-processed so that callouts in the .java file are copied down below the [source] section.  if there are no examples, then this section is omitted completely.
+
+[source,java]
+.Action_example.java
+----
+include::{examplesdir}/index/applib/annotation/Action_example.java[]
+----
+<.> non-idempotent action (this is the default, so could be omitted)
+<.> emits this event on the internal event bus, allowing subscribers to react to or possibly veto the action
+<.> emits the action invocation event in serialized form to the configured ExecutionPublisher service, typically to interact with external systems
+<.> associates the action with the "orders" member (probably a collection in this case).  In this example this acts solely as a UI hint.
+
+
+
+== Implementations and Usage
+
+include::Action/_implementations_and_usage.adoc[]
+
+
+
+== Related
+// ISIS-2524: automatically included if it exists (under a 'Related' section header)
+
+include::Action/hooks/_related.adoc[]

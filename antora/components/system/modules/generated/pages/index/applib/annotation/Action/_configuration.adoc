@@ -1,0 +1,26 @@
+:Notice: Licensed to the Apache Software Foundation (ASF) under one or more contributor license agreements. See the NOTICE file distributed with this work for additional information regarding copyright ownership. The ASF licenses this file to you under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at. http://www.apache.org/licenses/LICENSE-2.0 . Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR  CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
+
+
+
+// ISIS-2524: if there are any configuration parameters that are relevant, then they could be automatically brought in here.
+
+// to identify the parameters, would either be by convention, alternatively by a javadoc hint in the configuration parameter as to which classes it related to.
+
+[source,yaml]
+.application.yaml
+----
+isis:
+    applib:
+        annotation:
+            action:
+                commandPublishing: NONE | IGNORE_SAFE | IGNORE_QUERY_ONLY | ALL <.>
+                executionPublishing: NONE | IGNORE_SAFE | IGNORE_QUERY_ONLY | NONE <.>
+                explicit: false | true <.>
+                domainEvent:
+                    postForDefault: false | true <.>
+----
+<.> yada yada yada
+<.> yada yada yada
+<.> yada yada yada
+<.> yada yada yada
+// ISIS-2524: extracted from javadoc of IsisConfiguration)
