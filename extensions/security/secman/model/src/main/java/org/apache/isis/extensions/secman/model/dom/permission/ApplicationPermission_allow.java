@@ -19,19 +19,28 @@
 package org.apache.isis.extensions.secman.model.dom.permission;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermission.AllowDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.permission.ApplicationPermission_allow.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRule;
 
 import lombok.RequiredArgsConstructor;
 
-@Action(domainEvent = AllowDomainEvent.class, associateWith = "rule")
+@Action(
+        domainEvent = ApplicationPermission_allow.ActionDomainEvent.class,
+        associateWith = "rule"
+)
+@ActionLayout(
+        sequence = "1"
+)
 @RequiredArgsConstructor
 public class ApplicationPermission_allow {
 
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationPermission_allow> {}
+
     private final ApplicationPermission target;
 
-    //@PropertyLayout(group = "Rule", sequence = "1")
     public ApplicationPermission act() {
         target.setRule(ApplicationPermissionRule.ALLOW);
         return target;
@@ -40,5 +49,4 @@ public class ApplicationPermission_allow {
     public String disableAct() {
         return target.getRule() == ApplicationPermissionRule.ALLOW? "Rule is already set to ALLOW": null;
     }
-
 }

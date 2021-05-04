@@ -29,35 +29,36 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.value.Password;
 import org.apache.isis.commons.internal.exceptions._Exceptions;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.encryption.PasswordEncryptionService;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdatePasswordDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updatePassword.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Action(
-        domainEvent = UpdatePasswordDomainEvent.class, 
+        domainEvent = ApplicationUser_updatePassword.ActionDomainEvent.class,
         associateWith = "hasPassword")
 @ActionLayout(sequence = "10")
 @RequiredArgsConstructor
 public class ApplicationUser_updatePassword {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updatePassword> {}
+
     @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
     @Inject private Optional<PasswordEncryptionService> passwordEncryptionService; // empty if no candidate is available
-    
+
     private final ApplicationUser target;
 
     @MemberSupport
     public ApplicationUser act(
-            @ParameterLayout(named="Existing password")
             final Password existingPassword,
-            @ParameterLayout(named="New password")
             final Password newPassword,
             @ParameterLayout(named="Re-enter password")
             final Password newPasswordRepeat) {
-        
+
         applicationUserRepository.updatePassword(target, newPassword.getPassword());
         return target;
     }
@@ -90,9 +91,9 @@ public class ApplicationUser_updatePassword {
         }
 
         val encrypter = passwordEncryptionService.orElseThrow(_Exceptions::unexpectedCodeReach);
-        
+
         val encryptedPassword = target.getEncryptedPassword();
-        
+
         if(target.getEncryptedPassword() != null) {
             if (!encrypter.matches(existingPassword.getPassword(), encryptedPassword)) {
                 return "Existing password is incorrect";
@@ -105,6 +106,6 @@ public class ApplicationUser_updatePassword {
 
         return null;
     }
-    
+
 
 }

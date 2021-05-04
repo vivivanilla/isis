@@ -23,18 +23,22 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateEmailAddressDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateEmailAddress.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateEmailAddressDomainEvent.class, 
+        domainEvent = ApplicationUser_updateEmailAddress.ActionDomainEvent.class,
         associateWith = "emailAddress")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
 @RequiredArgsConstructor
 public class ApplicationUser_updateEmailAddress {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateEmailAddress> {}
+
     private final ApplicationUser target;
 
     @MemberSupport

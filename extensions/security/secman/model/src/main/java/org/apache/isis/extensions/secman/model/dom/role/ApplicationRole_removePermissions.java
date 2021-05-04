@@ -30,16 +30,17 @@ import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.commons.internal.base._NullSafe;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.SecmanConfiguration;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
-import org.apache.isis.extensions.secman.api.role.ApplicationRole.RemovePermissionDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.role.ApplicationRole_removePermissions.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.role.ApplicationRoleRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = RemovePermissionDomainEvent.class, 
+        domainEvent = ApplicationRole_removePermissions.ActionDomainEvent.class,
         associateWith = "permissions")
 @ActionLayout(
 		named="Remove",
@@ -48,20 +49,22 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class ApplicationRole_removePermissions {
 
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_removePermissions> {}
+
     @Inject private MessageService messageService;
     @Inject private SecmanConfiguration configBean;
     @Inject private RepositoryService repository;
     @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
-    
+
     private final ApplicationRole target;
 
     @MemberSupport
     public ApplicationRole act(Collection<ApplicationPermission> permissions) {
-        
+
         _NullSafe.stream(permissions)
         .filter(this::canRemove)
         .forEach(repository::remove);
-        
+
         return target;
     }
 
@@ -69,13 +72,12 @@ public class ApplicationRole_removePermissions {
         if(!Objects.equals(permission.getRole(), target)) {
             return false;
         }
-        if(applicationRoleRepository.isAdminRole(target) 
+        if(applicationRoleRepository.isAdminRole(target)
                 && configBean.isStickyAdminNamespace(permission.getFeatureFqn())) {
-            
+
             messageService.warnUser("Cannot remove top-level namespace permissions for the admin role.");
             return false;
         }
         return true;
     }
-
 }

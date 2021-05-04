@@ -23,22 +23,25 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.AccountType;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateAccountTypeDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateAccountType.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateAccountTypeDomainEvent.class, 
+        domainEvent = ApplicationUser_updateAccountType.ActionDomainEvent.class,
         associateWith = "accountType")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", position = ActionLayout.Position.RIGHT)
 @RequiredArgsConstructor
 public class ApplicationUser_updateAccountType {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateAccountType> {}
+
     @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-    
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -47,14 +50,14 @@ public class ApplicationUser_updateAccountType {
         target.setAccountType(accountType);
         return target;
     }
-    
+
     @MemberSupport
     public String disableAct() {
         return applicationUserRepository.isAdminUser(target)
                 ? "Cannot change account type for admin user"
                         : null;
     }
-    
+
     @MemberSupport
     public AccountType default0Act() {
         return target.getAccountType();

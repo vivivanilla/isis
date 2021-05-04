@@ -23,24 +23,27 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.SecmanConfiguration;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.LockDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_lock.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserStatus;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = LockDomainEvent.class, 
+        domainEvent = ApplicationUser_lock.ActionDomainEvent.class,
         associateWith = "status")
 @ActionLayout(named="Disable", sequence = "2")
 @RequiredArgsConstructor
 public class ApplicationUser_lock {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_lock> {}
+
     @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
     @Inject private SecmanConfiguration configBean;
-    
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -48,7 +51,7 @@ public class ApplicationUser_lock {
         target.setStatus(ApplicationUserStatus.DISABLED);
         return target;
     }
-    
+
     @MemberSupport
     public String disableAct() {
         if(applicationUserRepository.isAdminUser(target)) {

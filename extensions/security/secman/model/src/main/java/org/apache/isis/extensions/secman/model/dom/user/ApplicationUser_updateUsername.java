@@ -23,18 +23,21 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateUsernameDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateUsername.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateUsernameDomainEvent.class, 
+        domainEvent = ApplicationUser_updateUsername.ActionDomainEvent.class,
         associateWith = "username")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", position = ActionLayout.Position.RIGHT)
 @RequiredArgsConstructor
 public class ApplicationUser_updateUsername {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateUsername> {}
+
     private final ApplicationUser target;
 
     @MemberSupport

@@ -27,49 +27,51 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.commons.internal.base._NullSafe;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.role.ApplicationRoleRepository;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.RemoveRoleDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_removeRoles.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = RemoveRoleDomainEvent.class, 
+        domainEvent = ApplicationUser_removeRoles.ActionDomainEvent.class,
         associateWith = "roles")
 @ActionLayout(named="Remove", sequence = "2")
 @RequiredArgsConstructor
 public class ApplicationUser_removeRoles {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_removeRoles> {}
+
     @Inject private MessageService messageService;
     @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
     @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-    
+
     private final ApplicationUser target;
 
-    
+
     @MemberSupport
     public ApplicationUser act(Collection<ApplicationRole> roles) {
-        
+
         _NullSafe.stream(roles)
         .filter(this::canRemove)
         .forEach(role->applicationRoleRepository.removeRoleFromUser(role, target));
-        
+
         return target;
     }
 
     // same logic in ApplicationRole_removeUsers
     public boolean canRemove(
             final ApplicationRole applicationRole) {
-        
-        if(applicationUserRepository.isAdminUser(target) 
+
+        if(applicationUserRepository.isAdminUser(target)
                 && applicationRoleRepository.isAdminRole(applicationRole)) {
             messageService.warnUser("Cannot remove admin user from the admin role.");
             return false;
         }
         return true;
     }
-     
-    
+
 }

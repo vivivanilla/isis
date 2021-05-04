@@ -24,21 +24,25 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.applib.types.DescriptionType;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
-import org.apache.isis.extensions.secman.api.role.ApplicationRole.UpdateDescriptionDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.role.ApplicationRole_updateDescription.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateDescriptionDomainEvent.class, 
+        domainEvent = ApplicationRole_updateDescription.ActionDomainEvent.class,
         associateWith = "description")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
 @RequiredArgsConstructor
 public class ApplicationRole_updateDescription {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_updateDescription> {}
+
     private final ApplicationRole target;
-    
+
     @MemberSupport
     public ApplicationRole act(
             @Parameter(
@@ -46,10 +50,10 @@ public class ApplicationRole_updateDescription {
                     optionality = Optionality.OPTIONAL
                     )
             @ParameterLayout(
-                    named="Description", 
+                    named="Description",
                     typicalLength=ApplicationRole.TYPICAL_LENGTH_DESCRIPTION)
             final String description) {
-        
+
         target.setDescription(description);
         return target;
     }
@@ -58,6 +62,4 @@ public class ApplicationRole_updateDescription {
     public String default0Act() {
         return target.getDescription();
     }
-
-
 }

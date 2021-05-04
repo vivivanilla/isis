@@ -24,18 +24,21 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateNameDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateName.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateNameDomainEvent.class, 
-        associateWith = "knownAs")
+        domainEvent = ApplicationUser_updateName.ActionDomainEvent.class,
+        associateWith = "familyName")
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationUser_updateName {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateName> {}
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -53,6 +56,7 @@ public class ApplicationUser_updateName {
         target.setFamilyName(familyName);
         target.setGivenName(givenName);
         target.setKnownAs(knownAs);
+
         return target;
     }
 
@@ -86,4 +90,5 @@ public class ApplicationUser_updateName {
         }
         return null;
     }
+
 }

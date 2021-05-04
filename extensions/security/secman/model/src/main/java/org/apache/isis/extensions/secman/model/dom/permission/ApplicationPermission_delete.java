@@ -23,19 +23,22 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermission.DeleteDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.permission.ApplicationPermission_delete.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Action(
-        domainEvent = DeleteDomainEvent.class, 
+        domainEvent = ApplicationPermission_delete.ActionDomainEvent.class,
         semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
 @RequiredArgsConstructor
 public class ApplicationPermission_delete {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationPermission_delete> {}
+
     @Inject private RepositoryService repository;
 
     private final ApplicationPermission target;
@@ -45,5 +48,4 @@ public class ApplicationPermission_delete {
         repository.remove(target);
         return owningRole;
     }
-
 }

@@ -40,7 +40,7 @@ import lombok.val;
  *
  * <p>
  *     Each permission has a {@link #getRule() rule} and a {@link #getMode() mode}.  The
- *     {@link ApplicationPermissionRule rule} determines whether the permission 
+ *     {@link ApplicationPermissionRule rule} determines whether the permission
  *     {@link ApplicationPermissionRule#ALLOW grants}
  *     access to the feature or {@link ApplicationPermissionRule#VETO veto}es access
  *     to it.  The {@link ApplicationPermissionMode mode} indicates whether
@@ -72,16 +72,6 @@ public interface ApplicationPermission {
 
     public static abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission, T> {}
     public static abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission, T> {}
-    public static abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationPermission> {}
-
-    public static class AllowDomainEvent extends ActionDomainEvent {}
-    public static class UpdateRoleDomainEvent extends ActionDomainEvent {}
-    public static class VetoDomainEvent extends ActionDomainEvent {}
-    public static class DeleteDomainEvent extends ActionDomainEvent {}
-    public static class ChangingDomainEvent extends ActionDomainEvent {}
-    public static class ViewingDomainEvent extends ActionDomainEvent {}
-
-    public static class RelocateNamespaceDomainEvent extends ActionDomainEvent {}
 
     // -- MODEL
 
@@ -130,7 +120,7 @@ public interface ApplicationPermission {
     @Property
     @PropertyLayout(
             hidden=Where.REFERENCES_PARENT,
-            fieldSetId="Role", 
+            fieldSetId="Role",
             sequence = "1")
     default ApplicationRole getRole() {
         throw _Exceptions.unsupportedOperation("please implement me");

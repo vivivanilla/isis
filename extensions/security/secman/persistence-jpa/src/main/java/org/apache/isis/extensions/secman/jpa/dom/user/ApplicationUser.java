@@ -39,6 +39,7 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Collection;
@@ -121,13 +122,12 @@ import lombok.val;
 public class ApplicationUser implements Comparable<ApplicationUser>,
 org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
-    @Inject private transient ApplicationUserRepository applicationUserRepository;
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private transient UserService userService;
     /**
      * Optional service, if configured then is used to evaluate permissions within
      * {@link org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet#evaluate(ApplicationFeatureId, ApplicationPermissionMode)}
-     * else will fallback to a {@link org.apache.isis.extensions.secman.api.permission.PermissionsEvaluationService#DEFAULT default}
+     * else will fallback to a default.
      * implementation.
      */
     @Inject private transient PermissionsEvaluationService permissionsEvaluationService;
@@ -137,247 +137,189 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     @GeneratedValue
     private Long id;
 
-    // -- name (derived property)
-
-    public static class NameDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Override
-    @javax.persistence.Transient
-    @Property(
-            domainEvent = NameDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @PropertyLayout(
-            hidden=Where.OBJECT_FORMS,
-            fieldSetId="Id", 
-            sequence = "1")
-    public String getName() {
-        final StringBuilder buf = new StringBuilder();
-        if(getFamilyName() != null) {
-            if(getKnownAs() != null) {
-                buf.append(getKnownAs());
-            } else {
-                buf.append(getGivenName());
-            }
-            buf.append(' ')
-            .append(getFamilyName())
-            .append(" (").append(getUsername()).append(')');
-        } else {
-            buf.append(getUsername());
-        }
-        return buf.toString();
-    }
+    @Version
+    private Long version;
 
 
     // -- username (property)
 
-    public static class UsernameDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Column(nullable=false, length=MAX_LENGTH_USERNAME)
     @Property(
             domainEvent = UsernameDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_USERNAME
+    )
     @PropertyLayout(
             hidden=Where.PARENTED_TABLES,
-            fieldSetId="Id", 
+            fieldSetId="Id",
             sequence = "1")
+    @Column(nullable=false, length=MAX_LENGTH_USERNAME)
     @Getter @Setter
     private String username;
 
 
     // -- familyName (property)
 
-    public static class FamilyNameDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Column(nullable=true, length=MAX_LENGTH_FAMILY_NAME)
     @Property(
             domainEvent = FamilyNameDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_FAMILY_NAME
+    )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
             fieldSetId="Name",
             sequence = "2.1")
+    @Column(nullable=true, length=MAX_LENGTH_FAMILY_NAME)
     @Getter @Setter
     private String familyName;
 
 
     // -- givenName (property)
 
-    public static class GivenNameDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Column(nullable=true, length=MAX_LENGTH_GIVEN_NAME)
     @Property(
             domainEvent = GivenNameDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_KNOWN_AS
+    )
     @PropertyLayout(
-            hidden=Where.ALL_TABLES, 
-            fieldSetId="Name", 
+            hidden=Where.ALL_TABLES,
+            fieldSetId="Name",
             sequence = "2.2")
+    @Column(nullable=true, length=MAX_LENGTH_GIVEN_NAME)
     @Getter @Setter
     private String givenName;
 
 
     // -- knownAs (property)
 
-    public static class KnownAsDomainEvent extends PropertyDomainEvent<String> {}
-
-
-    @Column(nullable=true, length=MAX_LENGTH_KNOWN_AS)
     @Property(
             domainEvent = KnownAsDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_KNOWN_AS
+    )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
             fieldSetId="Name",
             sequence = "2.3")
+    @Column(nullable=true, length=MAX_LENGTH_KNOWN_AS)
     @Getter @Setter
     private String knownAs;
 
 
     // -- emailAddress (property)
 
-    public static class EmailAddressDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Column(nullable=true, length=MAX_LENGTH_EMAIL_ADDRESS)
     @Property(
             domainEvent = EmailAddressDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_EMAIL_ADDRESS
+    )
     @PropertyLayout(fieldSetId="Contact Details", sequence = "3.1")
+    @Column(nullable=true, length=MAX_LENGTH_EMAIL_ADDRESS)
     @Getter @Setter
     private String emailAddress;
 
 
     // -- phoneNumber (property)
 
-    public static class PhoneNumberDomainEvent extends PropertyDomainEvent<String> {}
-
-
-    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Property(
             domainEvent = PhoneNumberDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_PHONE_NUMBER
+    )
     @PropertyLayout(fieldSetId="Contact Details", sequence = "3.2")
+    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Getter @Setter
     private String phoneNumber;
 
 
     // -- faxNumber (property)
 
-    public static class FaxNumberDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Property(
             domainEvent = FaxNumberDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_PHONE_NUMBER
+    )
     @PropertyLayout(
             hidden=Where.PARENTED_TABLES,
-            fieldSetId="Contact Details", 
+            fieldSetId="Contact Details",
             sequence = "3.3")
+    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Getter @Setter
     private String faxNumber;
 
 
     // -- atPath (property)
 
-    public static class AtPathDomainEvent extends PropertyDomainEvent<String> {}
-
-
-    @Column(name="atPath", nullable=true)
     @Property(
             domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED
-            )
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_AT_PATH
+    )
     @PropertyLayout(fieldSetId="atPath", sequence = "3.4")
+    @Column(name="atPath", nullable=true, length = MAX_LENGTH_AT_PATH)
     @Getter @Setter
     private String atPath;
 
     // -- accountType (property)
 
-    public static class AccountTypeDomainEvent extends PropertyDomainEvent<AccountType> {}
-
-
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
     @Property(
             domainEvent = AccountTypeDomainEvent.class,
             editing = Editing.DISABLED
-            )
+    )
     @PropertyLayout(fieldSetId="Status", sequence = "3")
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
     @Getter @Setter
     private AccountType accountType;
 
 
-    // -- status (property), visible (action), usable (action)
+    // -- status (property)
 
-    public static class StatusDomainEvent extends PropertyDomainEvent<ApplicationUserStatus> {}
-
-
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
     @Property(
             domainEvent = StatusDomainEvent.class,
             editing = Editing.DISABLED
-            )
+    )
     @PropertyLayout(fieldSetId="Status", sequence = "4")
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
     @Getter @Setter
     private ApplicationUserStatus status;
 
 
     // -- encryptedPassword (hidden property)
 
-
-    @Column(nullable=true)
     @PropertyLayout(hidden=Where.EVERYWHERE)
+    @Column(nullable=true)
     @Getter @Setter
     private String encryptedPassword;
 
-    public boolean hideEncryptedPassword() {
-        return !applicationUserRepository.isPasswordFeatureEnabled(this);
-    }
 
 
     // -- hasPassword (derived property)
 
-    public static class HasPasswordDomainEvent extends PropertyDomainEvent<Boolean> {}
-
     @Property(
             domainEvent = HasPasswordDomainEvent.class,
             editing = Editing.DISABLED
-            )
+    )
     @PropertyLayout(fieldSetId="Status", sequence = "4")
     @Override
     public boolean isHasPassword() {
-        return _Strings.isNotEmpty(getEncryptedPassword());
+        return org.apache.isis.extensions.secman.api.user.ApplicationUser.super.isHasPassword();
     }
 
-    public boolean hideHasPassword() {
-        return !applicationUserRepository.isPasswordFeatureEnabled(this);
-    }
 
     // -- roles (collection)
-    public static class RolesDomainEvent extends CollectionDomainEvent<ApplicationRole> {}
 
-//    @javax.jdo.annotations.Persistent(table="ApplicationUserRoles")
-//    @javax.jdo.annotations.Join(column="userId")
-//    @javax.jdo.annotations.Element(column="roleId")
+    @Collection(
+            domainEvent = RolesDomainEvent.class
+    )
+    @CollectionLayout(
+            defaultView="table",
+            sequence = "20")
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     @JoinTable(
             name = "ApplicationUserRoles",
             joinColumns = {@JoinColumn(name = "userId")},
             inverseJoinColumns = {@JoinColumn(name = "roleId")})
-    @Collection(
-            domainEvent = RolesDomainEvent.class
-            )
-    @CollectionLayout(
-            defaultView="table",
-            sequence = "20")
     @Getter @Setter
     private Set<ApplicationRole> roles = new TreeSet<>();
 

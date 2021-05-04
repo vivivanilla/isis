@@ -1,6 +1,8 @@
 package org.apache.isis.extensions.secman.model.menu;
 
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -41,7 +43,7 @@ public class ImpersonateMenuAdvisorForSecman implements ImpersonateMenuAdvisor {
         return this.applicationUserRepository.allUsers()
                 .stream()
                 .filter(x -> x.getStatus() == ApplicationUserStatus.ENABLED)
-                .map(ApplicationUser::getName)
+                .map(ApplicationUser::getUsername)
                 .collect(Collectors.toList());
     }
 
@@ -56,6 +58,9 @@ public class ImpersonateMenuAdvisorForSecman implements ImpersonateMenuAdvisor {
     @Override
     public List<String> roleNamesFor(
             final String username) {
+        if(username == null) {
+            return null;
+        }
         val applicationUser =
                 applicationUserRepository.findByUsername(username)
                         .orElseThrow(RuntimeException::new);

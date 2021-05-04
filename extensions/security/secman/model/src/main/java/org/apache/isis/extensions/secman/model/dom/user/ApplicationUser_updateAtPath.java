@@ -24,18 +24,21 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateAtPathDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateAtPath.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateAtPathDomainEvent.class, 
+        domainEvent = ApplicationUser_updateAtPath.ActionDomainEvent.class,
         associateWith = "atPath")
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationUser_updateAtPath {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateAtPath> {}
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -51,6 +54,5 @@ public class ApplicationUser_updateAtPath {
     public String default0Act() {
         return target.getAtPath();
     }
-
 
 }

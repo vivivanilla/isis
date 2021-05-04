@@ -25,23 +25,26 @@ import javax.inject.Inject;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.commons.internal.collections._Sets;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.role.ApplicationRoleRepository;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.AddRoleDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_addRole.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
 @Action(
-        domainEvent = AddRoleDomainEvent.class, 
+        domainEvent = ApplicationUser_addRole.ActionDomainEvent.class,
         associateWith = "roles")
 @ActionLayout(named="Add", sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationUser_addRole {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_addRole> {}
+
     @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
-    
+
     private final ApplicationUser target;
 
     public ApplicationUser act(final ApplicationRole role) {

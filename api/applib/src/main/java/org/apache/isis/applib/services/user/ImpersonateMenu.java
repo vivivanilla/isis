@@ -3,6 +3,7 @@ package org.apache.isis.applib.services.user;
 import java.util.Collections;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.IsisModuleApplib;
@@ -114,7 +115,7 @@ public class ImpersonateMenu {
             final String userName,
             final List<String> roleNames) {
 
-        this.userService.impersonateUser(userName, roleNames);
+        this.userService.impersonateUser(userName, roleNames != null ? roleNames : Collections.emptyList());
         this.messageService.informUser("Now impersonating " + userName);
     }
     public boolean hideImpersonateWithRoles() {

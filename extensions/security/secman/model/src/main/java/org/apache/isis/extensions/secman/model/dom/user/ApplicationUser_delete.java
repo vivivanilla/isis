@@ -27,22 +27,26 @@ import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.repository.RepositoryService;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.DeleteDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_delete.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = DeleteDomainEvent.class,
-        semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
-@ActionLayout(sequence = "1")
+        domainEvent = ApplicationUser_delete.ActionDomainEvent.class,
+        semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE,
+        associateWith = "username")
+@ActionLayout(sequence = "2", position = ActionLayout.Position.PANEL)
 @RequiredArgsConstructor
 public class ApplicationUser_delete {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_delete> {}
+
     @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
     @Inject private RepositoryService repository;
-    
+
     private final ApplicationUser target;
 
     @MemberSupport

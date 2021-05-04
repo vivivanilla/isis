@@ -24,18 +24,22 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdatePhoneNumberDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updatePhoneNumber.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdatePhoneNumberDomainEvent.class, 
+        domainEvent = ApplicationUser_updatePhoneNumber.ActionDomainEvent.class,
         associateWith = "phoneNumber")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
 @RequiredArgsConstructor
 public class ApplicationUser_updatePhoneNumber {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updatePhoneNumber> {}
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -51,9 +55,10 @@ public class ApplicationUser_updatePhoneNumber {
     public String disableAct() {
         return target.isForSelfOrRunAsAdministrator()? null: "Can only update your own user record.";
     }
-    
+
     @MemberSupport
     public String default0Act() {
         return target.getPhoneNumber();
     }
+
 }

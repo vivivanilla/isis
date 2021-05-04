@@ -21,21 +21,24 @@ package org.apache.isis.extensions.secman.model.dom.user;
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UnlockDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_unlock.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserStatus;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UnlockDomainEvent.class, 
+        domainEvent = ApplicationUser_unlock.ActionDomainEvent.class,
         associateWith = "status")
 @ActionLayout(
         named="Enable", // symmetry with lock (disable)
         sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationUser_unlock {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_unlock> {}
+
     private final ApplicationUser target;
 
     @MemberSupport
@@ -43,9 +46,10 @@ public class ApplicationUser_unlock {
         target.setStatus(ApplicationUserStatus.ENABLED);
         return target;
     }
-    
+
     @MemberSupport
     public String disableAct() {
         return target.getStatus() == ApplicationUserStatus.ENABLED ? "Status is already set to ENABLE": null;
     }
+
 }

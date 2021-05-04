@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
+import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 import org.apache.isis.extensions.secman.model.dom.feature.ApplicationFeatureViewModels;
 import org.apache.isis.extensions.secman.model.dom.feature.ApplicationNamespace;
 import org.apache.isis.extensions.secman.model.dom.feature.ApplicationType;
@@ -98,7 +99,9 @@ import org.apache.isis.extensions.secman.model.spiimpl.TableColumnHidingService;
         ApplicationTenancyMenu.class,
         ApplicationUserMenu.class,
 
-        //ImpersonateMenuAdvisorForSecman.class, //not activated by default yet
+        ApplicationUser.HasPasswordAdvisor.class,
+
+        ImpersonateMenuAdvisorForSecman.class, //not activated by default yet
         MeService.class,
 
         // @Component

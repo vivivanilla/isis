@@ -22,25 +22,28 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
-import org.apache.isis.extensions.secman.api.role.ApplicationRole.UpdateNameDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.role.ApplicationRole_updateName.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateNameDomainEvent.class, 
+        domainEvent = ApplicationRole_updateName.ActionDomainEvent.class,
         associateWith = "name")
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationRole_updateName {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_updateName> {}
+
     private final ApplicationRole target;
-    
+
     public ApplicationRole act(
-            @Parameter(maxLength = ApplicationRole.MAX_LENGTH_NAME) 
+            @Parameter(maxLength = ApplicationRole.MAX_LENGTH_NAME)
             @ParameterLayout(named="Name", typicalLength = ApplicationRole.TYPICAL_LENGTH_NAME)
             final String name) {
-        
+
         target.setName(name);
         return target;
     }
@@ -48,5 +51,4 @@ public class ApplicationRole_updateName {
     public String default0Act() {
         return target.getName();
     }
-
 }

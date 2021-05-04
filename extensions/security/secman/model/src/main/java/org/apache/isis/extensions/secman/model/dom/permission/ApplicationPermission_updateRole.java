@@ -23,24 +23,32 @@ import java.util.Collection;
 import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
+import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.MemberSupport;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermission.UpdateRoleDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.permission.ApplicationPermission_updateRole.ActionDomainEvent;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.role.ApplicationRoleRepository;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateRoleDomainEvent.class, 
+        domainEvent = ActionDomainEvent.class,
         associateWith = "role")
+@ActionLayout(
+        sequence = "1",
+        promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
 @RequiredArgsConstructor
 public class ApplicationPermission_updateRole {
 
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationPermission_updateRole> {}
+
     @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
-    
+
     private final ApplicationPermission target;
-    
+
     @MemberSupport
     public ApplicationPermission act(final ApplicationRole applicationRole) {
         target.setRole(applicationRole);
@@ -56,5 +64,4 @@ public class ApplicationPermission_updateRole {
     public Collection<? extends ApplicationRole> choices0Act() {
         return applicationRoleRepository.allRoles();
     }
-    
 }

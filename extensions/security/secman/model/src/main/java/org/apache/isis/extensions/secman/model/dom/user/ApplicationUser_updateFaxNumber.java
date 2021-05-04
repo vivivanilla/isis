@@ -24,18 +24,22 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.applib.annotation.PromptStyle;
+import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.api.user.ApplicationUser.UpdateFaxNumberDomainEvent;
+import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateFaxNumber.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateFaxNumberDomainEvent.class, 
+        domainEvent = ApplicationUser_updateFaxNumber.ActionDomainEvent.class,
         associateWith = "faxNumber")
-@ActionLayout(sequence = "1")
+@ActionLayout(sequence = "1", promptStyle = PromptStyle.INLINE_AS_IF_EDIT)
 @RequiredArgsConstructor
 public class ApplicationUser_updateFaxNumber {
-    
+
+    public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateFaxNumber> {}
+
     private final ApplicationUser holder;
 
     @MemberSupport
