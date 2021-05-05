@@ -133,6 +133,7 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     @Inject private transient PermissionsEvaluationService permissionsEvaluationService;
     @Inject private transient SecmanConfiguration configBean;
 
+
     @Id
     @GeneratedValue
     private Long id;
@@ -149,12 +150,60 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
             maxLength = MAX_LENGTH_USERNAME
     )
     @PropertyLayout(
-            hidden=Where.PARENTED_TABLES,
-            fieldSetId="Id",
-            sequence = "1")
+            fieldSetId="identity",
+            sequence = "1"
+    )
     @Column(nullable=false, length=MAX_LENGTH_USERNAME)
     @Getter @Setter
     private String username;
+
+
+    // -- accountType (property)
+
+    @Property(
+            domainEvent = AccountTypeDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="status",
+            sequence = "1"
+    )
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    private AccountType accountType;
+
+
+    // -- status (property)
+
+    @Property(
+            domainEvent = StatusDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="status",
+            sequence = "2"
+    )
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    @Getter @Setter
+    private ApplicationUserStatus status;
+
+
+    // -- atPath (property)
+
+    @Property(
+            domainEvent = AtPathDomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_AT_PATH
+    )
+    @PropertyLayout(
+            fieldSetId="atPath",
+            sequence = "3"
+    )
+    @Column(name="atPath", nullable=true, length = MAX_LENGTH_AT_PATH)
+    @Getter @Setter
+    private String atPath;
 
 
     // -- familyName (property)
@@ -166,8 +215,9 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.1")
+            fieldSetId="name",
+            sequence = "1"
+    )
     @Column(nullable=true, length=MAX_LENGTH_FAMILY_NAME)
     @Getter @Setter
     private String familyName;
@@ -182,8 +232,9 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.2")
+            fieldSetId="name",
+            sequence = "2"
+    )
     @Column(nullable=true, length=MAX_LENGTH_GIVEN_NAME)
     @Getter @Setter
     private String givenName;
@@ -198,8 +249,9 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.3")
+            fieldSetId="name",
+            sequence = "3"
+    )
     @Column(nullable=true, length=MAX_LENGTH_KNOWN_AS)
     @Getter @Setter
     private String knownAs;
@@ -212,7 +264,10 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
             editing = Editing.DISABLED,
             maxLength = MAX_LENGTH_EMAIL_ADDRESS
     )
-    @PropertyLayout(fieldSetId="Contact Details", sequence = "3.1")
+    @PropertyLayout(
+            fieldSetId="contactDetails",
+            sequence = "1"
+    )
     @Column(nullable=true, length=MAX_LENGTH_EMAIL_ADDRESS)
     @Getter @Setter
     private String emailAddress;
@@ -225,7 +280,10 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
             editing = Editing.DISABLED,
             maxLength = MAX_LENGTH_PHONE_NUMBER
     )
-    @PropertyLayout(fieldSetId="Contact Details", sequence = "3.2")
+    @PropertyLayout(
+            fieldSetId="contactDetails",
+            sequence = "2"
+    )
     @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Getter @Setter
     private String phoneNumber;
@@ -240,49 +298,12 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     )
     @PropertyLayout(
             hidden=Where.PARENTED_TABLES,
-            fieldSetId="Contact Details",
-            sequence = "3.3")
+            fieldSetId="contactDetails",
+            sequence = "3"
+    )
     @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
     @Getter @Setter
     private String faxNumber;
-
-
-    // -- atPath (property)
-
-    @Property(
-            domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_AT_PATH
-    )
-    @PropertyLayout(fieldSetId="atPath", sequence = "3.4")
-    @Column(name="atPath", nullable=true, length = MAX_LENGTH_AT_PATH)
-    @Getter @Setter
-    private String atPath;
-
-    // -- accountType (property)
-
-    @Property(
-            domainEvent = AccountTypeDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(fieldSetId="Status", sequence = "3")
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
-    @Getter @Setter
-    private AccountType accountType;
-
-
-    // -- status (property)
-
-    @Property(
-            domainEvent = StatusDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(fieldSetId="Status", sequence = "4")
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
-    @Getter @Setter
-    private ApplicationUserStatus status;
 
 
     // -- encryptedPassword (hidden property)

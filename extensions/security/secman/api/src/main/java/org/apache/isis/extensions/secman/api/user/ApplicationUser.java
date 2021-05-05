@@ -95,13 +95,62 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
             maxLength = MAX_LENGTH_USERNAME
     )
     @PropertyLayout(
-            hidden=Where.PARENTED_TABLES,
             fieldSetId="identity",
-            sequence = "1")
+            sequence = "1"
+    )
     @Override
     String getUsername();
     void setUsername(String username);
 
+
+    // -- accountType (property)
+
+    class AccountTypeDomainEvent extends PropertyDomainEvent<AccountType> {}
+
+    @Property(
+            domainEvent = AccountTypeDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="status",
+            sequence = "1"
+    )
+    AccountType getAccountType();
+    void setAccountType(AccountType accountType);
+
+
+    // -- status (property)
+
+    class StatusDomainEvent extends PropertyDomainEvent<ApplicationUserStatus> {}
+
+    @Property(
+            domainEvent = StatusDomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="status",
+            sequence = "2"
+    )
+    ApplicationUserStatus getStatus();
+    void setStatus(ApplicationUserStatus disabled);
+
+
+    // -- atPath (property)
+
+    class AtPathDomainEvent extends PropertyDomainEvent<String> {}
+
+    @Property(
+            domainEvent = AtPathDomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = MAX_LENGTH_AT_PATH
+    )
+    @PropertyLayout(
+            fieldSetId="status",
+            sequence = "3"
+    )
+    @Override
+    String getAtPath();
+    void setAtPath(String atPath);
 
     // -- familyName (property)
 
@@ -114,8 +163,9 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.1")
+            fieldSetId="name",
+            sequence = "1"
+    )
     String getFamilyName();
     void setFamilyName(String familyName);
 
@@ -131,8 +181,9 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.2")
+            fieldSetId="name",
+            sequence = "2"
+    )
     String getGivenName();
     void setGivenName(String givenName);
 
@@ -148,8 +199,9 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
     )
     @PropertyLayout(
             hidden=Where.ALL_TABLES,
-            fieldSetId="Name",
-            sequence = "2.3")
+            fieldSetId="name",
+            sequence = "3"
+    )
     String getKnownAs();
     void setKnownAs(String knownAs);
 
@@ -163,7 +215,10 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
             editing = Editing.DISABLED,
             maxLength = MAX_LENGTH_EMAIL_ADDRESS
     )
-    @PropertyLayout(fieldSetId="Contact Details", sequence = "3.1")
+    @PropertyLayout(
+            fieldSetId="contactDetails",
+            sequence = "1"
+    )
     String getEmailAddress();
     void setEmailAddress(String emailAddress);
 
@@ -177,7 +232,11 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
             editing = Editing.DISABLED,
             maxLength = MAX_LENGTH_PHONE_NUMBER
     )
-    @PropertyLayout(fieldSetId="Contact Details", sequence = "3.2")
+    @PropertyLayout(
+            hidden = Where.PARENTED_TABLES,
+            fieldSetId="contactDetails",
+            sequence = "2"
+    )
     String getPhoneNumber();
     void setPhoneNumber(String phoneNumber);
 
@@ -192,51 +251,12 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
             maxLength = MAX_LENGTH_PHONE_NUMBER
     )
     @PropertyLayout(
-            hidden=Where.PARENTED_TABLES,
-            fieldSetId="Contact Details",
-            sequence = "3.3")
+            hidden=Where.ALL_TABLES,
+            fieldSetId="contactDetails",
+            sequence = "3"
+    )
     String getFaxNumber();
     void setFaxNumber(String faxNumber);
-
-
-    // -- atPath (property)
-
-    class AtPathDomainEvent extends PropertyDomainEvent<String> {}
-
-    @Property(
-            domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_AT_PATH
-    )
-    @PropertyLayout(fieldSetId="atPath", sequence = "3.4")
-    @Override
-    String getAtPath();
-    void setAtPath(String atPath);
-
-    // -- accountType (property)
-
-    class AccountTypeDomainEvent extends PropertyDomainEvent<AccountType> {}
-
-    @Property(
-            domainEvent = AccountTypeDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(fieldSetId="Status", sequence = "3")
-    AccountType getAccountType();
-    void setAccountType(AccountType accountType);
-
-
-    // -- status (property)
-
-    class StatusDomainEvent extends PropertyDomainEvent<ApplicationUserStatus> {}
-
-    @Property(
-            domainEvent = StatusDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(fieldSetId="Status", sequence = "4")
-    ApplicationUserStatus getStatus();
-    void setStatus(ApplicationUserStatus disabled);
 
 
     // -- encryptedPassword (hidden property)
@@ -255,7 +275,10 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
             domainEvent = HasPasswordDomainEvent.class,
             editing = Editing.DISABLED
     )
-    @PropertyLayout(fieldSetId="Status", sequence = "4")
+    @PropertyLayout(
+            fieldSetId="password",
+            sequence = "1"
+    )
     default boolean isHasPassword() {
         return _Strings.isNotEmpty(getEncryptedPassword());
     }
@@ -292,7 +315,8 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
     )
     @CollectionLayout(
             defaultView="table",
-            sequence = "20")
+            sequence = "20"
+    )
     Set<? extends ApplicationRole> getRoles();
 
 
