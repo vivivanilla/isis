@@ -19,11 +19,21 @@
 package org.apache.isis.extensions.secman.api;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+
+import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionTitleAdvisor;
+import org.apache.isis.extensions.secman.api.user.ApplicationUserIconAdvisor;
+import org.apache.isis.extensions.secman.api.user.ApplicationUserTitleAdvisor;
 
 /**
  * @since 2.0 {@index}
  */
-@Configuration
+@Configuration()
+@Import({
+        ApplicationPermissionTitleAdvisor.class,
+        ApplicationUserTitleAdvisor.class,
+        ApplicationUserIconAdvisor.class,
+})
 public class IsisModuleExtSecmanApi {
 
     public abstract static class ActionDomainEvent<S>
@@ -34,4 +44,16 @@ public class IsisModuleExtSecmanApi {
 
     public abstract static class PropertyDomainEvent<S, T>
     extends org.apache.isis.applib.events.domain.PropertyDomainEvent<S, T> {}
+
+    public abstract static class TitleUiEvent<S>
+    extends org.apache.isis.applib.events.ui.TitleUiEvent<S> {}
+
+    public abstract static class IconUiEvent<S>
+    extends org.apache.isis.applib.events.ui.IconUiEvent<S> {}
+
+    public abstract static class CssClassUiEvent<S>
+    extends org.apache.isis.applib.events.ui.CssClassUiEvent<S> {}
+
+    public abstract static class LayoutUiEvent<S>
+    extends org.apache.isis.applib.events.ui.LayoutUiEvent<S> {}
 }

@@ -29,27 +29,43 @@ under the License.
         </bs3:col>
     </bs3:row>
     <bs3:row>
-        <bs3:col span="3">
-            <cpt:fieldSet name="Role" id="role" unreferencedProperties="true">
-                <cpt:property id="role"/>
-            </cpt:fieldSet>
-            <cpt:fieldSet name="Metadata" id="metadata">
-                <cpt:property id="datanucleusVersionLong"/>
-                <cpt:property id="datanucleusVersionTimestamp"/>
-            </cpt:fieldSet>
-        </bs3:col>
-        <bs3:col span="3">
-            <cpt:fieldSet name="Permissions" id="permissions">
-                <cpt:property id="rule"/>
-                <cpt:property id="mode"/>
-            </cpt:fieldSet>
+        <bs3:col span="6">
+            <bs3:row>
+                <bs3:col span="12">
+                    <bs3:tabGroup>
+                        <bs3:tab name="Identity">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Identity" id="identity"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Other">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Other" id="other" unreferencedProperties="true"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                        <bs3:tab name="Metadata">
+                            <bs3:row>
+                                <bs3:col span="12">
+                                    <cpt:fieldSet name="Metadata" id="metadata"/>
+                                </bs3:col>
+                            </bs3:row>
+                        </bs3:tab>
+                    </bs3:tabGroup>
+                </bs3:col>
+            </bs3:row>
+            <cpt:fieldSet name="Feature" id="feature"/>
         </bs3:col>
         <bs3:col span="6">
-            <cpt:fieldSet name="Feature" id="feature">
-                <cpt:property id="sort"/>
-                <cpt:property id="featureFqn"/>
-            </cpt:fieldSet>
+            <cpt:fieldSet name="Permissions" id="permissions"/>
         </bs3:col>
-        <bs3:col span="12" unreferencedCollections="true"/>
+    </bs3:row>
+    <bs3:row>
+        <bs3:col span="12">
+            <bs3:tabGroup unreferencedCollections="true"/>
+        </bs3:col>
     </bs3:row>
 </bs3:grid>

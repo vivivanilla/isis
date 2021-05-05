@@ -35,7 +35,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import javax.persistence.UniqueConstraint;
+import javax.persistence.Version;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
@@ -113,90 +115,57 @@ import lombok.experimental.UtilityClass;
 @EntityListeners(JpaEntityInjectionPointResolver.class)
 @DomainObject(
         objectType = "isis.ext.secman.ApplicationPermission"
-        )
+)
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_CHILD
-        )
+)
 public class ApplicationPermission
 implements
-    org.apache.isis.extensions.secman.api.permission.ApplicationPermission,
+    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationRole>,
     Comparable<ApplicationPermission> {
 
-    private static final int TYPICAL_LENGTH_TYPE = 7;  // ApplicationFeatureType.PACKAGE is longest
+    @Inject @Transient ApplicationFeatureRepository featureRepository;
 
-    @Inject private transient ApplicationFeatureRepository featureRepository;
 
-    @Id
-    @GeneratedValue
+    @javax.persistence.Id
+    @javax.persistence.GeneratedValue
     private Long id;
 
-    // -- role (property)
+    @javax.persistence.Version
+    private Long version;
 
-    public static class RoleDomainEvent extends PropertyDomainEvent<ApplicationRole> {}
 
+    // -- ROLE
 
+    @Role
     @JoinColumn(name="roleId", nullable=false)
-    @Property(
-            domainEvent = RoleDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
     @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    @SuppressWarnings("JpaAttributeTypeInspection")
     private ApplicationRole role;
 
-    @Override
-    public void setRole(org.apache.isis.extensions.secman.api.role.ApplicationRole applicationRole) {
-        role = _Casts.<ApplicationRole>uncheckedCast(applicationRole);
-    }
 
-    // -- rule (property)
-    public static class RuleDomainEvent extends PropertyDomainEvent<ApplicationPermissionRule> {}
+    // -- FEATURE FQN
 
+    @FeatureFqn
+    @Column(nullable=false)
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    private String featureFqn;
+
+
+    // -- FEATURE SORT
 
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    @Property(
-            domainEvent = RuleDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @Getter(onMethod = @__(@Override))
-    @Setter(onMethod = @__(@Override))
-    private ApplicationPermissionRule rule;
+    @Getter(onMethod = @__({@Override, @Programmatic}))
+    @Setter
+    private ApplicationFeatureSort featureSort;
 
 
-    // -- mode (property)
-    public static class ModeDomainEvent extends PropertyDomainEvent<ApplicationPermissionMode> {}
+    // -- SORT
 
-
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
-    @Property(
-            domainEvent = ModeDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @Getter(onMethod = @__(@Override))
-    @Setter(onMethod = @__(@Override))
-    private ApplicationPermissionMode mode;
-
-    // -- featureId (derived property)
-
-    private Optional<ApplicationFeature> getFeature() {
-        return asFeatureId()
-                .map(featureId -> featureRepository.findFeature(featureId));
-    }
-
-    // region > type (derived, memberSort of associated feature)
-
-    public static class TypeDomainEvent extends PropertyDomainEvent<String> {}
-
-    /**
-     * Combines {@link #getFeatureSort() feature sort} and member sort.
-     */
-    @Property(
-            domainEvent = TypeDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @PropertyLayout(typicalLength=ApplicationPermission.TYPICAL_LENGTH_TYPE)
+    @Sort
     @Override
     public String getSort() {
         final Enum<?> e = getFeatureSort() != ApplicationFeatureSort.MEMBER
@@ -211,55 +180,31 @@ implements
                 .flatMap(ApplicationFeature::getMemberSort);
     }
 
-
-    // -- featureSort
-
-    /**
-     * The {@link ApplicationFeatureId#getType() feature type} of the
-     * feature.
-     *
-     * <p>
-     *     The combination of the feature type and the {@link #getFeatureFqn() fully qualified name} is used to build
-     *     the corresponding {@link #getFeature() feature} (view model).
-     * </p>
-     *
-     * @see #getFeatureFqn()
-     */
-    @Column(nullable=false)
-    @Enumerated(EnumType.STRING)
-    @Setter
-    private ApplicationFeatureSort featureSort;
-
-    @Override
-    @Programmatic
-    public ApplicationFeatureSort getFeatureSort() {
-        return featureSort;
+    private Optional<ApplicationFeature> getFeature() {
+        return asFeatureId()
+                .map(featureId -> featureRepository.findFeature(featureId));
     }
 
 
+    // -- RULE
 
-    // -- featureFqn
-
-    public static class FeatureFqnDomainEvent extends PropertyDomainEvent<String> {}
-
-    /**
-     * The {@link ApplicationFeatureId#getFullyQualifiedName() fully qualified name}
-     * of the feature.
-     *
-     * <p>
-     *     The combination of the {@link #getFeatureSort() feature type} and the fully qualified name is used to build
-     *     the corresponding {@link #getFeature() feature} (view model).
-     * </p>
-     *
-     * @see #getFeatureSort()
-     */
+    @Rule
     @Column(nullable=false)
-    @Property(
-            domainEvent = FeatureFqnDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @Getter @Setter
-    private String featureFqn;
+    @Enumerated(EnumType.STRING)
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    private ApplicationPermissionRule rule;
+
+
+    // -- MODE
+
+    @Mode
+    @Column(nullable=false)
+    @Enumerated(EnumType.STRING)
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    private ApplicationPermissionMode mode;
+
 
 
     // -- CONTRACT
@@ -314,7 +259,6 @@ implements
                             input.getMode());
 
     }
-
 
 
 }

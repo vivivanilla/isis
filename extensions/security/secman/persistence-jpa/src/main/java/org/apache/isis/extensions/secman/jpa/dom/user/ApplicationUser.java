@@ -109,7 +109,7 @@ import lombok.val;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationUser implements Comparable<ApplicationUser>,
-org.apache.isis.extensions.secman.api.user.ApplicationUser {
+org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationRole> {
 
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private transient UserService userService;
@@ -134,69 +134,80 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
     @Username
     @Column(nullable=false, length= Username.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String username;
 
 
     @AccountType
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private org.apache.isis.extensions.secman.api.user.AccountType accountType;
 
 
     @Status
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private ApplicationUserStatus status;
 
 
     @AtPath
     @Column(name="atPath", nullable=true, length = AtPath.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String atPath;
 
 
     @FamilyName
     @Column(nullable=true, length= FamilyName.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String familyName;
 
 
     @GivenName
     @Column(nullable=true, length= GivenName.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String givenName;
 
 
     @KnownAs
     @Column(nullable=true, length= KnownAs.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String knownAs;
 
 
     @EmailAddress
     @Column(nullable=true, length= EmailAddress.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String emailAddress;
 
 
     @PhoneNumber
     @Column(nullable=true, length= PhoneNumber.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String phoneNumber;
 
 
     @FaxNumber
     @Column(nullable=true, length= FaxNumber.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String faxNumber;
 
 
     @EncryptedPassword
     @Column(nullable=true)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String encryptedPassword;
 
 

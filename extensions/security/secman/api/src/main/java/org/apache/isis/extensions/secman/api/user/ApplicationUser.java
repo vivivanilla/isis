@@ -31,6 +31,8 @@ import org.springframework.stereotype.Component;
 
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
@@ -40,6 +42,7 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.mixins.security.HasUsername;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
+import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.tenancy.HasAtPath;
@@ -49,35 +52,29 @@ import lombok.RequiredArgsConstructor;
 /**
  * @since 2.0 {@index}
  */
-public interface ApplicationUser extends HasUsername, HasAtPath {
+@DomainObject(
+        objectType = "isis.ext.secman.IApplicationUser"
+)
+@DomainObjectLayout(
+        titleUiEvent = ApplicationUser.TitleUiEvent.class,
+        iconUiEvent = ApplicationUser.IconUiEvent.class,
+        cssClassUiEvent = ApplicationUser.CssClassUiEvent.class,
+        layoutUiEvent = ApplicationUser.LayoutUiEvent.class
+)
+public interface ApplicationUser<APPROLE extends ApplicationRole> extends HasUsername, HasAtPath {
 
     // -- DOMAIN EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser<?>, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser<?>, T> {}
 
-    // -- MODEL
+        // -- UI EVENTS
 
-    default String title() {
-        final StringBuilder buf = new StringBuilder();
-        if(getFamilyName() != null) {
-            if(getKnownAs() != null) {
-                buf.append(getKnownAs());
-            } else {
-                buf.append(getGivenName());
-            }
-            buf.append(' ')
-                    .append(getFamilyName())
-                    .append(" (").append(getUsername()).append(')');
-        } else {
-            buf.append(getUsername());
-        }
-        return buf.toString();
-    }
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationUser<?>> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationUser<?>> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationUser<?>> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationUser<?>> {}
 
-    default String iconName() {
-        return getStatus().isEnabled() ? "enabled" : "disabled";
-    }
 
 
     // -- username (property)
@@ -416,7 +413,7 @@ public interface ApplicationUser extends HasUsername, HasAtPath {
     }
 
     @Roles
-    Set<? extends ApplicationRole> getRoles();
+    Set<APPROLE> getRoles();
 
 
 

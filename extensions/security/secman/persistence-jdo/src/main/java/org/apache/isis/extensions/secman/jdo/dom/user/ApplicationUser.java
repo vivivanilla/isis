@@ -117,7 +117,7 @@ import lombok.val;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationUser implements Comparable<ApplicationUser>,
-org.apache.isis.extensions.secman.api.user.ApplicationUser {
+org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationRole> {
 
     @Inject private ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private UserService userService;
@@ -134,66 +134,77 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
     @Username
     @javax.jdo.annotations.Column(allowsNull="false", length = Username.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String username;
 
 
     @AccountType
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private org.apache.isis.extensions.secman.api.user.AccountType accountType;
 
 
     @Status
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private ApplicationUserStatus status;
 
 
     @AtPath
     @javax.jdo.annotations.Column(name = "atPath", allowsNull="true", length = AtPath.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String atPath;
 
 
     @FamilyName
     @javax.jdo.annotations.Column(allowsNull="true", length = FamilyName.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String familyName;
 
 
     @GivenName
     @javax.jdo.annotations.Column(allowsNull="true", length = GivenName.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String givenName;
 
 
     @KnownAs
     @javax.jdo.annotations.Column(allowsNull="true", length = KnownAs.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String knownAs;
 
 
     @EmailAddress
     @javax.jdo.annotations.Column(allowsNull="true", length = EmailAddress.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String emailAddress;
 
 
     @PhoneNumber
     @javax.jdo.annotations.Column(allowsNull="true", length = PhoneNumber.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String phoneNumber;
 
 
     @FaxNumber
     @javax.jdo.annotations.Column(allowsNull="true", length = FaxNumber.MAX_LENGTH)
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String faxNumber;
 
 
     @EncryptedPassword
     @javax.jdo.annotations.Column(allowsNull="true")
-    @Getter @Setter
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
     private String encryptedPassword;
 
 

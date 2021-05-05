@@ -18,9 +18,15 @@
  */
 package org.apache.isis.extensions.secman.api.permission;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.Optional;
 
 import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -28,11 +34,8 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.appfeat.ApplicationFeature;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureSort;
-import org.apache.isis.commons.internal.exceptions._Exceptions;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
-
-import lombok.val;
 
 /**
  * Specifies how a particular {@link #getRole() application role} may interact with a specific
@@ -65,102 +68,165 @@ import lombok.val;
  *
  * @since 2.0 {@index}
  */
-@DomainObject(objectType = "isis.ext.secman.IApplicationPermission")
-public interface ApplicationPermission {
+@DomainObject(
+        objectType = "isis.ext.secman.IApplicationPermission"
+)
+@DomainObjectLayout(
+        titleUiEvent = ApplicationPermission.TitleUiEvent.class,
+        iconUiEvent = ApplicationPermission.IconUiEvent.class,
+        cssClassUiEvent = ApplicationPermission.CssClassUiEvent.class,
+        layoutUiEvent = ApplicationPermission.LayoutUiEvent.class
+)
+public interface ApplicationPermission<APPROLE extends ApplicationRole> {
+
 
     // -- DOMAIN EVENTS
 
-    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission, T> {}
-    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission<?>, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission<?>, T> {}
 
-    // -- MODEL
 
-    /**
-     * having a title() method (rather than using @Title annotation) is necessary as a workaround to be able to use
-     * wrapperFactory#unwrap(...) method, which is otherwise broken in Isis 1.6.0
-     */
-    default String title() {
-        val buf = new StringBuilder();
-        buf.append(getRole().getName()).append(":")  // admin:
-        .append(" ").append(getRule().toString()) // Allow|Veto
-        .append(" ").append(getMode().toString()) // Viewing|Changing
-        .append(" of ");
+    // -- UI EVENTS
 
-        asFeatureId()
-        .ifPresent(featureId->{
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationPermission<?>> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationPermission<?>> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationPermission<?>> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationPermission<?>> {}
 
-            switch (featureId.getSort()) {
-            case NAMESPACE:
-                buf.append(getFeatureFqn());              // com.mycompany
-                break;
-            case TYPE:
-                // abbreviate if required because otherwise title overflows on action prompt.
-                if(getFeatureFqn().length() < 30) {
-                    buf.append(getFeatureFqn());          // com.mycompany.Bar
-                } else {
-                    buf.append(featureId.getTypeSimpleName()); // Bar
-                }
-                break;
-            case MEMBER:
-                buf.append(featureId.getTypeSimpleName())
-                .append("#")
-                .append(featureId.getMemberName());   // com.mycompany.Bar#foo
-                break;
-            }
 
-        });
-
-        return buf.toString();
-    }
-
-    ApplicationFeatureSort getFeatureSort();
 
     // -- ROLE
 
-    @Property
+    @Property(
+            domainEvent = Role.DomainEvent.class,
+            editing = Editing.DISABLED
+    )
     @PropertyLayout(
             hidden=Where.REFERENCES_PARENT,
-            fieldSetId="Role",
-            sequence = "1")
-    default ApplicationRole getRole() {
-        throw _Exceptions.unsupportedOperation("please implement me");
+            fieldSetId="identity",
+            sequence = "1"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Role {
+        class DomainEvent extends PropertyDomainEvent<ApplicationRole> {}
     }
-    void setRole(ApplicationRole applicationRole);
 
-    // -- RULE
+    @Role
+    APPROLE getRole();
+    void setRole(APPROLE applicationRole);
 
-    @Property
-    @PropertyLayout(fieldSetId="Permissions", sequence = "2")
-    default ApplicationPermissionRule getRule() {
-        throw _Exceptions.unsupportedOperation("please implement me");
+
+    // -- FEATURE FQN
+
+    @Property(
+            domainEvent = FeatureFqn.DomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="identity",
+            sequence = "2"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface FeatureFqn {
+        class DomainEvent extends PropertyDomainEvent<String> {}
     }
-    void setRule(ApplicationPermissionRule rule);
 
-    // -- MODE
+    @FeatureFqn
+    String getFeatureFqn();
+    void setFeatureFqn(String featureFqn);
 
-    @Property
-    @PropertyLayout(fieldSetId="Permissions", sequence = "3")
-    default ApplicationPermissionMode getMode() {
-        throw _Exceptions.unsupportedOperation("please implement me");
-    }
-    void setMode(ApplicationPermissionMode changing);
+
+    // -- FEATURE SORT
+    /**
+     * The {@link ApplicationFeatureId#getSort() feature sort} of the
+     * feature.
+     *
+     * <p>
+     *     The combination of the feature sort and the
+     *     {@link #getFeatureFqn() fully qualified name} is used to build
+     *     the corresponding feature (view model).
+     * </p>
+     *
+     * @see #getFeatureFqn()
+     */
+    @Programmatic
+    ApplicationFeatureSort getFeatureSort();
+
 
     // -- SORT
 
-    @Property
-    @PropertyLayout(fieldSetId="Feature", sequence = "5")
-    default String getSort() {
-        throw _Exceptions.unsupportedOperation("please implement me");
+    /**
+     * Whether this feature is a namespace, type or member.
+     */
+    @Property(
+            domainEvent = Sort.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = Sort.MAX_LENGTH
+    )
+    @PropertyLayout(
+            fieldSetId="feature",
+            sequence = "1"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Sort {
+        int MAX_LENGTH = 7;  // ApplicationFeatureType.PACKAGE is longest
+
+        class DomainEvent extends PropertyDomainEvent<String> {}
     }
 
-    // -- FQN
+    @Sort
+    String getSort();
 
-    @Property
-    @PropertyLayout(fieldSetId="Feature", sequence = "5.1")
-    default String getFeatureFqn() {
-        throw _Exceptions.unsupportedOperation("please implement me");
+
+
+
+    // -- RULE
+
+    @Property(
+            domainEvent = Rule.DomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="permissions",
+            sequence = "1"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Rule {
+        class DomainEvent extends PropertyDomainEvent<ApplicationPermissionRule> {}
     }
-    void setFeatureFqn(String featureFqn);
+
+    @Rule
+    ApplicationPermissionRule getRule();
+    void setRule(ApplicationPermissionRule rule);
+
+
+    // -- MODE
+
+    @Property(
+            domainEvent = Mode.DomainEvent.class,
+            editing = Editing.DISABLED
+    )
+    @PropertyLayout(
+            fieldSetId="permissions",
+            sequence = "2"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Mode {
+        class DomainEvent extends PropertyDomainEvent<ApplicationPermissionMode> {}
+    }
+
+    @Mode
+    ApplicationPermissionMode getMode();
+    void setMode(ApplicationPermissionMode mode);
+
+
+
+
 
     // -- HELPER
 

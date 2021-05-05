@@ -32,19 +32,13 @@ import javax.jdo.annotations.VersionStrategy;
 import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.appfeat.ApplicationFeature;
-import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureRepository;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureSort;
 import org.apache.isis.applib.services.appfeat.ApplicationMemberSort;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.ObjectContracts.ObjectContract;
-import org.apache.isis.commons.internal.base._Casts;
 import org.apache.isis.commons.internal.exceptions._Exceptions;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionMode;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRule;
@@ -107,83 +101,47 @@ import lombok.experimental.UtilityClass;
 })
 @DomainObject(
         objectType = "isis.ext.secman.ApplicationPermission"
-        )
+)
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_CHILD
-        )
+)
 public class ApplicationPermission
 implements
-    org.apache.isis.extensions.secman.api.permission.ApplicationPermission,
+    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationRole>,
     Comparable<ApplicationPermission> {
 
-    private static final int TYPICAL_LENGTH_TYPE = 7;  // ApplicationFeatureType.PACKAGE is longest
+    @Inject ApplicationFeatureRepository featureRepository;
 
 
-    // -- role (property)
+    // -- ROLE
 
-    public static class RoleDomainEvent extends PropertyDomainEvent<ApplicationRole> {}
-
-
-    @javax.jdo.annotations.Column(name = "roleId", allowsNull="false")
-    @Property(
-            domainEvent = RoleDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @PropertyLayout(hidden = Where.REFERENCES_PARENT)
+    @Role
     @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    @javax.jdo.annotations.Column(name = "roleId", allowsNull="false")
     private ApplicationRole role;
 
-    @Override
-    public void setRole(org.apache.isis.extensions.secman.api.role.ApplicationRole applicationRole) {
-        role = _Casts.<ApplicationRole>uncheckedCast(applicationRole);
-    }
 
-    // -- rule (property)
-    public static class RuleDomainEvent extends PropertyDomainEvent<ApplicationPermissionRule> {}
+    // -- FEATURE FQN
 
-
+    @FeatureFqn
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Property(
-            domainEvent = RuleDomainEvent.class,
-            editing = Editing.DISABLED
-            )
     @Getter(onMethod = @__(@Override))
     @Setter(onMethod = @__(@Override))
-    private ApplicationPermissionRule rule;
+    private String featureFqn;
 
 
-    // -- mode (property)
-    public static class ModeDomainEvent extends PropertyDomainEvent<ApplicationPermissionMode> {}
-
+    // -- FEATURE SORT
 
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Property(
-            domainEvent = ModeDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @Getter(onMethod = @__(@Override))
-    @Setter(onMethod = @__(@Override))
-    private ApplicationPermissionMode mode;
+    @Getter(onMethod = @__({@Override, @Programmatic}))
+    @Setter
+    private ApplicationFeatureSort featureSort;
 
-    // -- featureId (derived property)
 
-    private Optional<ApplicationFeature> getFeature() {
-        return asFeatureId()
-                .map(featureId -> featureRepository.findFeature(featureId));
-    }
+    // -- SORT
 
-    // region > type (derived, memberSort of associated feature)
-
-    public static class TypeDomainEvent extends PropertyDomainEvent<String> {}
-
-    /**
-     * Combines {@link #getFeatureSort() feature type} and member type.
-     */
-    @Property(
-            domainEvent = TypeDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @PropertyLayout(typicalLength=ApplicationPermission.TYPICAL_LENGTH_TYPE)
+    @Sort
     @Override
     public String getSort() {
         final Enum<?> e = getFeatureSort() != ApplicationFeatureSort.MEMBER
@@ -198,54 +156,29 @@ implements
                 .flatMap(ApplicationFeature::getMemberSort);
     }
 
-
-    // -- FEATURE SORT
-
-    /**
-     * The {@link ApplicationFeatureId#getSort() feature sort} of the
-     * feature.
-     *
-     * <p>
-     *     The combination of the feature type and the {@link #getFeatureFqn() fully qualified name} is used to build
-     *     the corresponding {@link #getFeature() feature} (view model).
-     * </p>
-     *
-     * @see #getFeatureFqn()
-     */
-    @javax.jdo.annotations.Column(allowsNull="false")
-    @Setter
-    private ApplicationFeatureSort featureSort;
-
-    @Override
-    @Programmatic
-    public ApplicationFeatureSort getFeatureSort() {
-        return featureSort;
+    private Optional<ApplicationFeature> getFeature() {
+        return asFeatureId()
+                .map(featureId -> featureRepository.findFeature(featureId));
     }
 
 
+    // -- RULE
 
-    // -- featureFqn
-
-    public static class FeatureFqnDomainEvent extends PropertyDomainEvent<String> {}
-
-    /**
-     * The {@link ApplicationFeatureId#getFullyQualifiedName() fully qualified name}
-     * of the feature.
-     *
-     * <p>
-     *     The combination of the {@link #getFeatureSort() feature type} and the fully qualified name is used to build
-     *     the corresponding {@link #getFeature() feature} (view model).
-     * </p>
-     *
-     * @see #getFeatureSort()
-     */
+    @Rule
     @javax.jdo.annotations.Column(allowsNull="false")
-    @Property(
-            domainEvent = FeatureFqnDomainEvent.class,
-            editing = Editing.DISABLED
-            )
-    @Getter @Setter
-    private String featureFqn;
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    private ApplicationPermissionRule rule;
+
+
+    // -- MODE
+
+    @Mode
+    @javax.jdo.annotations.Column(allowsNull="false")
+    @Getter(onMethod = @__(@Override))
+    @Setter(onMethod = @__(@Override))
+    private ApplicationPermissionMode mode;
+
 
 
     // -- CONTRACT
@@ -301,6 +234,5 @@ implements
 
     }
 
-    @Inject private ApplicationFeatureRepository featureRepository;
 
 }
