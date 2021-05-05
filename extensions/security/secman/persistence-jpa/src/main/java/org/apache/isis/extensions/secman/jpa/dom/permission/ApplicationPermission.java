@@ -61,6 +61,7 @@ import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRul
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValue;
 import org.apache.isis.extensions.secman.jpa.dom.constants.NamedQueryNames;
 import org.apache.isis.extensions.secman.jpa.dom.role.ApplicationRole;
+import org.apache.isis.extensions.secman.jpa.dom.user.ApplicationUser;
 import org.apache.isis.persistence.jpa.applib.integration.JpaEntityInjectionPointResolver;
 
 import lombok.Getter;
@@ -121,10 +122,10 @@ import lombok.experimental.UtilityClass;
 )
 public class ApplicationPermission
 implements
-    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationRole>,
+    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationUser, ApplicationRole>,
     Comparable<ApplicationPermission> {
 
-    @Inject @Transient ApplicationFeatureRepository featureRepository;
+    @Inject transient ApplicationFeatureRepository featureRepository;
 
 
     @javax.persistence.Id

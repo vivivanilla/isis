@@ -22,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionTitleAdvisor;
+import org.apache.isis.extensions.secman.api.role.ApplicationRoleTitleAdvisor;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserIconAdvisor;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserTitleAdvisor;
 
@@ -33,6 +34,7 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUserTitleAdvisor;
         ApplicationPermissionTitleAdvisor.class,
         ApplicationUserTitleAdvisor.class,
         ApplicationUserIconAdvisor.class,
+        ApplicationRoleTitleAdvisor.class,
 })
 public class IsisModuleExtSecmanApi {
 

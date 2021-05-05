@@ -61,19 +61,21 @@ import lombok.RequiredArgsConstructor;
         cssClassUiEvent = ApplicationUser.CssClassUiEvent.class,
         layoutUiEvent = ApplicationUser.LayoutUiEvent.class
 )
-public interface ApplicationUser<APPROLE extends ApplicationRole> extends HasUsername, HasAtPath {
+public interface ApplicationUser<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>>
+        extends HasUsername, HasAtPath, Comparable<APPUSER> {
+
 
     // -- DOMAIN EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser<?>, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser<?>, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser<?,?>, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser<?,?>, T> {}
 
-        // -- UI EVENTS
+    // -- UI EVENTS
 
-    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationUser<?>> {}
-    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationUser<?>> {}
-    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationUser<?>> {}
-    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationUser<?>> {}
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationUser<?,?>> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationUser<?,?>> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationUser<?,?>> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationUser<?,?>> {}
 
 
 

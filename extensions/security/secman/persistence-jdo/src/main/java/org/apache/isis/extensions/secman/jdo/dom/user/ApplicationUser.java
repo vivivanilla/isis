@@ -30,15 +30,9 @@ import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.VersionStrategy;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
 import org.apache.isis.applib.services.user.RoleMemento;
 import org.apache.isis.applib.services.user.UserMemento;
@@ -116,8 +110,8 @@ import lombok.val;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
         )
-public class ApplicationUser implements Comparable<ApplicationUser>,
-org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationRole> {
+public class ApplicationUser
+        implements org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationUser, ApplicationRole> {
 
     @Inject private ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private UserService userService;
@@ -295,7 +289,5 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationRole> {
     public String toString() {
         return contract.toString(this);
     }
-
-
 
 }

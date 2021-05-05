@@ -18,22 +18,40 @@
  */
 package org.apache.isis.extensions.secman.api.role;
 
+import org.apache.isis.applib.annotation.DomainObject;
+import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
+import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 
 /**
  * @since 2.0 {@index}
  */
-public interface ApplicationRole {
+@DomainObject(
+        objectType = "isis.ext.secman.IApplicationRole"
+)
+@DomainObjectLayout(
+        titleUiEvent = ApplicationRole.TitleUiEvent.class,
+        iconUiEvent = ApplicationRole.IconUiEvent.class,
+        cssClassUiEvent = ApplicationRole.CssClassUiEvent.class,
+        layoutUiEvent = ApplicationRole.LayoutUiEvent.class
+)
+public interface ApplicationRole<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>> extends Comparable<APPROLE>{
 
-    public static final int MAX_LENGTH_NAME = 120;
-    public static final int TYPICAL_LENGTH_NAME = 30;
-    public static final int TYPICAL_LENGTH_DESCRIPTION = 50;
+    int MAX_LENGTH_NAME = 120;
+    int TYPICAL_LENGTH_NAME = 30;
+    int TYPICAL_LENGTH_DESCRIPTION = 50;
 
     // -- EVENTS
 
-    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationRole, T> {}
-    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationRole, T> {}
-    public static abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationRole<?,?>, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationRole<?,?>, T> {}
+    abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole<?,?>> {}
+
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationRole<?,?>> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationRole<?,?>> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationRole<?,?>> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationRole<?,?>> {}
+
 
     // -- MODEL
 

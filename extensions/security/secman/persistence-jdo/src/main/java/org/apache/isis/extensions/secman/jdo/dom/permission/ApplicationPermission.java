@@ -44,6 +44,7 @@ import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionMod
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRule;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValue;
 import org.apache.isis.extensions.secman.jdo.dom.role.ApplicationRole;
+import org.apache.isis.extensions.secman.jdo.dom.user.ApplicationUser;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -107,7 +108,7 @@ import lombok.experimental.UtilityClass;
 )
 public class ApplicationPermission
 implements
-    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationRole>,
+    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationUser, ApplicationRole>,
     Comparable<ApplicationPermission> {
 
     @Inject ApplicationFeatureRepository featureRepository;

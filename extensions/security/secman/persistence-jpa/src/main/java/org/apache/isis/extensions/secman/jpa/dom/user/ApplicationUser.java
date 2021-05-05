@@ -108,8 +108,8 @@ import lombok.val;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
         )
-public class ApplicationUser implements Comparable<ApplicationUser>,
-org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationRole> {
+public class ApplicationUser
+        implements org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationUser, ApplicationRole> {
 
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private transient UserService userService;

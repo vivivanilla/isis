@@ -36,6 +36,7 @@ import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureSort;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
+import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 
 /**
  * Specifies how a particular {@link #getRole() application role} may interact with a specific
@@ -77,21 +78,21 @@ import org.apache.isis.extensions.secman.api.role.ApplicationRole;
         cssClassUiEvent = ApplicationPermission.CssClassUiEvent.class,
         layoutUiEvent = ApplicationPermission.LayoutUiEvent.class
 )
-public interface ApplicationPermission<APPROLE extends ApplicationRole> {
+public interface ApplicationPermission<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>> {
 
 
     // -- DOMAIN EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission<?>, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission<?>, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission<?,?>, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission<?,?>, T> {}
 
 
     // -- UI EVENTS
 
-    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationPermission<?>> {}
-    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationPermission<?>> {}
-    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationPermission<?>> {}
-    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationPermission<?>> {}
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationPermission<?,?>> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationPermission<?,?>> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationPermission<?,?>> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationPermission<?,?>> {}
 
 
 
@@ -109,7 +110,7 @@ public interface ApplicationPermission<APPROLE extends ApplicationRole> {
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @interface Role {
-        class DomainEvent extends PropertyDomainEvent<ApplicationRole> {}
+        class DomainEvent extends PropertyDomainEvent<ApplicationRole<?,?>> {}
     }
 
     @Role
