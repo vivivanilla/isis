@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateFaxNumber.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -44,7 +43,7 @@ public class ApplicationUser_updateFaxNumber {
 
     @MemberSupport
     public ApplicationUser act(
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_PHONE_NUMBER, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = ApplicationUser.PhoneNumber.MAX_LENGTH, optionality = Optionality.OPTIONAL)
             @ParameterLayout(named="Fax")
             final String faxNumber) {
         holder.setFaxNumber(faxNumber);

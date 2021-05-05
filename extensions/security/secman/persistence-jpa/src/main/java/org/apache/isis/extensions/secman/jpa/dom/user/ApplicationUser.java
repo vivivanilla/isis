@@ -30,8 +30,6 @@ import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
@@ -39,31 +37,22 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.persistence.Version;
 
 import org.apache.isis.applib.annotation.BookmarkPolicy;
-import org.apache.isis.applib.annotation.Collection;
-import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
-import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
 import org.apache.isis.applib.services.user.RoleMemento;
 import org.apache.isis.applib.services.user.UserMemento;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.ObjectContracts.ObjectContract;
-import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.commons.internal.collections._Lists;
 import org.apache.isis.extensions.secman.api.SecmanConfiguration;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionMode;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet;
 import org.apache.isis.extensions.secman.api.permission.PermissionsEvaluationService;
-import org.apache.isis.extensions.secman.api.user.AccountType;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserStatus;
 import org.apache.isis.extensions.secman.jpa.dom.constants.NamedQueryNames;
 import org.apache.isis.extensions.secman.jpa.dom.permission.ApplicationPermission;
@@ -124,6 +113,7 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private transient UserService userService;
+
     /**
      * Optional service, if configured then is used to evaluate permissions within
      * {@link org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet#evaluate(ApplicationFeatureId, ApplicationPermissionMode)}
@@ -134,208 +124,90 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
     @Inject private transient SecmanConfiguration configBean;
 
 
-    @Id
-    @GeneratedValue
+    @javax.persistence.Id
+    @javax.persistence.GeneratedValue
     private Long id;
 
-    @Version
+    @javax.persistence.Version
     private Long version;
 
 
-    // -- username (property)
-
-    @Property(
-            domainEvent = UsernameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_USERNAME
-    )
-    @PropertyLayout(
-            fieldSetId="identity",
-            sequence = "1"
-    )
-    @Column(nullable=false, length=MAX_LENGTH_USERNAME)
+    @Username
+    @Column(nullable=false, length= Username.MAX_LENGTH)
     @Getter @Setter
     private String username;
 
 
-    // -- accountType (property)
-
-    @Property(
-            domainEvent = AccountTypeDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            fieldSetId="status",
-            sequence = "1"
-    )
+    @AccountType
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     @Getter @Setter
-    private AccountType accountType;
+    private org.apache.isis.extensions.secman.api.user.AccountType accountType;
 
 
-    // -- status (property)
-
-    @Property(
-            domainEvent = StatusDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            fieldSetId="status",
-            sequence = "2"
-    )
+    @Status
     @Column(nullable=false)
     @Enumerated(EnumType.STRING)
     @Getter @Setter
     private ApplicationUserStatus status;
 
 
-    // -- atPath (property)
-
-    @Property(
-            domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_AT_PATH
-    )
-    @PropertyLayout(
-            fieldSetId="atPath",
-            sequence = "3"
-    )
-    @Column(name="atPath", nullable=true, length = MAX_LENGTH_AT_PATH)
+    @AtPath
+    @Column(name="atPath", nullable=true, length = AtPath.MAX_LENGTH)
     @Getter @Setter
     private String atPath;
 
 
-    // -- familyName (property)
-
-    @Property(
-            domainEvent = FamilyNameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_FAMILY_NAME
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "1"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_FAMILY_NAME)
+    @FamilyName
+    @Column(nullable=true, length= FamilyName.MAX_LENGTH)
     @Getter @Setter
     private String familyName;
 
 
-    // -- givenName (property)
-
-    @Property(
-            domainEvent = GivenNameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_KNOWN_AS
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "2"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_GIVEN_NAME)
+    @GivenName
+    @Column(nullable=true, length= GivenName.MAX_LENGTH)
     @Getter @Setter
     private String givenName;
 
 
-    // -- knownAs (property)
-
-    @Property(
-            domainEvent = KnownAsDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_KNOWN_AS
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "3"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_KNOWN_AS)
+    @KnownAs
+    @Column(nullable=true, length= KnownAs.MAX_LENGTH)
     @Getter @Setter
     private String knownAs;
 
 
-    // -- emailAddress (property)
-
-    @Property(
-            domainEvent = EmailAddressDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_EMAIL_ADDRESS
-    )
-    @PropertyLayout(
-            fieldSetId="contactDetails",
-            sequence = "1"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_EMAIL_ADDRESS)
+    @EmailAddress
+    @Column(nullable=true, length= EmailAddress.MAX_LENGTH)
     @Getter @Setter
     private String emailAddress;
 
 
-    // -- phoneNumber (property)
-
-    @Property(
-            domainEvent = PhoneNumberDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_PHONE_NUMBER
-    )
-    @PropertyLayout(
-            fieldSetId="contactDetails",
-            sequence = "2"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
+    @PhoneNumber
+    @Column(nullable=true, length= PhoneNumber.MAX_LENGTH)
     @Getter @Setter
     private String phoneNumber;
 
 
-    // -- faxNumber (property)
-
-    @Property(
-            domainEvent = FaxNumberDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_PHONE_NUMBER
-    )
-    @PropertyLayout(
-            hidden=Where.PARENTED_TABLES,
-            fieldSetId="contactDetails",
-            sequence = "3"
-    )
-    @Column(nullable=true, length=MAX_LENGTH_PHONE_NUMBER)
+    @FaxNumber
+    @Column(nullable=true, length= FaxNumber.MAX_LENGTH)
     @Getter @Setter
     private String faxNumber;
 
 
-    // -- encryptedPassword (hidden property)
-
-    @PropertyLayout(hidden=Where.EVERYWHERE)
+    @EncryptedPassword
     @Column(nullable=true)
     @Getter @Setter
     private String encryptedPassword;
 
 
-
-    // -- hasPassword (derived property)
-
-    @Property(
-            domainEvent = HasPasswordDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(fieldSetId="Status", sequence = "4")
+    @HasPassword
     @Override
     public boolean isHasPassword() {
         return org.apache.isis.extensions.secman.api.user.ApplicationUser.super.isHasPassword();
     }
 
 
-    // -- roles (collection)
-
-    @Collection(
-            domainEvent = RolesDomainEvent.class
-    )
-    @CollectionLayout(
-            defaultView="table",
-            sequence = "20")
+    @Roles
     @ManyToMany(mappedBy = "users", cascade = CascadeType.ALL)
     @JoinTable(
             name = "ApplicationUserRoles",

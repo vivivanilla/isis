@@ -27,7 +27,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updatePhoneNumber.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -45,7 +44,7 @@ public class ApplicationUser_updatePhoneNumber {
     @MemberSupport
     public ApplicationUser act(
             @ParameterLayout(named="Phone")
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_PHONE_NUMBER, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = ApplicationUser.PhoneNumber.MAX_LENGTH, optionality = Optionality.OPTIONAL)
             final String phoneNumber) {
         target.setPhoneNumber(phoneNumber);
         return target;

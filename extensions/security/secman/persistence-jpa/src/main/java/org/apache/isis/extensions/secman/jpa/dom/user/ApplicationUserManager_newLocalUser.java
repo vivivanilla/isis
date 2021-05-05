@@ -42,7 +42,7 @@ extends org.apache.isis.extensions.secman.model.dom.user.ApplicationUserManager_
 
     @MemberSupport
     public ApplicationUserManager act(
-          @Parameter(maxLength = ApplicationUser.MAX_LENGTH_USERNAME)
+          @Parameter(maxLength = ApplicationUser.Username.MAX_LENGTH)
           @ParameterLayout(named = "Name")
           final String username,
 

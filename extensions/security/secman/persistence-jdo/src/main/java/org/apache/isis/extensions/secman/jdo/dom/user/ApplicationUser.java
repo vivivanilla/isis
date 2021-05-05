@@ -45,13 +45,11 @@ import org.apache.isis.applib.services.user.UserMemento;
 import org.apache.isis.applib.services.user.UserService;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.ObjectContracts.ObjectContract;
-import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.commons.internal.collections._Lists;
 import org.apache.isis.extensions.secman.api.SecmanConfiguration;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionMode;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet;
 import org.apache.isis.extensions.secman.api.permission.PermissionsEvaluationService;
-import org.apache.isis.extensions.secman.api.user.AccountType;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserStatus;
 import org.apache.isis.extensions.secman.jdo.dom.permission.ApplicationPermission;
 import org.apache.isis.extensions.secman.jdo.dom.permission.ApplicationPermissionRepository;
@@ -134,203 +132,79 @@ org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
 
 
-    // -- username (property)
-
-    @Property(
-            domainEvent = UsernameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_USERNAME
-    )
-    @PropertyLayout(
-            fieldSetId="identity",
-            sequence = "1"
-    )
-    @javax.jdo.annotations.Column(allowsNull="false", length = MAX_LENGTH_USERNAME)
+    @Username
+    @javax.jdo.annotations.Column(allowsNull="false", length = Username.MAX_LENGTH)
     @Getter @Setter
     private String username;
 
 
-    // -- accountType (property)
-
-    @Property(
-            domainEvent = AccountTypeDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            fieldSetId="status",
-            sequence = "1"
-    )
+    @AccountType
     @javax.jdo.annotations.Column(allowsNull="false")
     @Getter @Setter
-    private AccountType accountType;
+    private org.apache.isis.extensions.secman.api.user.AccountType accountType;
 
 
-    // -- status (property)
-
-    @Property(
-            domainEvent = StatusDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            fieldSetId="status",
-            sequence = "2"
-    )
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @Status
     @Getter @Setter
     private ApplicationUserStatus status;
 
 
-    // -- atPath (property)
-
-    @Property(
-            domainEvent = AtPathDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_AT_PATH
-    )
-    @PropertyLayout(
-            fieldSetId="status",
-            sequence = "3"
-    )
-    @javax.jdo.annotations.Column(name = "atPath", allowsNull="true", length = MAX_LENGTH_AT_PATH)
+    @AtPath
+    @javax.jdo.annotations.Column(name = "atPath", allowsNull="true", length = AtPath.MAX_LENGTH)
     @Getter @Setter
     private String atPath;
 
 
-    // -- familyName (property)
-
-    @Property(
-            domainEvent = FamilyNameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_FAMILY_NAME
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "1"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_FAMILY_NAME)
+    @FamilyName
+    @javax.jdo.annotations.Column(allowsNull="true", length = FamilyName.MAX_LENGTH)
     @Getter @Setter
     private String familyName;
 
 
-    // -- givenName (property)
-
-    @Property(
-            domainEvent = GivenNameDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_KNOWN_AS
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "2"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_GIVEN_NAME)
+    @GivenName
+    @javax.jdo.annotations.Column(allowsNull="true", length = GivenName.MAX_LENGTH)
     @Getter @Setter
     private String givenName;
 
 
-    // -- knownAs (property)
-
-    @Property(
-            domainEvent = KnownAsDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_KNOWN_AS
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="name",
-            sequence = "3"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_KNOWN_AS)
+    @KnownAs
+    @javax.jdo.annotations.Column(allowsNull="true", length = KnownAs.MAX_LENGTH)
     @Getter @Setter
     private String knownAs;
 
 
-    // -- emailAddress (property)
-
-    @Property(
-            domainEvent = EmailAddressDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_EMAIL_ADDRESS
-    )
-    @PropertyLayout(
-            fieldSetId="contactDetails",
-            sequence = "1"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_EMAIL_ADDRESS)
+    @EmailAddress
+    @javax.jdo.annotations.Column(allowsNull="true", length = EmailAddress.MAX_LENGTH)
     @Getter @Setter
     private String emailAddress;
 
 
-    // -- phoneNumber (property)
-
-    @Property(
-            domainEvent = PhoneNumberDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_PHONE_NUMBER
-    )
-    @PropertyLayout(
-            hidden = Where.PARENTED_TABLES,
-            fieldSetId="contactDetails",
-            sequence = "2"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_PHONE_NUMBER)
+    @PhoneNumber
+    @javax.jdo.annotations.Column(allowsNull="true", length = PhoneNumber.MAX_LENGTH)
     @Getter @Setter
     private String phoneNumber;
 
 
-    // -- faxNumber (property)
-
-    @Property(
-            domainEvent = FaxNumberDomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = MAX_LENGTH_PHONE_NUMBER
-    )
-    @PropertyLayout(
-            hidden=Where.ALL_TABLES,
-            fieldSetId="contactDetails",
-            sequence = "3"
-    )
-    @javax.jdo.annotations.Column(allowsNull="true", length = MAX_LENGTH_PHONE_NUMBER)
+    @FaxNumber
+    @javax.jdo.annotations.Column(allowsNull="true", length = FaxNumber.MAX_LENGTH)
     @Getter @Setter
     private String faxNumber;
 
 
-    // -- encryptedPassword (hidden property)
-
-    @PropertyLayout(hidden=Where.EVERYWHERE)
+    @EncryptedPassword
     @javax.jdo.annotations.Column(allowsNull="true")
     @Getter @Setter
     private String encryptedPassword;
 
 
-
-    // -- hasPassword (derived property)
-
-    @Property(
-            domainEvent = HasPasswordDomainEvent.class,
-            editing = Editing.DISABLED
-    )
-    @PropertyLayout(
-            fieldSetId="password",
-            sequence = "1"
-    )
+    @HasPassword
     @Override
     public boolean isHasPassword() {
         return org.apache.isis.extensions.secman.api.user.ApplicationUser.super.isHasPassword();
     }
 
 
-    // -- roles (collection)
-
-    @Collection(
-            domainEvent = RolesDomainEvent.class
-    )
-    @CollectionLayout(
-            defaultView="table",
-            sequence = "20"
-    )
+    @Roles
     @javax.jdo.annotations.Persistent(table="ApplicationUserRoles")
     @javax.jdo.annotations.Join(column="userId")
     @javax.jdo.annotations.Element(column="roleId")

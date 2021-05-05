@@ -25,7 +25,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateUsername.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -42,7 +41,7 @@ public class ApplicationUser_updateUsername {
 
     @MemberSupport
     public ApplicationUser act(
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_USERNAME)
+            @Parameter(maxLength = ApplicationUser.Username.MAX_LENGTH)
             @ParameterLayout(named="Username")
             final String username) {
         target.setUsername(username);

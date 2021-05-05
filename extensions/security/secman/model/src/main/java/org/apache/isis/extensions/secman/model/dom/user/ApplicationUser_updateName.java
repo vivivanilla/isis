@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateName.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,13 +42,13 @@ public class ApplicationUser_updateName {
 
     @MemberSupport
     public ApplicationUser act(
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_FAMILY_NAME, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = ApplicationUser.FamilyName.MAX_LENGTH, optionality = Optionality.OPTIONAL)
             @ParameterLayout(named="Family Name")
             final String familyName,
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_GIVEN_NAME, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = ApplicationUser.GivenName.MAX_LENGTH, optionality = Optionality.OPTIONAL)
             @ParameterLayout(named="Given Name")
             final String givenName,
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_KNOWN_AS, optionality = Optionality.OPTIONAL)
+            @Parameter(maxLength = ApplicationUser.KnownAs.MAX_LENGTH, optionality = Optionality.OPTIONAL)
             @ParameterLayout(named="Known As")
             final String knownAs
             ) {

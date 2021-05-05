@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PromptStyle;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
-import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateEmailAddress.ActionDomainEvent;
 
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +42,7 @@ public class ApplicationUser_updateEmailAddress {
 
     @MemberSupport
     public ApplicationUser act(
-            @Parameter(maxLength = ApplicationUser.MAX_LENGTH_EMAIL_ADDRESS)
+            @Parameter(maxLength = ApplicationUser.EmailAddress.MAX_LENGTH)
             @ParameterLayout(named="Email")
             final String emailAddress) {
         target.setEmailAddress(emailAddress);
