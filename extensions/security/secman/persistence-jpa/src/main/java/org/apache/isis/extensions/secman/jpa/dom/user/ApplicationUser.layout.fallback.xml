@@ -39,7 +39,6 @@ under the License.
                 <cpt:property id="atPath"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
-                <cpt:property id="datanucleusIdLong"/>
                 <cpt:property id="datanucleusVersionLong"/>
                 <cpt:property id="datanucleusVersionTimestamp"/>
             </cpt:fieldSet>
@@ -62,7 +61,7 @@ under the License.
 						                <cpt:property id="familyName"/>
 						                <cpt:property id="givenName"/>
 						                <cpt:property id="knownAs"/>
-						            </cpt:fieldSet>						            
+						            </cpt:fieldSet>
         						</bs3:col>
         					</bs3:row>
         				</bs3:tab>

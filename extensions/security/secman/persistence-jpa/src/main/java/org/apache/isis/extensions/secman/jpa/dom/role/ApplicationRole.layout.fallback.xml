@@ -34,7 +34,6 @@ under the License.
             <cpt:fieldSet name="General" id="general" unreferencedProperties="true">
                 <cpt:property id="name"/>
                 <cpt:property id="description"/>
-                <cpt:property id="datanucleusIdLong"/>
                 <cpt:property id="datanucleusVersionLong"/>
                 <cpt:property id="datanucleusVersionTimestamp"/>
             </cpt:fieldSet>

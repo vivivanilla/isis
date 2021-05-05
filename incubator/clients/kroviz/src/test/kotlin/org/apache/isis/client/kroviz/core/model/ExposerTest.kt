@@ -52,10 +52,6 @@ class ExposerTest {
         val to = TObjectHandler().parse(jsonStr) as TObject
         val exposer = Exposer(to)
 
-        //TODO datanucleus may be gone with Apache Isis 2.0.x
-        val actualDnId = exposer.get("datanucleusIdLong") as Value
-        assertEquals(0, actualDnId.content as Long)
-
         val actualDnvers = exposer.get("datanucleusVersionTimestamp") as Value
         assertEquals(1514897074953L, actualDnvers.content as Long)
 

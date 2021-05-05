@@ -51,7 +51,6 @@ under the License.
                 <cpt:action id="rebuildMetamodel" position="PANEL_DROPDOWN"/>
                 <cpt:property id="datanucleusVersionLong"/>
                 <cpt:property id="datanucleusVersionTimestamp"/>
-                <cpt:property id="datanucleusIdLong"/>
             </cpt:fieldSet>
 
         </bs3:col>

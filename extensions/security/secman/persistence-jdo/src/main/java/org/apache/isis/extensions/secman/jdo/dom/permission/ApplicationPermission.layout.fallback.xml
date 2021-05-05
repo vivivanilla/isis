@@ -34,7 +34,6 @@ under the License.
                 <cpt:property id="role"/>
             </cpt:fieldSet>
             <cpt:fieldSet name="Metadata" id="metadata">
-                <cpt:property id="datanucleusIdLong"/>
                 <cpt:property id="datanucleusVersionLong"/>
                 <cpt:property id="datanucleusVersionTimestamp"/>
             </cpt:fieldSet>

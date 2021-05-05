@@ -816,14 +816,6 @@ msgid "Yaml"
 msgstr ""
 
 
-#: org.apache.isis.applib.services.layout.Object_downloadLayoutXml
-#: org.apache.isis.applib.services.layout.Object_openRestApi
-#: org.apache.isis.applib.services.layout.Object_rebuildMetamodel
-#: org.apache.isis.core.metamodel.services.jdosupport.Persistable_downloadJdoMetadata
-msgid "datanucleusIdLong"
-msgstr ""
-
-
 #: org.isisaddons.module.fakedata.fixture.demoapp.demomodule.dom.FakeDataDemoObjectWithAll#someInt
 msgid "description of some int"
 msgstr ""

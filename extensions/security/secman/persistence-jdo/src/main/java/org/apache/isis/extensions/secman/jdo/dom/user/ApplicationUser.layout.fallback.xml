@@ -50,7 +50,6 @@ under the License.
 									<cpt:fieldSet name="Metadata" id="metadata">
 										<cpt:property id="objectType"/>
 										<cpt:property id="objectIdentifier"/>
-										<cpt:property id="datanucleusIdLong" hidden="EVERYWHERE"/>
 										<cpt:property id="datanucleusVersionLong"/>
 										<cpt:property id="datanucleusVersionTimestamp"/>
 									</cpt:fieldSet>
