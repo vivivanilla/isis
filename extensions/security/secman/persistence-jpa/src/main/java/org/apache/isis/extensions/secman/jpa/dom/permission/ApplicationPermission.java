@@ -68,6 +68,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.UtilityClass;
 
+@SuppressWarnings("JpaQlInspection")
 @Entity
 @Table(
         schema = "isisExtensionsSecman",
@@ -122,8 +123,7 @@ import lombok.experimental.UtilityClass;
 )
 public class ApplicationPermission
 implements
-    org.apache.isis.extensions.secman.api.permission.ApplicationPermission<ApplicationUser, ApplicationRole>,
-    Comparable<ApplicationPermission> {
+    org.apache.isis.extensions.secman.api.permission.ApplicationPermission {
 
     @Inject transient ApplicationFeatureRepository featureRepository;
 
@@ -139,17 +139,25 @@ implements
     // -- ROLE
 
     @Role
+    @SuppressWarnings("JpaAttributeTypeInspection")
     @JoinColumn(name="roleId", nullable=false)
     @Getter(onMethod = @__(@Override))
-    @Setter(onMethod = @__(@Override))
-    @SuppressWarnings("JpaAttributeTypeInspection")
     private ApplicationRole role;
+
+    public void setRole(ApplicationRole role) {
+        this.role = role;
+    }
+
+    @Override
+    public void setRole(org.apache.isis.extensions.secman.api.role.ApplicationRole applicationRole) {
+        setRole((ApplicationRole) applicationRole);
+    }
 
 
     // -- FEATURE FQN
 
     @FeatureFqn
-    @Column(nullable=false)
+    @Column(nullable=false, length = FeatureFqn.MAX_LENGTH)
     @Getter(onMethod = @__(@Override))
     @Setter(onMethod = @__(@Override))
     private String featureFqn;
@@ -218,8 +226,8 @@ implements
             .thenUse("mode", ApplicationPermission::getMode);
 
     @Override
-    public int compareTo(final ApplicationPermission other) {
-        return contract.compare(this, other);
+    public int compareTo(final org.apache.isis.extensions.secman.api.permission.ApplicationPermission other) {
+        return contract.compare(this, (ApplicationPermission) other);
     }
 
     @Override
@@ -242,7 +250,7 @@ implements
     public static class DefaultComparator implements Comparator<ApplicationPermission> {
         @Override
         public int compare(final ApplicationPermission o1, final ApplicationPermission o2) {
-            return Objects.compare(o1, o2, (a, b) -> a.compareTo(b) );
+            return Objects.compare(o1, o2, ApplicationPermission::compareTo);
         }
     }
 

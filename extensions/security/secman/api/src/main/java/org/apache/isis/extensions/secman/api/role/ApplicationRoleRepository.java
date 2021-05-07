@@ -26,31 +26,30 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 /**
  * @since 2.0 {@index}
  */
-public interface ApplicationRoleRepository<R extends ApplicationRole> {
+public interface ApplicationRoleRepository {
 
     /**
      *
      * @return detached entity
      */
-    R newApplicationRole();
+    ApplicationRole newApplicationRole();
 
-    Collection<R> allRoles();
+    Collection<ApplicationRole> allRoles();
 
-    R newRole(String name, String description);
+    ApplicationRole newRole(String name, String description);
 
-    Collection<R> findNameContaining(String search);
-    Collection<R> getRoles(ApplicationUser user);
+    Collection<ApplicationRole> findNameContaining(String search);
 
     /**
      * auto-complete support
      * @param search
      */
-    Collection<R> findMatching(String search);
+    Collection<ApplicationRole> findMatching(String search);
 
-    Optional<R> findByName(String roleName);
-    Optional<R> findByNameCached(String roleName);
+    Optional<ApplicationRole> findByName(String roleName);
+    Optional<ApplicationRole> findByNameCached(String roleName);
 
-    default R upsert(final String name, final String roleDescription) {
+    default ApplicationRole upsert(final String name, final String roleDescription) {
         return findByName(name)
                 .orElseGet(() -> newRole(name, roleDescription));
     }
@@ -61,7 +60,5 @@ public interface ApplicationRoleRepository<R extends ApplicationRole> {
     boolean isAdminRole(ApplicationRole role);
 
     void deleteRole(ApplicationRole holder);
-
-
 
 }

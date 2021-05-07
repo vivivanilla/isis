@@ -84,7 +84,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationRole
-implements org.apache.isis.extensions.secman.api.role.ApplicationRole<ApplicationUser,ApplicationRole>, Comparable<ApplicationRole> {
+implements org.apache.isis.extensions.secman.api.role.ApplicationRole {
 
     @Inject private ApplicationPermissionRepository applicationPermissionRepository;
 
@@ -173,8 +173,8 @@ implements org.apache.isis.extensions.secman.api.role.ApplicationRole<Applicatio
 
 
     @Override
-    public int compareTo(final ApplicationRole o) {
-        return comparator.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.role.ApplicationRole o) {
+        return comparator.compare(this, (ApplicationRole) o);
     }
 
     @Override

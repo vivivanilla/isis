@@ -27,16 +27,8 @@ import org.apache.isis.applib.annotation.Nature;
         )
 public class ApplicationUserManager {
 
-//    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-
     public String title() {
-        return "Application User Manager"; 
+        return "Application User Manager";
     }
 
-//XXX provided via mixins, that is one specific to JPA the other specific to JDO    
-//    @Collection
-//    public java.util.Collection<? extends ApplicationUser> getAllUsers() {
-//        return applicationUserRepository.allUsers();
-//    }
-    
 }

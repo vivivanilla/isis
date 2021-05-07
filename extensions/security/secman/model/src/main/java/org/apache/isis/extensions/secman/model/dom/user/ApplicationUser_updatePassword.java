@@ -47,7 +47,7 @@ public class ApplicationUser_updatePassword {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updatePassword> {}
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
     @Inject private Optional<PasswordEncryptionService> passwordEncryptionService; // empty if no candidate is available
 
     private final ApplicationUser target;

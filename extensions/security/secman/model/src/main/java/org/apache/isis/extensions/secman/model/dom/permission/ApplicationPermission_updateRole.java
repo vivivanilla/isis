@@ -45,7 +45,7 @@ public class ApplicationPermission_updateRole {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationPermission_updateRole> {}
 
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
 
     private final ApplicationPermission target;
 

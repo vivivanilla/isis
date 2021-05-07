@@ -35,7 +35,7 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUser;
         cssClassUiEvent = ApplicationRole.CssClassUiEvent.class,
         layoutUiEvent = ApplicationRole.LayoutUiEvent.class
 )
-public interface ApplicationRole<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>> extends Comparable<APPROLE>{
+public interface ApplicationRole extends Comparable<ApplicationRole>{
 
     int MAX_LENGTH_NAME = 120;
     int TYPICAL_LENGTH_NAME = 30;
@@ -43,14 +43,14 @@ public interface ApplicationRole<APPUSER extends ApplicationUser<APPUSER,APPROLE
 
     // -- EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationRole<?,?>, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationRole<?,?>, T> {}
-    abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole<?,?>> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationRole, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationRole, T> {}
+    abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole> {}
 
-    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationRole<?,?>> {}
-    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationRole<?,?>> {}
-    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationRole<?,?>> {}
-    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationRole<?,?>> {}
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationRole> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationRole> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationRole> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationRole> {}
 
 
     // -- MODEL

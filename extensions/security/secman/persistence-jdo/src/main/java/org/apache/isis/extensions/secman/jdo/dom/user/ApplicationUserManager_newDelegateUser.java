@@ -23,9 +23,9 @@ import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
+import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 import org.apache.isis.extensions.secman.model.dom.user.ApplicationUserManager_newDelegateUser.ActionDomainEvent;
-import org.apache.isis.extensions.secman.jdo.dom.role.ApplicationRole;
 import org.apache.isis.extensions.secman.model.dom.user.ApplicationUserManager;
 
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ import lombok.RequiredArgsConstructor;
         associateWith = "allUsers")
 @RequiredArgsConstructor
 public class ApplicationUserManager_newDelegateUser
-extends org.apache.isis.extensions.secman.model.dom.user.ApplicationUserManager_newDelegateUser<ApplicationRole>{
+extends org.apache.isis.extensions.secman.model.dom.user.ApplicationUserManager_newDelegateUser{
 
     private final ApplicationUserManager target;
 

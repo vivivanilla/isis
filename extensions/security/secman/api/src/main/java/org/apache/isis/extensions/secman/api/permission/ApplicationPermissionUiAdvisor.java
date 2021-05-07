@@ -11,11 +11,14 @@ import lombok.val;
 @Component
 @Order(OrderPrecedence.LATE)
 public
-class ApplicationPermissionTitleAdvisor {
+class ApplicationPermissionUiAdvisor {
 
     @EventListener(ApplicationPermission.TitleUiEvent.class)
     public void on(ApplicationPermission.TitleUiEvent ev) {
         val permission = ev.getSource();
+        if(permission == null) {
+            return;
+        }
         val buf = new StringBuilder();
         buf.append(permission.getRole().getName()).append(":")  // admin:
                 .append(" ").append(permission.getRule().toString()) // Allow|Veto

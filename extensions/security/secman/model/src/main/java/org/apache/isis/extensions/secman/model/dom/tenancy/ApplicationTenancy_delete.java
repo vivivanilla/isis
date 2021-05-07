@@ -38,23 +38,23 @@ import org.apache.isis.extensions.secman.model.dom.user.ApplicationUser_updateAt
 import lombok.RequiredArgsConstructor;
 import lombok.val;
 
-@Action(domainEvent = 
-        DeleteDomainEvent.class, 
+@Action(domainEvent =
+        DeleteDomainEvent.class,
         semantics = SemanticsOf.IDEMPOTENT_ARE_YOU_SURE)
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationTenancy_delete {
-    
-    @Inject private ApplicationTenancyRepository<? extends ApplicationTenancy> applicationTenancyRepository;
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+
+    @Inject private ApplicationTenancyRepository applicationTenancyRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
     @Inject private FactoryService factoryService;
     @Inject private RepositoryService repository;
 
     private final ApplicationTenancy target;
 
-    
+
     @MemberSupport
-    public Collection<? extends ApplicationTenancy> act() {
+    public Collection<ApplicationTenancy> act() {
         for (val user : applicationUserRepository.findByTenancy(target)) {
             val updateAtPathMixin = factoryService.mixin(ApplicationUser_updateAtPath.class, user);
             updateAtPathMixin.act(null);

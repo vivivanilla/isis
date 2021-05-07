@@ -32,13 +32,13 @@ import org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancyRepositor
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = RemoveChildDomainEvent.class, 
+        domainEvent = RemoveChildDomainEvent.class,
         associateWith = "children")
 @ActionLayout(sequence = "2")
 @RequiredArgsConstructor
 public class ApplicationTenancy_removeChild {
-    
-    @Inject private ApplicationTenancyRepository<? extends ApplicationTenancy> applicationTenancyRepository;
+
+    @Inject private ApplicationTenancyRepository applicationTenancyRepository;
 
     private final ApplicationTenancy target;
 
@@ -47,12 +47,12 @@ public class ApplicationTenancy_removeChild {
         applicationTenancyRepository.clearParentOnTenancy(child);
         return target;
     }
-    
+
     @MemberSupport
-    public Collection<? extends ApplicationTenancy> choices0Act() {
+    public Collection<ApplicationTenancy> choices0Act() {
         return applicationTenancyRepository.getChildren(target);
     }
-    
+
     @MemberSupport
     public String disableAct() {
         return choices0Act().isEmpty()? "No children to remove": null;

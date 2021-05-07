@@ -58,6 +58,7 @@ import org.apache.isis.persistence.jpa.applib.integration.JpaEntityInjectionPoin
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings("JpaQlInspection")
 @Entity
 @Table(
         schema = "isisExtensionsSecman",
@@ -92,7 +93,7 @@ import lombok.Setter;
         )
 public class ApplicationRole
 implements
-    org.apache.isis.extensions.secman.api.role.ApplicationRole<ApplicationUser, ApplicationRole> {
+    org.apache.isis.extensions.secman.api.role.ApplicationRole {
 
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
 
@@ -186,8 +187,8 @@ implements
 
 
     @Override
-    public int compareTo(final ApplicationRole o) {
-        return comparator.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.role.ApplicationRole o) {
+        return comparator.compare(this, (ApplicationRole) o);
     }
 
     @Override

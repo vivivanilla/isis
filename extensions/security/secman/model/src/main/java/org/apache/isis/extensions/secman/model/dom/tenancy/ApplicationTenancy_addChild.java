@@ -30,14 +30,14 @@ import org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancyRepositor
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = AddChildDomainEvent.class, 
+        domainEvent = AddChildDomainEvent.class,
         associateWith = "children")
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationTenancy_addChild {
-    
-    @Inject private ApplicationTenancyRepository<? extends ApplicationTenancy> applicationTenancyRepository;
-    
+
+    @Inject private ApplicationTenancyRepository applicationTenancyRepository;
+
     private final ApplicationTenancy target;
 
     @MemberSupport

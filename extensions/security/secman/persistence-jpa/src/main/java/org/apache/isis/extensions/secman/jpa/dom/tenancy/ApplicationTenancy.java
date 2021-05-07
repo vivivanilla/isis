@@ -50,6 +50,7 @@ import org.apache.isis.extensions.secman.jpa.dom.constants.NamedQueryNames;
 import lombok.Getter;
 import lombok.Setter;
 
+@SuppressWarnings("JpaQlInspection")
 @Entity
 @Table(
         schema = "isisExtensionsSecman",
@@ -86,9 +87,7 @@ import lombok.Setter;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationTenancy
-implements
-    Comparable<ApplicationTenancy>,
-    org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy {
+implements org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy {
 
     // -- name (property, title)
 
@@ -195,8 +194,8 @@ implements
     }
 
     @Override
-    public int compareTo(final ApplicationTenancy o) {
-        return comparator.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy o) {
+        return comparator.compare(this, (ApplicationTenancy) o);
     }
 
 }

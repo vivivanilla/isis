@@ -33,20 +33,20 @@ import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRep
         )
 public class ApplicationOrphanedPermissionManager {
 
-    @Inject private ApplicationPermissionRepository<? extends ApplicationPermission> applicationPermissionRepository;
-    
+    @Inject private ApplicationPermissionRepository applicationPermissionRepository;
+
     public String title() {
         return "Manage Orphaned Permissions";
     }
-    
+
     @org.apache.isis.applib.annotation.Collection(typeOf = ApplicationPermission.class)
     public Collection<? extends ApplicationPermission> getOrphanedPermissions() {
         return applicationPermissionRepository.findOrphaned();
     }
-    
+
 //    @Action
 //    public Collection<? extends ApplicationPermission> debugOrphanedPermissions() {
 //        return applicationPermissionRepository.findOrphaned();
 //    }
-    
+
 }

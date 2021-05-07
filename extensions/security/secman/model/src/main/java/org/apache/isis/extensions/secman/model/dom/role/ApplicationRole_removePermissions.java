@@ -54,7 +54,7 @@ public class ApplicationRole_removePermissions {
     @Inject private MessageService messageService;
     @Inject private SecmanConfiguration configBean;
     @Inject private RepositoryService repository;
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
 
     private final ApplicationRole target;
 

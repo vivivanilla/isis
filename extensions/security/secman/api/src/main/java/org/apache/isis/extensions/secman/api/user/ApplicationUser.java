@@ -27,6 +27,7 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import org.springframework.context.event.EventListener;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import org.apache.isis.applib.annotation.Collection;
@@ -34,6 +35,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.OrderPrecedence;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
@@ -42,7 +44,6 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.mixins.security.HasUsername;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
 import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionValueSet;
 import org.apache.isis.extensions.secman.api.role.ApplicationRole;
 import org.apache.isis.extensions.secman.api.tenancy.HasAtPath;
@@ -61,21 +62,21 @@ import lombok.RequiredArgsConstructor;
         cssClassUiEvent = ApplicationUser.CssClassUiEvent.class,
         layoutUiEvent = ApplicationUser.LayoutUiEvent.class
 )
-public interface ApplicationUser<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>>
-        extends HasUsername, HasAtPath, Comparable<APPUSER> {
+public interface ApplicationUser
+        extends HasUsername, HasAtPath, Comparable<ApplicationUser> {
 
 
     // -- DOMAIN EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser<?,?>, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser<?,?>, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationUser, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationUser, T> {}
 
     // -- UI EVENTS
 
-    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationUser<?,?>> {}
-    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationUser<?,?>> {}
-    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationUser<?,?>> {}
-    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationUser<?,?>> {}
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationUser> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationUser> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationUser> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationUser> {}
 
 
 
@@ -378,13 +379,15 @@ public interface ApplicationUser<APPUSER extends ApplicationUser<APPUSER,APPROLE
 
 
     @Component
+    @Order(OrderPrecedence.LATE)
     @RequiredArgsConstructor(onConstructor_ = {@Inject})
     class HasPasswordAdvisor {
 
-        final org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<?> applicationUserRepository;
+        final org.apache.isis.extensions.secman.api.user.ApplicationUserRepository applicationUserRepository;
 
         @EventListener(HasPassword.DomainEvent.class)
         public void advise(HasPassword.DomainEvent ev) {
+            //noinspection SwitchStatementWithTooFewBranches
             switch(ev.getEventPhase()) {
                 case HIDE:
                     if(! applicationUserRepository.isPasswordFeatureEnabled(ev.getSource())) {
@@ -415,14 +418,13 @@ public interface ApplicationUser<APPUSER extends ApplicationUser<APPUSER,APPROLE
     }
 
     @Roles
-    Set<APPROLE> getRoles();
+    Set<ApplicationRole> getRoles();
 
 
 
 
     /**
      * Short-term (request-scoped) caching.
-     * @return
      */
     @Programmatic
     ApplicationPermissionValueSet getPermissionSet();

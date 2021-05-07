@@ -64,6 +64,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.val;
 
+@SuppressWarnings("JpaQlInspection")
 @Entity
 @Table(
         schema = "isisExtensionsSecman",
@@ -109,7 +110,7 @@ import lombok.val;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationUser
-        implements org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationUser, ApplicationRole> {
+        implements org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
     @Inject private transient ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private transient UserService userService;
@@ -282,8 +283,8 @@ public class ApplicationUser
 
 
     @Override
-    public int compareTo(final ApplicationUser o) {
-        return contract.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.user.ApplicationUser o) {
+        return contract.compare(this, (ApplicationUser) o);
     }
 
     @Override

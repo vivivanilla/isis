@@ -32,21 +32,21 @@ import org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancyRepositor
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = UpdateParentDomainEvent.class, 
+        domainEvent = UpdateParentDomainEvent.class,
         associateWith = "parent")
 @ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class ApplicationTenancy_updateParent {
-    
-    @Inject private ApplicationTenancyRepository<? extends ApplicationTenancy> applicationTenancyRepository;
-    
+
+    @Inject private ApplicationTenancyRepository applicationTenancyRepository;
+
     private final ApplicationTenancy target;
 
     @MemberSupport
     public ApplicationTenancy act(
             @Parameter(optionality = Optionality.OPTIONAL)
             final ApplicationTenancy parent) {
-        
+
         applicationTenancyRepository.setParentOnTenancy(target, parent);
         return target;
     }

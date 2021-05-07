@@ -56,7 +56,7 @@ import lombok.val;
 @Service
 @Named("isis.ext.secman.ApplicationUserRepository")
 public class ApplicationUserRepository
-implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<ApplicationUser> {
+implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository {
 
     @Inject private FactoryService factoryService;
     @Inject private RepositoryService repository;
@@ -95,13 +95,15 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
 
     public Optional<ApplicationUser> findByUsernameCached(final String username) {
         return queryResultsCacheProvider.get().execute(this::findByUsername,
-                ApplicationUserRepository.class, "findByUsernameCached", username);
+                ApplicationUserRepository.class, "findByUsernameCached", username)
+                .map(ApplicationUser.class::cast);
     }
 
     @Override
-    public Optional<ApplicationUser> findByUsername(final String username) {
+    public Optional<org.apache.isis.extensions.secman.api.user.ApplicationUser> findByUsername(final String username) {
         return repository.uniqueMatch(Query.named(ApplicationUser.class, NamedQueryNames.USER_BY_USERNAME)
-                .withParameter("username", username));
+                .withParameter("username", username))
+                .map(org.apache.isis.extensions.secman.api.user.ApplicationUser.class::cast);
     }
 
     // -- findByEmailAddress (programmatic)

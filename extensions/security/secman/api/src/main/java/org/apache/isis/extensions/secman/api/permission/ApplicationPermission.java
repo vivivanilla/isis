@@ -27,6 +27,7 @@ import java.util.Optional;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
+import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
@@ -78,21 +79,21 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUser;
         cssClassUiEvent = ApplicationPermission.CssClassUiEvent.class,
         layoutUiEvent = ApplicationPermission.LayoutUiEvent.class
 )
-public interface ApplicationPermission<APPUSER extends ApplicationUser<APPUSER,APPROLE>, APPROLE extends ApplicationRole<APPUSER, APPROLE>> {
+public interface ApplicationPermission extends Comparable<ApplicationPermission>{
 
 
     // -- DOMAIN EVENTS
 
-    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission<?,?>, T> {}
-    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission<?,?>, T> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationPermission, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationPermission, T> {}
 
 
     // -- UI EVENTS
 
-    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationPermission<?,?>> {}
-    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationPermission<?,?>> {}
-    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationPermission<?,?>> {}
-    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationPermission<?,?>> {}
+    class TitleUiEvent extends IsisModuleExtSecmanApi.TitleUiEvent<ApplicationPermission> {}
+    class IconUiEvent extends IsisModuleExtSecmanApi.IconUiEvent<ApplicationPermission> {}
+    class CssClassUiEvent extends IsisModuleExtSecmanApi.CssClassUiEvent<ApplicationPermission> {}
+    class LayoutUiEvent extends IsisModuleExtSecmanApi.LayoutUiEvent<ApplicationPermission> {}
 
 
 
@@ -110,27 +111,33 @@ public interface ApplicationPermission<APPUSER extends ApplicationUser<APPUSER,A
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @interface Role {
-        class DomainEvent extends PropertyDomainEvent<ApplicationRole<?,?>> {}
+        class DomainEvent extends PropertyDomainEvent<ApplicationRole> {}
     }
 
     @Role
-    APPROLE getRole();
-    void setRole(APPROLE applicationRole);
+    ApplicationRole getRole();
+    void setRole(ApplicationRole applicationRole);
 
 
     // -- FEATURE FQN
 
     @Property(
             domainEvent = FeatureFqn.DomainEvent.class,
-            editing = Editing.DISABLED
+            editing = Editing.DISABLED,
+            maxLength = FeatureFqn.MAX_LENGTH
     )
     @PropertyLayout(
             fieldSetId="identity",
             sequence = "2"
     )
+    @Parameter(
+            maxLength = FeatureFqn.MAX_LENGTH
+    )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @interface FeatureFqn {
+        int MAX_LENGTH = 1024;
+
         class DomainEvent extends PropertyDomainEvent<String> {}
     }
 
@@ -169,6 +176,9 @@ public interface ApplicationPermission<APPUSER extends ApplicationUser<APPUSER,A
     @PropertyLayout(
             fieldSetId="feature",
             sequence = "1"
+    )
+    @Parameter(
+            maxLength = Sort.MAX_LENGTH
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
@@ -224,7 +234,6 @@ public interface ApplicationPermission<APPUSER extends ApplicationUser<APPUSER,A
     @Mode
     ApplicationPermissionMode getMode();
     void setMode(ApplicationPermissionMode mode);
-
 
 
 

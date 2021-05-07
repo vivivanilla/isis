@@ -83,7 +83,7 @@ import lombok.Setter;
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
         )
-public class ApplicationTenancy implements Comparable<ApplicationTenancy>,
+public class ApplicationTenancy implements
 org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy {
 
     // -- name (property, title)
@@ -191,8 +191,8 @@ org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy {
     }
 
     @Override
-    public int compareTo(final ApplicationTenancy o) {
-        return comparator.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy o) {
+        return comparator.compare(this, (ApplicationTenancy) o);
     }
 
 }

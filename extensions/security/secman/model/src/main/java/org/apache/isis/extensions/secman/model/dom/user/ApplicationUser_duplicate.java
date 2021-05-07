@@ -45,8 +45,8 @@ public class ApplicationUser_duplicate {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_duplicate> {}
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
 
     private final ApplicationUser target;
 

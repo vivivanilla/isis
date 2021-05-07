@@ -36,16 +36,16 @@ import lombok.RequiredArgsConstructor;
         )
 @RequiredArgsConstructor
 public class ApplicationTenancy_users {
-    
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-    
+
+    @Inject private ApplicationUserRepository applicationUserRepository;
+
     private final ApplicationTenancy target;
 
     // -- users (collection)
 
     public static class UsersDomainEvent extends CollectionDomainEvent<ApplicationUser> {}
 
-    public java.util.Collection<? extends ApplicationUser> coll() {
+    public java.util.Collection<ApplicationUser> coll() {
         return applicationUserRepository.findByAtPath(target.getPath());
     }
 

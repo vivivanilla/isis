@@ -27,20 +27,20 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 /**
  * @apiNote This mixin requires concrete implementations associated with JPA and JDO,
- * since action's type parameters are inspected for their compile time types 
- * and the ApplicationRole here is just an interface that the framework has not much 
+ * since action's type parameters are inspected for their compile time types
+ * and the ApplicationRole here is just an interface that the framework has not much
  * meta-model information to derive UI behavior from.
- * 
+ *
  * @implNote due to current limitations, both the main and its supporting methods have to be
- * overridden with the concrete subclasses. 
- * 
+ * overridden with the concrete subclasses.
+ *
  */
-public abstract class ApplicationUserManager_allUsers<U extends ApplicationUser> {
-    
-    @Inject private ApplicationUserRepository<U> applicationUserRepository;
-    
-    protected Collection<U> doColl() {
-        return applicationUserRepository.allUsers();        
+public abstract class ApplicationUserManager_allUsers {
+
+    @Inject private ApplicationUserRepository applicationUserRepository;
+
+    protected Collection<ApplicationUser> doColl() {
+        return applicationUserRepository.allUsers();
     }
 
 

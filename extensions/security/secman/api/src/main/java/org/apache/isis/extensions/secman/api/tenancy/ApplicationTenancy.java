@@ -18,30 +18,33 @@
  */
 package org.apache.isis.extensions.secman.api.tenancy;
 
+import java.util.Collection;
+
 import org.apache.isis.extensions.secman.api.IsisModuleExtSecmanApi;
 
 /**
  * @since 2.0 {@index}
  */
-public interface ApplicationTenancy {
+public interface ApplicationTenancy extends Comparable<ApplicationTenancy> {
 
-    public static final int MAX_LENGTH_PATH = 255;
-    public static final int MAX_LENGTH_NAME = 120;
-    public static final int TYPICAL_LENGTH_NAME = 20;
+    int MAX_LENGTH_PATH = 255;
+    int MAX_LENGTH_NAME = 120;
+    int TYPICAL_LENGTH_NAME = 20;
+
 
     // -- DOMAIN EVENTS
 
-    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationTenancy, T> {}
-    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationTenancy, T> {}
-    public static abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    abstract class PropertyDomainEvent<T> extends IsisModuleExtSecmanApi.PropertyDomainEvent<ApplicationTenancy, T> {}
+    abstract class CollectionDomainEvent<T> extends IsisModuleExtSecmanApi.CollectionDomainEvent<ApplicationTenancy, T> {}
+    abstract class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
 
-    public static class AddUserDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class RemoveUserDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class AddChildDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class DeleteDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class RemoveChildDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class UpdateNameDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
-    public static class UpdateParentDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class AddUserDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class RemoveUserDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class AddChildDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class DeleteDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class RemoveChildDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class UpdateNameDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
+    class UpdateParentDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationTenancy> {}
 
     // -- MODEL
 
@@ -49,12 +52,15 @@ public interface ApplicationTenancy {
         return getName();
     }
 
-    public String getPath();
+    String getPath();
+    void setPath(String path);
 
-    public String getName();
-    public void setName(String name);
+    String getName();
+    void setName(String name);
 
-    public ApplicationTenancy getParent();
+    ApplicationTenancy getParent();
+    void setParent(ApplicationTenancy parent);
 
+    Collection<ApplicationTenancy> getChildren();
 
 }

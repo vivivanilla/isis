@@ -12,11 +12,14 @@ import lombok.val;
 @Component
 @Order(OrderPrecedence.LATE)
 public
-class ApplicationRoleTitleAdvisor {
+class ApplicationRoleUiAdvisor {
 
     @EventListener(ApplicationRole.TitleUiEvent.class)
     public void on(ApplicationRole.TitleUiEvent ev) {
         val role = ev.getSource();
+        if(role == null) {
+            return;
+        }
         ev.setTitle(role.getName());
     }
 

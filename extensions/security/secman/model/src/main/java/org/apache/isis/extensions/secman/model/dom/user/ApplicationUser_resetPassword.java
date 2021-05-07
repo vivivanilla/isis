@@ -43,7 +43,7 @@ public class ApplicationUser_resetPassword {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_resetPassword> {}
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
 
     private final ApplicationUser target;
 

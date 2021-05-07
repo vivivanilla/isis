@@ -5,18 +5,20 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Component;
 
 import org.apache.isis.applib.annotation.OrderPrecedence;
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermission;
 
 import lombok.val;
 
 @Component
 @Order(OrderPrecedence.LATE)
 public
-class ApplicationUserTitleAdvisor {
+class ApplicationUserUiAdvisor {
 
     @EventListener(ApplicationUser.TitleUiEvent.class)
     public void on(ApplicationUser.TitleUiEvent ev) {
         val user = ev.getSource();
+        if(user == null) {
+            return;
+        }
 
         val buf = new StringBuilder();
         if(user.getFamilyName() != null) {
@@ -24,13 +26,25 @@ class ApplicationUserTitleAdvisor {
                     user.getKnownAs() != null
                             ? user.getKnownAs()
                             : user.getGivenName())
-               .append(' ')
+                    .append(' ')
                     .append(user.getFamilyName())
                     .append(" (").append(user.getUsername()).append(')');
         } else {
             buf.append(user.getUsername());
         }
         ev.setTitle(buf.toString());
+    }
+
+    @EventListener(ApplicationUser.IconUiEvent.class)
+    public void on(ApplicationUser.IconUiEvent ev) {
+        val user = ev.getSource();
+        if(user == null) {
+            return;
+        }
+        ev.setIconName(
+                user.getStatus().isEnabled()
+                        ? "enabled"
+                        : "disabled");
     }
 
 }

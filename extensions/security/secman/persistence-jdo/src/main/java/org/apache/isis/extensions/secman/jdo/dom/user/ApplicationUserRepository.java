@@ -21,6 +21,7 @@ package org.apache.isis.extensions.secman.jdo.dom.user;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.SortedSet;
 import java.util.function.Consumer;
 
 import javax.annotation.Nullable;
@@ -42,6 +43,7 @@ import org.apache.isis.core.config.IsisConfiguration;
 import org.apache.isis.extensions.secman.api.SecmanConfiguration;
 import org.apache.isis.extensions.secman.api.encryption.PasswordEncryptionService;
 import org.apache.isis.extensions.secman.api.events.UserCreatedEvent;
+import org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy;
 import org.apache.isis.extensions.secman.api.user.AccountType;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserStatus;
 import org.apache.isis.extensions.secman.jdo.dom.role.ApplicationRole;
@@ -54,7 +56,7 @@ import lombok.val;
 @Repository
 @Named("isis.ext.secman.ApplicationUserRepository")
 public class ApplicationUserRepository
-implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<ApplicationUser> {
+implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository {
 
     @Inject private FactoryService factoryService;
     @Inject private RepositoryService repository;
@@ -81,25 +83,31 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
      * </p>
      */
     @Override
-    public ApplicationUser findOrCreateUserByUsername(
-            final String username) {
+    public org.apache.isis.extensions.secman.api.user.ApplicationUser findOrCreateUserByUsername(final String username) {
         // slightly unusual to cache a function that modifies state, but safe because this is idempotent
         return queryResultsCacheProvider.get().execute(()->
-            findByUsername(username).orElseGet(()->newDelegateUser(username, null)),
+                    findOrCreateUserByUsernameNotCached(username),
             ApplicationUserRepository.class, "findOrCreateUserByUsername", username);
     }
+
+    private org.apache.isis.extensions.secman.api.user.ApplicationUser findOrCreateUserByUsernameNotCached(String username) {
+        return findByUsername(username).orElseGet(() -> newDelegateUser(username, null));
+    }
+
 
     // -- findByUsername
 
     public Optional<ApplicationUser> findByUsernameCached(final String username) {
         return queryResultsCacheProvider.get().execute(this::findByUsername,
-                ApplicationUserRepository.class, "findByUsernameCached", username);
+                ApplicationUserRepository.class, "findByUsernameCached", username)
+                .map(ApplicationUser.class::cast);
     }
 
     @Override
-    public Optional<ApplicationUser> findByUsername(final String username) {
+    public Optional<org.apache.isis.extensions.secman.api.user.ApplicationUser> findByUsername(final String username) {
         return repository.uniqueMatch(Query.named(ApplicationUser.class, "findByUsername")
-                .withParameter("username", username));
+                .withParameter("username", username))
+                .map(org.apache.isis.extensions.secman.api.user.ApplicationUser.class::cast);
     }
 
     // -- findByEmailAddress (programmatic)
@@ -117,7 +125,12 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
     // -- findByName
 
     @Override
-    public Collection<ApplicationUser> find(final String search) {
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> find(final String search) {
+        //noinspection unchecked
+        return (Collection)find_(search);
+    }
+
+    private SortedSet<ApplicationUser> find_(String search) {
         final String regex = String.format("(?i).*%s.*", search.replace("*", ".*").replace("?", "."));
         return repository.allMatches(Query.named(ApplicationUser.class, "find")
                 .withParameter("regex", regex))
@@ -128,7 +141,12 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
     // -- allUsers
 
     @Override
-    public Collection<ApplicationUser> findByAtPath(final String atPath) {
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> findByAtPath(final String atPath) {
+        //noinspection unchecked
+        return (Collection) findByAtPath_(atPath);
+    }
+
+    private Collection<ApplicationUser> findByAtPath_(String atPath) {
         return repository.allMatches(Query.named(ApplicationUser.class, "findByAtPath")
                 .withParameter("atPath", atPath))
                 .stream()
@@ -136,38 +154,59 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
     }
 
     @Override
-    public Collection<ApplicationUser> findByRole(
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> findByRole(
             org.apache.isis.extensions.secman.api.role.ApplicationRole genericRole) {
+        //noinspection unchecked
+        return (Collection)findByRole_(genericRole);
+    }
 
-        val role = _Casts.<ApplicationRole>uncheckedCast(genericRole);
+    private Collection<ApplicationUser> findByRole_(org.apache.isis.extensions.secman.api.role.ApplicationRole genericRole) {
+        ApplicationRole role = _Casts.<ApplicationRole>uncheckedCast(genericRole);
         return _NullSafe.stream(role.getUsers())
                 .collect(_Sets.toUnmodifiableSorted());
     }
 
     @Override
-    public Collection<ApplicationUser> findByTenancy(
-            @NonNull final org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy genericTenancy) {
-        return findByAtPath(genericTenancy.getPath())
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> findByTenancy(
+            @NonNull final ApplicationTenancy genericTenancy) {
+        //noinspection unchecked
+        return (Collection)findByTenancy_(genericTenancy);
+    }
+
+    private Collection<ApplicationUser> findByTenancy_(org.apache.isis.extensions.secman.api.tenancy.ApplicationTenancy genericTenancy) {
+        return findByAtPath_(genericTenancy.getPath())
                 .stream()
                 .collect(_Sets.toUnmodifiableSorted());
     }
 
+
     // -- allUsers
 
     @Override
-    public Collection<ApplicationUser> allUsers() {
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> allUsers() {
+        //noinspection unchecked
+        return (Collection)allUsers_();
+    }
+
+    private Collection<ApplicationUser> allUsers_() {
         return repository.allInstances(ApplicationUser.class)
                 .stream()
                 .collect(_Sets.toUnmodifiableSorted());
     }
 
     @Override
-    public Collection<ApplicationUser> findMatching(final String search) {
+    public Collection<org.apache.isis.extensions.secman.api.user.ApplicationUser> findMatching(final String search) {
+        //noinspection unchecked
+        return (Collection)findMatching_(search);
+    }
+
+    private Collection<ApplicationUser> findMatching_(String search) {
         if (search != null && search.length() > 0) {
-            return find(search);
+            return find_(search);
         }
         return Collections.emptySortedSet();
     }
+
 
     // -- UPDATE USER STATE
 
@@ -192,11 +231,12 @@ implements org.apache.isis.extensions.secman.api.user.ApplicationUserRepository<
         return configBean.getAdminUserName().equals(user.getUsername());
     }
 
+
     @Override
-    public ApplicationUser newUser(
+    public org.apache.isis.extensions.secman.api.user.ApplicationUser newUser(
             @NonNull String username,
             @Nullable AccountType accountType,
-            Consumer<ApplicationUser> beforePersist) {
+            Consumer<org.apache.isis.extensions.secman.api.user.ApplicationUser> beforePersist) {
 
         val user = newApplicationUser();
         user.setUsername(username);

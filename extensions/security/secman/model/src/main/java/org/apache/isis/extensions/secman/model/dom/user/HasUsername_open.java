@@ -36,11 +36,11 @@ import lombok.RequiredArgsConstructor;
         domainEvent = HasUsername_open.ActionDomainEvent.class,
         associateWith = "User" // associate with a 'User' property (if any)
         )
-@ActionLayout(sequence = "1") 
+@ActionLayout(sequence = "1")
 @RequiredArgsConstructor
 public class HasUsername_open {
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
 
     private final HasUsername target;
 

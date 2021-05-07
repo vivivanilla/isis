@@ -35,6 +35,7 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUser;
 import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Action(
         domainEvent = ApplicationRole_addUser.ActionDomainEvent.class,
@@ -45,8 +46,8 @@ public class ApplicationRole_addUser {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_addUser> {}
 
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
 
     private final ApplicationRole target;
 
@@ -58,8 +59,8 @@ public class ApplicationRole_addUser {
 
     @MemberSupport
     public List<? extends ApplicationUser> autoComplete0Act(final String search) {
-        final Collection<? extends ApplicationUser> matchingSearch = applicationUserRepository.find(search);
-        final List<? extends ApplicationUser> list = _Lists.newArrayList(matchingSearch);
+        val matchingSearch = applicationUserRepository.find(search);
+        val list = _Lists.newArrayList(matchingSearch);
         list.removeAll(applicationUserRepository.findByRole(target));
         return list;
     }

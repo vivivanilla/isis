@@ -46,8 +46,8 @@ public class ApplicationRole_removeUsers {
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_removeUsers> {}
 
     @Inject private MessageService messageService;
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
 
     private final ApplicationRole target;
 

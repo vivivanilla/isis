@@ -43,20 +43,20 @@ import lombok.val;
  * overridden with the concrete subclasses.
  *
  */
-public abstract class ApplicationUserManager_newDelegateUser<R extends ApplicationRole> {
+public abstract class ApplicationUserManager_newDelegateUser {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUserManager_newDelegateUser> {}
 
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
-    @Inject private ApplicationRoleRepository<R> applicationRoleRepository;
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
     @Inject private SecmanConfiguration configBean;
     @Inject private RepositoryService repository;
     @Inject private SecurityRealmService securityRealmService;
 
     protected ApplicationUser doAct(
           final String username,
-          final R initialRole,
+          final ApplicationRole initialRole,
           final Boolean enabled) {
 
         final ApplicationUser user = applicationUserRepository
@@ -73,7 +73,7 @@ public abstract class ApplicationUserManager_newDelegateUser<R extends Applicati
         return hasNoDelegateAuthenticationRealm();
     }
 
-    protected R doDefault1() {
+    protected ApplicationRole doDefault1() {
         return applicationRoleRepository
                 .findByNameCached(configBean.getRegularUserRoleName())
                 .orElse(null);

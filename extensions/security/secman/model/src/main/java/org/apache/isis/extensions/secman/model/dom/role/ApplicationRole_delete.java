@@ -43,7 +43,7 @@ public class ApplicationRole_delete {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationRole_delete> {}
 
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
 
     private final ApplicationRole holder;
 

@@ -111,7 +111,7 @@ import lombok.val;
         bookmarking = BookmarkPolicy.AS_ROOT
         )
 public class ApplicationUser
-        implements org.apache.isis.extensions.secman.api.user.ApplicationUser<ApplicationUser, ApplicationRole> {
+        implements org.apache.isis.extensions.secman.api.user.ApplicationUser {
 
     @Inject private ApplicationPermissionRepository applicationPermissionRepository;
     @Inject private UserService userService;
@@ -271,8 +271,8 @@ public class ApplicationUser
 
 
     @Override
-    public int compareTo(final ApplicationUser o) {
-        return contract.compare(this, o);
+    public int compareTo(final org.apache.isis.extensions.secman.api.user.ApplicationUser o) {
+        return contract.compare(this, (ApplicationUser) o);
     }
 
     @Override

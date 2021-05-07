@@ -40,7 +40,7 @@ public class ApplicationUser_updateAccountType {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_updateAccountType> {}
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
 
     private final ApplicationUser target;
 

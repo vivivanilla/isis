@@ -19,6 +19,7 @@
 package org.apache.isis.extensions.secman.model.dom.user;
 
 import java.util.Collection;
+import java.util.TreeSet;
 
 import javax.inject.Inject;
 
@@ -43,7 +44,7 @@ public class ApplicationUser_addRole {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_addRole> {}
 
-    @Inject private ApplicationRoleRepository<? extends ApplicationRole> applicationRoleRepository;
+    @Inject private ApplicationRoleRepository applicationRoleRepository;
 
     private final ApplicationUser target;
 

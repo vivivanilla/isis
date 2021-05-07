@@ -21,20 +21,21 @@ package org.apache.isis.extensions.secman.api;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionTitleAdvisor;
-import org.apache.isis.extensions.secman.api.role.ApplicationRoleTitleAdvisor;
-import org.apache.isis.extensions.secman.api.user.ApplicationUserIconAdvisor;
-import org.apache.isis.extensions.secman.api.user.ApplicationUserTitleAdvisor;
+import org.apache.isis.extensions.secman.api.permission.ApplicationPermissionUiAdvisor;
+import org.apache.isis.extensions.secman.api.role.ApplicationRoleUiAdvisor;
+import org.apache.isis.extensions.secman.api.user.ApplicationUser;
+import org.apache.isis.extensions.secman.api.user.ApplicationUserUiAdvisor;
 
 /**
  * @since 2.0 {@index}
  */
 @Configuration()
 @Import({
-        ApplicationPermissionTitleAdvisor.class,
-        ApplicationUserTitleAdvisor.class,
-        ApplicationUserIconAdvisor.class,
-        ApplicationRoleTitleAdvisor.class,
+        ApplicationPermissionUiAdvisor.class,
+        ApplicationUserUiAdvisor.class,
+        ApplicationRoleUiAdvisor.class,
+
+        ApplicationUser.HasPasswordAdvisor.class,
 })
 public class IsisModuleExtSecmanApi {
 

@@ -54,13 +54,13 @@ import lombok.val;
 @Repository
 @Named("isis.ext.secman.ApplicationPermissionRepository")
 public class ApplicationPermissionRepository
-implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRepository<ApplicationPermission> {
+implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissionRepository {
 
     @Inject private RepositoryService repository;
     @Inject private ApplicationFeatureRepository featureRepository;
     @Inject private FactoryService factory;
     @Inject private MessageService messages;
-    
+
     @Inject private javax.inject.Provider<QueryResultsCache> queryResultsCacheProvider;
 
     @Override
@@ -83,7 +83,7 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
 
     // -- findByUser (programmatic)
     public List<ApplicationPermission> findByUserCached(@NonNull final ApplicationUser user) {
-        return queryResultsCacheProvider.get().execute(this::findByUser, 
+        return queryResultsCacheProvider.get().execute(this::findByUser,
                 ApplicationPermissionRepository.class, "findByUserCached", user);
     }
 
@@ -102,16 +102,17 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
     /**
      * Uses the {@link QueryResultsCache} in order to support
      * multiple lookups from <code>org.apache.isis.extensions.secman.jdo.app.user.UserPermissionViewModel</code>.
+     * @return
      */
     @Override
-    public Optional<ApplicationPermission> findByUserAndPermissionValue(final String username, final ApplicationPermissionValue permissionValue) {
+    public Optional<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findByUserAndPermissionValue(final String username, final ApplicationPermissionValue permissionValue) {
 
         // obtain all permissions for this user, map by its value, and
         // put into query cache (so that this method can be safely called in a tight loop)
         val permissions =
                 queryResultsCacheProvider.get().execute(
-                        this::permissionsByPermissionValue, 
-                        ApplicationPermissionRepository.class, "findByUserAndPermissionValue", 
+                        this::permissionsByPermissionValue,
+                        ApplicationPermissionRepository.class, "findByUserAndPermissionValue",
                         username);
 
         // now simply return the permission from the required value (if it exists)
@@ -120,16 +121,16 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
                 ? Optional.of(applicationPermissions.get(0))
                         : Optional.empty();
     }
-    
+
     private ListMultimap<ApplicationPermissionValue, ApplicationPermission> permissionsByPermissionValue(
             final String username) {
 
         // only username (and not permissionValue) is the key
         // (we are obtaining all the perms for this user)
-        
+
         val permissionsByPermissionValue =
                 _Multimaps.<ApplicationPermissionValue, ApplicationPermission>newListMultimap();
-        
+
         val permissions = findByUser(username);
 
         _NullSafe.stream(permissions)
@@ -143,17 +144,19 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
 
     // -- findByRoleAndRuleAndFeatureType (programmatic)
     @Override
-    public Collection<ApplicationPermission> findByRoleAndRuleAndFeatureTypeCached(
+    public Collection<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findByRoleAndRuleAndFeatureTypeCached(
             org.apache.isis.extensions.secman.api.role.ApplicationRole role,
             ApplicationPermissionRule rule,
             ApplicationFeatureSort type) {
-        return queryResultsCacheProvider.get().execute(this::findByRoleAndRuleAndFeatureType, 
-                ApplicationPermissionRepository.class, "findByRoleAndRuleAndFeatureTypeCached", 
-                role, rule, type);
+        //noinspection unchecked
+        return (Collection)queryResultsCacheProvider.get().execute(this::findByRoleAndRuleAndFeatureType,
+                ApplicationPermissionRepository.class, "findByRoleAndRuleAndFeatureTypeCached",
+                role, rule, type)
+                ;
     }
 
     public Collection<ApplicationPermission> findByRoleAndRuleAndFeatureType(
-            org.apache.isis.extensions.secman.api.role.ApplicationRole role, 
+            org.apache.isis.extensions.secman.api.role.ApplicationRole role,
             final ApplicationPermissionRule rule,
             final ApplicationFeatureSort type) {
         return repository.allMatches(Query.named(
@@ -167,7 +170,7 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
 
 
     // -- findByRoleAndRuleAndFeature (programmatic)
-    public Optional<ApplicationPermission> findByRoleAndRuleAndFeatureCached(
+    public Optional<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findByRoleAndRuleAndFeatureCached(
             final org.apache.isis.extensions.secman.api.role.ApplicationRole role,
             final ApplicationPermissionRule rule,
             final ApplicationFeatureSort featureSort,
@@ -179,7 +182,17 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
     }
 
     @Override
-    public Optional<ApplicationPermission> findByRoleAndRuleAndFeature(
+    public Optional<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findByRoleAndRuleAndFeature(
+            final org.apache.isis.extensions.secman.api.role.ApplicationRole role,
+            final ApplicationPermissionRule rule,
+            final ApplicationFeatureSort featureSort,
+            final String featureFqn) {
+
+        return findByRoleAndRuleAndFeature_(role, rule, featureSort, featureFqn)
+                .map(org.apache.isis.extensions.secman.api.permission.ApplicationPermission.class::cast);
+    }
+
+    private Optional<ApplicationPermission> findByRoleAndRuleAndFeature_(
             final org.apache.isis.extensions.secman.api.role.ApplicationRole role,
             final ApplicationPermissionRule rule,
             final ApplicationFeatureSort featureSort,
@@ -198,13 +211,18 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
     // -- findByFeature (programmatic)
 
     @Override
-    public Collection<ApplicationPermission> findByFeatureCached(final ApplicationFeatureId featureId) {
+    public Collection<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findByFeatureCached(final ApplicationFeatureId featureId) {
+        //noinspection unchecked
+        return (Collection)findByFeatureCached_(featureId);
+    }
+
+    private Collection<ApplicationPermission> findByFeatureCached_(final ApplicationFeatureId featureId) {
         return queryResultsCacheProvider.get().execute(
-                this::findByFeature, ApplicationPermissionRepository.class, "findByFeatureCached",
+                this::findByFeature, ApplicationPermissionRepository.class, "findByFeatureCached_",
                 featureId);
     }
 
-    public Collection<ApplicationPermission> findByFeature(final ApplicationFeatureId featureId) {
+    private Collection<ApplicationPermission> findByFeature(final ApplicationFeatureId featureId) {
         return repository.allMatches(
                 Query.named(
                         ApplicationPermission.class, "findByFeature")
@@ -243,6 +261,7 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
             final String featureFqn) {
 
         ApplicationPermission permission = findByRoleAndRuleAndFeature(role, rule, featureSort, featureFqn)
+                .map(ApplicationPermission.class::cast)
                 .orElse(null);
         if (permission != null) {
             return permission;
@@ -273,8 +292,8 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
     @Override
     public ApplicationPermission newPermission(
             final org.apache.isis.extensions.secman.api.role.ApplicationRole genericRole,
-            final ApplicationPermissionRule rule, 
-            final ApplicationPermissionMode mode, 
+            final ApplicationPermissionRule rule,
+            final ApplicationPermissionMode mode,
             final ApplicationFeatureId featureId) {
 
         val role = _Casts.<ApplicationRole>uncheckedCast(genericRole);
@@ -297,11 +316,16 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
 
         return permission;
     }
-    
+
 
     // -- allPermission (programmatic)
     @Override
-    public Collection<ApplicationPermission> allPermissions() {
+    public Collection<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> allPermissions() {
+        //noinspection unchecked
+        return (Collection)allPermissions_();
+    }
+
+    private Collection<ApplicationPermission> allPermissions_() {
         return repository.allInstances(ApplicationPermission.class)
                 .stream()
                 .collect(_Sets.toUnmodifiableSorted());
@@ -310,21 +334,25 @@ implements org.apache.isis.extensions.secman.api.permission.ApplicationPermissio
     // -- findOrphaned (programmatic)
 
     @Override
-    public Collection<ApplicationPermission> findOrphaned() {
+    public Collection<org.apache.isis.extensions.secman.api.permission.ApplicationPermission> findOrphaned() {
+        return (Collection)findOrphaned_();
+    }
 
-        val featureNamesKnownToTheMetamodel =  
+    private Collection<ApplicationPermission> findOrphaned_() {
+
+        val featureNamesKnownToTheMetamodel =
                 featureRepository.getFeatureIdentifiersByName().keySet();
 
         val orphaned = _Lists.<ApplicationPermission>newArrayList();
 
-        for (val permission : allPermissions()) {
-            
+        for (val permission : allPermissions_()) {
+
             val featId = permission.asFeatureId().orElse(null);
             if(featId==null) {
                 orphaned.add(permission);
                 continue;
             }
-            
+
             if(!featureNamesKnownToTheMetamodel.contains(featId.getFullyQualifiedName())) {
                 orphaned.add(permission);
             }

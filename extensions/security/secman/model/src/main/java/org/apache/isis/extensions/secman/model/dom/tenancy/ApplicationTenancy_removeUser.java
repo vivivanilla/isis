@@ -34,28 +34,28 @@ import org.apache.isis.extensions.secman.api.user.ApplicationUserRepository;
 import lombok.RequiredArgsConstructor;
 
 @Action(
-        domainEvent = RemoveUserDomainEvent.class, 
+        domainEvent = RemoveUserDomainEvent.class,
         associateWith = "users")
 @ActionLayout(named="Remove", sequence = "2")
 @RequiredArgsConstructor
 public class ApplicationTenancy_removeUser {
-    
-    @Inject private ApplicationTenancyRepository<? extends ApplicationTenancy> applicationTenancyRepository;
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
-    
+
+    @Inject private ApplicationTenancyRepository applicationTenancyRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
+
     private final ApplicationTenancy target;
-    
+
     @MemberSupport
     public ApplicationTenancy act(final ApplicationUser applicationUser) {
         applicationTenancyRepository.clearTenancyOnUser(applicationUser);
         return target;
     }
-    
+
     @MemberSupport
-    public Collection<? extends ApplicationUser> choices0Act() {
+    public Collection<ApplicationUser> choices0Act() {
         return applicationUserRepository.findByTenancy(target);
     }
-    
+
     @MemberSupport
     public String disableAct() {
         return choices0Act().isEmpty()? "No users to remove": null;

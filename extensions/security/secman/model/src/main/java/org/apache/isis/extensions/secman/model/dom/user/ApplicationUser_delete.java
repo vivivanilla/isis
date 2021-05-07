@@ -44,7 +44,7 @@ public class ApplicationUser_delete {
 
     public static class ActionDomainEvent extends IsisModuleExtSecmanApi.ActionDomainEvent<ApplicationUser_delete> {}
 
-    @Inject private ApplicationUserRepository<? extends ApplicationUser> applicationUserRepository;
+    @Inject private ApplicationUserRepository applicationUserRepository;
     @Inject private RepositoryService repository;
 
     private final ApplicationUser target;
