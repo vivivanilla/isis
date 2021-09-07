@@ -40,8 +40,8 @@ import org.apache.isis.applib.services.commanddto.conmap.ContentMappingServiceFo
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Clob;
-import org.apache.isis.extensions.commandlog.model.command.CommandModel;
-import org.apache.isis.extensions.commandlog.model.command.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
+import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
 import org.apache.isis.extensions.commandreplay.primary.IsisModuleExtCommandReplayPrimary;
 import org.apache.isis.extensions.commandreplay.primary.restapi.CommandRetrievalService;
 import org.apache.isis.schema.cmd.v2.CommandDto;

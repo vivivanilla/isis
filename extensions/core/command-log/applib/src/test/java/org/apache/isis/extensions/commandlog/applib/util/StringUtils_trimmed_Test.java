@@ -16,20 +16,31 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.model.util;
+package org.apache.isis.extensions.commandlog.applib.util;
 
-import lombok.experimental.UtilityClass;
+import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Test;
 
-@UtilityClass
-public class StringUtils {
+public class StringUtils_trimmed_Test {
 
-    public static String trimmed(final String str, final int lengthOfField) {
-        if (str == null) {
-            return null;
-        }
-        if (str.length() > lengthOfField) {
-            return str.substring(0, lengthOfField - 3) + "...";
-        }
-        return str;
+    @Test
+    public void fits() {
+        Assertions.assertThat(StringUtils.trimmed("abcde", 5)).isEqualTo("abcde");
     }
+
+    @Test
+    public void needs_to_be_trimmed() {
+        Assertions.assertThat(StringUtils.trimmed("abcde", 4)).isEqualTo("a...");
+    }
+
+    @Test
+    public void when_null() {
+        Assertions.assertThat(StringUtils.trimmed(null, 4)).isNull();
+    }
+
+    @Test
+    public void when_empty() {
+        Assertions.assertThat(StringUtils.trimmed("", 4)).isEqualTo("");
+    }
+
 }

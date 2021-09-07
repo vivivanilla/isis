@@ -22,7 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.Profile;
 
-import org.apache.isis.extensions.commandlog.model.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
 import org.apache.isis.extensions.commandreplay.primary.config.PrimaryConfig;
 import org.apache.isis.extensions.commandreplay.primary.mixins.Object_openOnSecondary;
 import org.apache.isis.extensions.commandreplay.primary.restapi.CommandRetrievalService;

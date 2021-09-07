@@ -28,9 +28,9 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.services.command.CommandExecutorService;
 import org.apache.isis.applib.services.xactn.TransactionService;
-import org.apache.isis.extensions.commandlog.model.command.CommandModel;
-import org.apache.isis.extensions.commandlog.model.command.CommandModelRepository;
-import org.apache.isis.extensions.commandlog.model.command.ReplayState;
+import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
+import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandreplay.secondary.SecondaryStatus;
 import org.apache.isis.extensions.commandreplay.secondary.StatusException;
 import org.apache.isis.extensions.commandreplay.secondary.analysis.CommandReplayAnalysisService;

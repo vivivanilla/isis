@@ -16,33 +16,30 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.model.util;
+package org.apache.isis.extensions.commandlog.applib.dom;
 
-import org.assertj.core.api.Assertions;
-import org.junit.jupiter.api.Test;
+public enum ReplayState {
+    /**
+     * As used on primary system.
+     */
+    UNDEFINED,
+    /**
+     * For use on secondary system, indicates that the command has not yet been replayed.
+     */
+    PENDING,
+    /**
+     * For use on secondary system, indicates that the command has been replayed ok
+     */
+    OK,
+    /**
+     * For use on secondary system, indicates that the command has been replayed but encountered an error
+     */
+    FAILED,
+    /**
+     * For use on secondary system, indicates that the command should not be replayed.
+     */
+    EXCLUDED,
+    ;
 
-import org.apache.isis.extensions.commandlog.model.util.StringUtils;
-
-public class StringUtils_trimmed_Test {
-
-    @Test
-    public void fits() {
-        Assertions.assertThat(StringUtils.trimmed("abcde", 5)).isEqualTo("abcde");
-    }
-
-    @Test
-    public void needs_to_be_trimmed() {
-        Assertions.assertThat(StringUtils.trimmed("abcde", 4)).isEqualTo("a...");
-    }
-
-    @Test
-    public void when_null() {
-        Assertions.assertThat(StringUtils.trimmed(null, 4)).isNull();
-    }
-
-    @Test
-    public void when_empty() {
-        Assertions.assertThat(StringUtils.trimmed("", 4)).isEqualTo("");
-    }
-
+    public boolean isFailed() { return this == FAILED;}
 }

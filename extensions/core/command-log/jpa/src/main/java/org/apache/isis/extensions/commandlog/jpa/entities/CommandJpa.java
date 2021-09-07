@@ -54,10 +54,10 @@ import org.apache.isis.commons.functional.Result;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.commons.internal.exceptions._Exceptions;
 import org.apache.isis.extensions.commandlog.jpa.IsisModuleExtCommandLogJpa;
-import org.apache.isis.extensions.commandlog.model.command.CommandModel;
-import org.apache.isis.extensions.commandlog.model.command.ReplayState;
-import org.apache.isis.extensions.commandlog.model.util.BigDecimalUtils;
-import org.apache.isis.extensions.commandlog.model.util.StringUtils;
+import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
+import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
+import org.apache.isis.extensions.commandlog.applib.util.BigDecimalUtils;
+import org.apache.isis.extensions.commandlog.applib.util.StringUtils;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 import org.apache.isis.schema.cmd.v2.MapDto;
 

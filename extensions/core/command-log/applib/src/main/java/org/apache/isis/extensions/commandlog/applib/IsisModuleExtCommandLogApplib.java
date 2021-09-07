@@ -16,32 +16,34 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.model;
+package org.apache.isis.extensions.commandlog.applib;
 
 import org.apache.isis.testing.fixtures.applib.modules.ModuleWithFixtures;
 
 public interface IsisModuleExtCommandLogApplib
 extends ModuleWithFixtures {
 
-    public abstract static class TitleUiEvent<S>
+    String NAMESPACE = "isis.ext.commandLog";
+
+    abstract class TitleUiEvent<S>
         extends org.apache.isis.applib.events.ui.TitleUiEvent<S> { }
 
-    public abstract static class IconUiEvent<S>
+    abstract class IconUiEvent<S>
         extends org.apache.isis.applib.events.ui.IconUiEvent<S> { }
 
-    public abstract static class CssClassUiEvent<S>
+    abstract class CssClassUiEvent<S>
         extends org.apache.isis.applib.events.ui.CssClassUiEvent<S> { }
 
-    public abstract static class LayoutUiEvent<S>
+    abstract class LayoutUiEvent<S>
         extends org.apache.isis.applib.events.ui.LayoutUiEvent<S> { }
 
-    public abstract static class ActionDomainEvent<S>
+    abstract class ActionDomainEvent<S>
         extends org.apache.isis.applib.events.domain.ActionDomainEvent<S> { }
 
-    public abstract static class CollectionDomainEvent<S,T>
+    abstract class CollectionDomainEvent<S,T>
         extends org.apache.isis.applib.events.domain.CollectionDomainEvent<S,T> { }
 
-    public abstract static class PropertyDomainEvent<S,T>
+    abstract class PropertyDomainEvent<S,T>
         extends org.apache.isis.applib.events.domain.PropertyDomainEvent<S,T> { }
 
 }

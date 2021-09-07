@@ -18,13 +18,20 @@
  */
 package org.apache.isis.applib.mixins.system;
 
-import java.sql.Timestamp;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.UUID;
 
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.Optionality;
+import org.apache.isis.applib.annotation.Parameter;
+import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
+import org.apache.isis.applib.events.domain.PropertyDomainEvent;
 import org.apache.isis.applib.mixins.security.HasUsername;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 
@@ -37,6 +44,33 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
  * @since 2.0 {@index}
  */
 public interface DomainChangeRecord extends HasInteractionId, HasUsername {
+
+    @Property(
+            domainEvent = ChangeTypeMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = ChangeTypeMeta.MAX_LENGTH
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
+            fieldSetId = "Identifiers",
+            sequence = "1",
+            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = ChangeTypeMeta.MAX_LENGTH
+    )
+    @ParameterLayout(
+            named = "Change Type",
+            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface ChangeTypeMeta {
+        int MAX_LENGTH = 24;
+        int TYPICAL_LENGTH = 24;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, DomainChangeRecord.ChangeType> {}
+    }
 
     /**
      * Enumerates the different types of changes recognised.
@@ -56,12 +90,35 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     /**
      * Distinguishes commands from audit entries from published events/interactions (when these are shown mixed together in a (standalone) table).
      */
-    @Property
-    @PropertyLayout(
-            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
-            fieldSetId="Identifiers",
-            sequence = "1")
+    @ChangeTypeMeta
     ChangeType getType();
+
+
+
+    @Property(
+            domainEvent = InteractionId.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = InteractionId.MAX_LENGTH
+    )
+    @PropertyLayout(
+            fieldSetId = "Identifiers",
+            sequence = "50",
+            typicalLength = InteractionId.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = InteractionId.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = InteractionId.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface InteractionId {
+        int MAX_LENGTH = 36;
+        int TYPICAL_LENGTH = 36;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, UUID> { }
+    }
 
 
     /**
@@ -69,27 +126,78 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
      * {@link org.apache.isis.applib.services.iactn.Interaction} within which
      * this change occurred.
      */
+    @InteractionId
     @Override
-    @Property
-    @PropertyLayout(fieldSetId="Identifiers",sequence = "50")
     UUID getInteractionId();
 
+
+
+    @Property(
+            domainEvent = Username.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = Username.MAX_LENGTH
+    )
+    @PropertyLayout(
+            fieldSetId="Identifiers",
+            sequence = "10",
+            typicalLength = Username.TYPICAL_LENGTH,
+            hidden = Where.PARENTED_TABLES
+    )
+    @Parameter(
+            maxLength = Username.MAX_LENGTH
+    )
+    @ParameterLayout(
+            named = "Username",
+            typicalLength = Username.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Username {
+        int MAX_LENGTH = 120;
+        int TYPICAL_LENGTH = 40;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, String> {}
+    }
 
     /**
      * The user that caused the change.
      */
-    @Override
-    @Property
-    @PropertyLayout(fieldSetId="Identifiers", sequence = "10")
+    @Username
     String getUsername();
 
+
+
+    @Property(
+            domainEvent = DomainChangeRecord.Timestamp.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = Timestamp.MAX_LENGTH
+    )
+    @PropertyLayout(
+            fieldSetId="Identifiers",
+            sequence = "20",
+            typicalLength = Timestamp.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = Timestamp.MAX_LENGTH
+    )
+    @ParameterLayout(
+            named = "Timestamp",
+            typicalLength = Timestamp.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface Timestamp {
+        int MAX_LENGTH = 32;
+        int TYPICAL_LENGTH = 32;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, java.sql.Timestamp> {}
+    }
 
     /**
      * The time that the change occurred.
      */
-    @Property
-    @PropertyLayout(fieldSetId="Identifiers", sequence = "20")
-    Timestamp getTimestamp();
+    @DomainChangeRecord.Timestamp
+    java.sql.Timestamp getTimestamp();
 
 
     /**
