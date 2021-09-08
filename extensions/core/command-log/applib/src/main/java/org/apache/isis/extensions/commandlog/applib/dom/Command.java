@@ -238,26 +238,38 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
-    // UP TO HERE...
+    @Property(
+            domainEvent = ReplayStateFailureReason.DomainEvent.class
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_TABLES,
+            multiLine = ReplayStateFailureReason.MULTILINE
+    )
+    @Parameter(
+    )
+    @ParameterLayout(
+            multiLine = ReplayStateFailureReason.MULTILINE
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ReplayStateFailureReason {
 
-    public static class ReplayStateFailureReasonDomainEvent extends PropertyDomainEvent<ReplayState> { }
+        int MULTILINE = 5;
+        class DomainEvent extends PropertyDomainEvent<String> {}
+    }
+
     /**
      * For a {@link org.apache.isis.extensions.commandlog.applib.dom.ReplayState#FAILED failed} replayed command,
      * what the reason was for the failure.
      */
-    @Property(
-            domainEvent = ReplayStateFailureReasonDomainEvent.class
-    )
-    @PropertyLayout(
-            hidden = Where.ALL_TABLES,
-            multiLine = 5
-    )
+    @ReplayStateFailureReason
     public abstract String getReplayStateFailureReason();
     public abstract void setReplayStateFailureReason(String replayStateFailureReason);
 
     @MemberSupport public boolean hideReplayStateFailureReason() {
         return getReplayState() == null || !getReplayState().isFailed();
     }
+
 
 
     public static class ParentDomainEvent extends PropertyDomainEvent<org.apache.isis.applib.services.command.Command> { }
