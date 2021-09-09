@@ -45,33 +45,6 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
  */
 public interface DomainChangeRecord extends HasInteractionId, HasUsername {
 
-    @Property(
-            domainEvent = ChangeTypeMeta.DomainEvent.class,
-            editing = Editing.DISABLED,
-            maxLength = ChangeTypeMeta.MAX_LENGTH
-    )
-    @PropertyLayout(
-            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
-            fieldSetId = "Identifiers",
-            sequence = "1",
-            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
-    )
-    @Parameter(
-            maxLength = ChangeTypeMeta.MAX_LENGTH
-    )
-    @ParameterLayout(
-            named = "Change Type",
-            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
-    )
-    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
-    @Retention(RetentionPolicy.RUNTIME)
-    @interface ChangeTypeMeta {
-        int MAX_LENGTH = 24;
-        int TYPICAL_LENGTH = 24;
-
-        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, DomainChangeRecord.ChangeType> {}
-    }
-
     /**
      * Enumerates the different types of changes recognised.
      *
@@ -87,6 +60,35 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
         }
     }
 
+    @Property(
+            domainEvent = ChangeTypeMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = ChangeTypeMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
+            fieldSetId = "Identifiers",
+            sequence = "1",
+            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = ChangeTypeMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
+    @ParameterLayout(
+            named = "Change Type",
+            typicalLength = ChangeTypeMeta.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface ChangeTypeMeta {
+        int MAX_LENGTH = 24;
+        int TYPICAL_LENGTH = 24;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, DomainChangeRecord.ChangeType> {}
+    }
+
     /**
      * Distinguishes commands from audit entries from published events/interactions (when these are shown mixed together in a (standalone) table).
      */
@@ -98,7 +100,8 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     @Property(
             domainEvent = InteractionId.DomainEvent.class,
             editing = Editing.DISABLED,
-            maxLength = InteractionId.MAX_LENGTH
+            maxLength = InteractionId.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
             fieldSetId = "Identifiers",
@@ -106,7 +109,8 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
             typicalLength = InteractionId.TYPICAL_LENGTH
     )
     @Parameter(
-            maxLength = InteractionId.MAX_LENGTH
+            maxLength = InteractionId.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @ParameterLayout(
             typicalLength = InteractionId.TYPICAL_LENGTH
@@ -119,7 +123,6 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
 
         class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, UUID> { }
     }
-
 
     /**
      * The unique identifier (a GUID) of the
@@ -135,7 +138,8 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     @Property(
             domainEvent = Username.DomainEvent.class,
             editing = Editing.DISABLED,
-            maxLength = Username.MAX_LENGTH
+            maxLength = Username.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
             fieldSetId="Identifiers",
@@ -144,7 +148,8 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
             hidden = Where.PARENTED_TABLES
     )
     @Parameter(
-            maxLength = Username.MAX_LENGTH
+            maxLength = Username.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @ParameterLayout(
             named = "Username",
@@ -168,25 +173,27 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
 
 
     @Property(
-            domainEvent = DomainChangeRecord.Timestamp.DomainEvent.class,
+            domainEvent = TimestampMeta.DomainEvent.class,
             editing = Editing.DISABLED,
-            maxLength = Timestamp.MAX_LENGTH
+            maxLength = TimestampMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
             fieldSetId="Identifiers",
             sequence = "20",
-            typicalLength = Timestamp.TYPICAL_LENGTH
+            typicalLength = TimestampMeta.TYPICAL_LENGTH
     )
     @Parameter(
-            maxLength = Timestamp.MAX_LENGTH
+            maxLength = TimestampMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @ParameterLayout(
             named = "Timestamp",
-            typicalLength = Timestamp.TYPICAL_LENGTH
+            typicalLength = TimestampMeta.TYPICAL_LENGTH
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
-    @interface Timestamp {
+    @interface TimestampMeta {
         int MAX_LENGTH = 32;
         int TYPICAL_LENGTH = 32;
 
@@ -196,34 +203,107 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     /**
      * The time that the change occurred.
      */
-    @DomainChangeRecord.Timestamp
+    @DomainChangeRecord.TimestampMeta
     java.sql.Timestamp getTimestamp();
 
 
-    /**
-     * The object type of the domain object being changed.
-     */
-    @Property
+
+    @Property(
+            domainEvent = LogicalTypeName.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = LogicalTypeName.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
     @PropertyLayout(
-            named="Object Type",
+            named="Logical Type Name",
             fieldSetId="Target",
-            sequence = "10")
-    default String getTargetObjectType() {
+            sequence = "10",
+            typicalLength = LogicalTypeName.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = LogicalTypeName.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
+    @ParameterLayout(
+            typicalLength = LogicalTypeName.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface LogicalTypeName {
+        int MAX_LENGTH = 1024;
+        int TYPICAL_LENGTH = 128;
+
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, Bookmark> { }
+    }
+
+    /**
+     * The logical type of the domain object being changed.
+     */
+    @LogicalTypeName
+    default String getTargetLogicalTypeName() {
         return getTarget().getLogicalTypeName();
     }
 
 
 
+    @Property(
+            domainEvent = TargetMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            optionality = Optionality.MANDATORY
+    )
+    @PropertyLayout(
+            named = "Object",
+            fieldSetId = "Target",
+            sequence = "30"
+    )
+    @Parameter(
+            optionality = Optionality.MANDATORY
+    )
+    @ParameterLayout(
+            named = "Object"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface TargetMeta {
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, Bookmark> { }
+    }
+
     /**
      * The {@link Bookmark} identifying the domain object that has changed.
      */
-    @Property
-    @PropertyLayout(
-            named="Object",
-            fieldSetId="Target",
-            sequence="30")
+    @DomainChangeRecord.TargetMeta
     Bookmark getTarget();
 
+
+
+    @Property(
+            domainEvent = TargetMember.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = TargetMember.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
+    )
+    @PropertyLayout(
+            fieldSetId="Target",
+            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
+            named = "Member",
+            sequence = "20",
+            typicalLength = TargetMember.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = TargetMember.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
+    )
+    @ParameterLayout(
+            named="Member",
+            typicalLength = TargetMember.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface TargetMember {
+        int MAX_LENGTH = 255;
+        int TYPICAL_LENGTH = 30;
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, String> { }
+    }
 
     /**
      * The member interaction (ie action invocation or property edit) which caused the domain object to be changed.
@@ -232,10 +312,35 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
      *     Populated for commands and for published events that represent action invocations or property edits.
      * </p>
      */
-    @Property(optionality = Optionality.OPTIONAL)
-    @PropertyLayout(named="Member", hidden = Where.ALL_EXCEPT_STANDALONE_TABLES, fieldSetId="Target", sequence = "20")
+    @DomainChangeRecord.TargetMember
     String getTargetMember();
 
+
+    @Property(
+            domainEvent = PreValue.DomainEvent.class,
+            editing = Editing.DISABLED,
+            optionality = Optionality.OPTIONAL
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
+            fieldSetId = "Detail",
+            sequence = "6",
+            typicalLength = PreValue.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = PreValue.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
+    )
+    @ParameterLayout(
+            typicalLength = PreValue.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface PreValue {
+        int MAX_LENGTH = 1024;
+        int TYPICAL_LENGTH = 30;
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, String> { }
+    }
 
     /**
      * The value of the property prior to it being changed.
@@ -244,10 +349,36 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
      * Populated only for audit entries.
      * </p>
      */
-    @Property(optionality = Optionality.OPTIONAL)
-    @PropertyLayout(hidden = Where.ALL_EXCEPT_STANDALONE_TABLES, fieldSetId="Detail",sequence = "6")
+    @PreValue
     String getPreValue();
 
+
+
+    @Property(
+            domainEvent = PostValue.DomainEvent.class,
+            editing = Editing.DISABLED,
+            optionality = Optionality.OPTIONAL
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_EXCEPT_STANDALONE_TABLES,
+            fieldSetId = "Detail",
+            sequence = "7",
+            typicalLength = PostValue.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = PostValue.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
+    )
+    @ParameterLayout(
+            typicalLength = PostValue.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    @interface PostValue {
+        int MAX_LENGTH = 1024;
+        int TYPICAL_LENGTH = 30;
+        class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, String> { }
+    }
 
     /**
      * The value of the property after it has changed.
@@ -256,9 +387,7 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
      * Populated only for audit entries.
      * </p>
      */
-    @Property(optionality = Optionality.MANDATORY)
-    @PropertyLayout(hidden = Where.ALL_EXCEPT_STANDALONE_TABLES, fieldSetId="Detail",
-    sequence = "7")
+    @PostValue
     String getPostValue();
 
 

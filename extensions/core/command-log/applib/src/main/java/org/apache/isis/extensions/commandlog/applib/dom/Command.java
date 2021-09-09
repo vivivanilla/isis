@@ -32,16 +32,21 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import javax.annotation.Nullable;
+
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
+import org.apache.isis.applib.annotation.Domain;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberSupport;
+import org.apache.isis.applib.annotation.Optionality;
 import org.apache.isis.applib.annotation.Parameter;
 import org.apache.isis.applib.annotation.ParameterLayout;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
+import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
@@ -62,6 +67,7 @@ import org.apache.isis.extensions.commandlog.applib.util.StringUtils;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 import org.apache.isis.schema.cmd.v2.MapDto;
 
+import lombok.NonNull;
 import lombok.val;
 
 @DomainObject(
@@ -78,18 +84,18 @@ public abstract class Command implements DomainChangeRecord {
 
     public final static String LOGICAL_TYPE_NAME = IsisModuleExtCommandLogApplib.NAMESPACE + ".Command";
 
-    public static class TitleUiEvent extends IsisModuleExtCommandLogApplib.TitleUiEvent<CommandModel> { }
-    public static class IconUiEvent extends IsisModuleExtCommandLogApplib.IconUiEvent<CommandModel> { }
-    public static class CssClassUiEvent extends IsisModuleExtCommandLogApplib.CssClassUiEvent<CommandModel> { }
-    public static class LayoutUiEvent extends IsisModuleExtCommandLogApplib.LayoutUiEvent<CommandModel> { }
+    public static class TitleUiEvent extends IsisModuleExtCommandLogApplib.TitleUiEvent<Command> { }
+    public static class IconUiEvent extends IsisModuleExtCommandLogApplib.IconUiEvent<Command> { }
+    public static class CssClassUiEvent extends IsisModuleExtCommandLogApplib.CssClassUiEvent<Command> { }
+    public static class LayoutUiEvent extends IsisModuleExtCommandLogApplib.LayoutUiEvent<Command> { }
 
-    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtCommandLogApplib.PropertyDomainEvent<CommandModel, T> { }
-    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<CommandModel, T> { }
+    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtCommandLogApplib.PropertyDomainEvent<Command, T> { }
+    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<Command, T> { }
 
 
     public Command(final org.apache.isis.applib.services.command.Command command) {
 
-        setInteractionIdStr(command.getInteractionId().toString());
+        setInteractionId(command.getInteractionId());
         setUsername(command.getUsername());
         setTimestamp(command.getTimestamp());
 
@@ -119,7 +125,7 @@ public abstract class Command implements DomainChangeRecord {
             final ReplayState replayState,
             final int targetIndex) {
 
-        setInteractionIdStr(commandDto.getInteractionId());
+        setInteractionId(UUID.fromString(commandDto.getInteractionId()));
         setUsername(commandDto.getUser());
         setTimestamp(JavaSqlXMLGregorianCalendarMarshalling.toTimestamp(commandDto.getTimestamp()));
 
@@ -156,15 +162,18 @@ public abstract class Command implements DomainChangeRecord {
     public static class TitleProvider {
 
         @EventListener(TitleUiEvent.class)
-        public void on(final TitleUiEvent ev) {
+        public void on(final @NonNull TitleUiEvent ev) {
             if(!Objects.equals(ev.getTitle(), "Command Jdo") || ev.getTranslatableTitle() != null) {
                 return;
             }
-            ev.setTitle(title((Command)ev.getSource()));
+            ev.setTitle(title(ev.getSource()));
         }
 
-        private static String title(final Command source) {
-            // nb: not thread-safe
+        private static String title(final @Nullable Command source) {
+            if(source == null) {
+                return "???"; // shouldn't happen.
+            }
+            // nb: not thread-safe, so need to instantiate each time.
             // formats defined in https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
             val format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -195,7 +204,7 @@ public abstract class Command implements DomainChangeRecord {
     public abstract void setUsername(String username);
 
 
-    @DomainChangeRecord.Timestamp
+    @DomainChangeRecord.TimestampMeta
     @Override
     public abstract java.sql.Timestamp getTimestamp();
     public abstract void setTimestamp(java.sql.Timestamp timestamp);
@@ -203,25 +212,28 @@ public abstract class Command implements DomainChangeRecord {
 
 
     @Property(
-            domainEvent = ReplayState.DomainEvent.class,
+            domainEvent = ReplayStateMeta.DomainEvent.class,
             editing = Editing.DISABLED,
-            maxLength = ReplayState.MAX_LENGTH
+            maxLength = ReplayStateMeta.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
     )
     @PropertyLayout(
             // fieldSetId = "XXX",  // TODO: fix
             // sequence = "XXX",
-            typicalLength = ReplayState.TYPICAL_LENGTH
+            named = "Replay State",
+            typicalLength = ReplayStateMeta.TYPICAL_LENGTH
     )
     @Parameter(
-            maxLength = ReplayState.MAX_LENGTH
+            maxLength = ReplayStateMeta.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
     )
     @ParameterLayout(
             named = "Replay State",
-            typicalLength = ReplayState.TYPICAL_LENGTH
+            typicalLength = ReplayStateMeta.TYPICAL_LENGTH
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ReplayState {
+    public @interface ReplayStateMeta {
         int MAX_LENGTH = 12;
         int TYPICAL_LENGTH = 12;
 
@@ -232,29 +244,38 @@ public abstract class Command implements DomainChangeRecord {
     /**
      * For a replayed command, what the outcome was.
      */
-    @Command.ReplayState
+    @Command.ReplayStateMeta
     public abstract org.apache.isis.extensions.commandlog.applib.dom.ReplayState getReplayState();
     public abstract void setReplayState(org.apache.isis.extensions.commandlog.applib.dom.ReplayState replayState);
 
 
 
     @Property(
-            domainEvent = ReplayStateFailureReason.DomainEvent.class
+            domainEvent = ReplayStateFailureReason.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = ReplayStateFailureReason.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
     )
     @PropertyLayout(
             hidden = Where.ALL_TABLES,
-            multiLine = ReplayStateFailureReason.MULTILINE
+            multiLine = ReplayStateFailureReason.MULTI_LINE,
+            typicalLength = ReplayStateFailureReason.TYPICAL_LENGTH
     )
     @Parameter(
+            maxLength = ReplayStateFailureReason.MAX_LENGTH,
+            optionality = Optionality.OPTIONAL
     )
     @ParameterLayout(
-            multiLine = ReplayStateFailureReason.MULTILINE
+            multiLine = ReplayStateFailureReason.MULTI_LINE,
+            typicalLength = ReplayStateFailureReason.TYPICAL_LENGTH
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     public @interface ReplayStateFailureReason {
+        int MAX_LENGTH = Integer.MAX_VALUE;
+        int TYPICAL_LENGTH = 4000;
 
-        int MULTILINE = 5;
+        int MULTI_LINE = 5;
         class DomainEvent extends PropertyDomainEvent<String> {}
     }
 
@@ -272,122 +293,288 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
-    public static class ParentDomainEvent extends PropertyDomainEvent<org.apache.isis.applib.services.command.Command> { }
     @Property(
-            domainEvent = ParentDomainEvent.class
+            domainEvent = Parent.DomainEvent.class
     )
     @PropertyLayout(
             hidden = Where.ALL_TABLES
     )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Parent {
+        class DomainEvent extends PropertyDomainEvent<org.apache.isis.applib.services.command.Command> { }
+    }
+
+    @Parent
     public abstract Command getParent();
     public abstract void setParent(Command parent);
 
 
 
-    public static class TargetDomainEvent extends PropertyDomainEvent<Bookmark> { }
-    @Property(
-            domainEvent = TargetDomainEvent.class
-    )
-    @PropertyLayout(
-            named = "Object"
-    )
+    @DomainChangeRecord.TargetMeta
     public abstract Bookmark getTarget();
     public abstract void setTarget(Bookmark target);
 
+
+
+    @Domain.Exclude
     public String getTargetStr() {
         return Optional.ofNullable(getTarget()).map(Bookmark::toString).orElse(null);
     }
 
+
+
+    @DomainChangeRecord.TargetMember
     @Override
     public String getTargetMember() {
         return getCommandDto().getMember().getLogicalMemberIdentifier();
     }
 
 
-    public static class LocalMemberEvent extends PropertyDomainEvent<String> { }
+
     @Property(
-            domainEvent = LocalMemberEvent.class
+            domainEvent = LocalMember.DomainEvent.class,
+            maxLength = LocalMember.MAX_LENGTH
     )
     @PropertyLayout(
-            named = "Member"
+            named = "Member",
+            typicalLength = LocalMember.TYPICAL_LENGTH
     )
+    @Parameter(
+            maxLength = LocalMember.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = LocalMember.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface LocalMember {
+        int MAX_LENGTH = 255;
+        int TYPICAL_LENGTH = 30;
+
+        class DomainEvent extends PropertyDomainEvent<String> { }
+    }
+
+    @LocalMember
     public String getLocalMember() {
         val targetMember = getTargetMember();
         return targetMember.substring(targetMember.indexOf("#") + 1);
     }
 
 
-    public static class LogicalMemberIdentifierDomainEvent extends PropertyDomainEvent<String> { }
+
     @Property(
-            domainEvent = LogicalMemberIdentifierDomainEvent.class
+            domainEvent = LogicalMemberIdentifier.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = LogicalMemberIdentifier.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
-            hidden = Where.ALL_TABLES
+            hidden = Where.ALL_TABLES,
+            typicalLength = LogicalMemberIdentifier.TYPICAL_LENGTH
     )
+    @Parameter(
+            maxLength = LogicalMemberIdentifier.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
+    @ParameterLayout(
+            typicalLength = LogicalMemberIdentifier.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface LogicalMemberIdentifier {
+        int MAX_LENGTH = 1024;
+        int TYPICAL_LENGTH = 128;
+
+        class DomainEvent extends PropertyDomainEvent<String> { }
+    }
+
+    @LogicalMemberIdentifier
     public abstract String getLogicalMemberIdentifier();
     public abstract void setLogicalMemberIdentifier(String logicalMemberIdentifier);
 
 
-    public static class CommandDtoDomainEvent extends PropertyDomainEvent<CommandDto> { }
+
+
     @Property(
-            domainEvent = CommandDtoDomainEvent.class
+            domainEvent = CommandDtoMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = CommandDtoMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
-            multiLine = 9
+            multiLine = CommandDtoMeta.MULTI_LINE,
+            typicalLength = CommandDtoMeta.TYPICAL_LENGTH
     )
+    @Parameter(
+            maxLength = CommandDtoMeta.MAX_LENGTH,
+            optionality = Optionality.MANDATORY
+    )
+    @ParameterLayout(
+            multiLine = CommandDtoMeta.MULTI_LINE,
+            typicalLength = CommandDtoMeta.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface CommandDtoMeta {
+        int MAX_LENGTH = Integer.MAX_VALUE;
+        int TYPICAL_LENGTH = 4000;
+
+        int MULTI_LINE = 9;
+        class DomainEvent extends PropertyDomainEvent<CommandDto> { }
+    }
+
+    @CommandDtoMeta
     public abstract CommandDto getCommandDto();
     public abstract void setCommandDto(CommandDto commandDto);
 
 
 
-    public static class StartedAtDomainEvent extends PropertyDomainEvent<Timestamp> { }
+
     @Property(
-            domainEvent = StartedAtDomainEvent.class
+            domainEvent = StartedAt.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = StartedAt.MAX_LENGTH
     )
+    @PropertyLayout(
+            typicalLength = StartedAt.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = StartedAt.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = StartedAt.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface StartedAt {
+        int MAX_LENGTH = 32;
+        int TYPICAL_LENGTH = 32;
+
+        class DomainEvent extends PropertyDomainEvent<Timestamp> { }
+    }
+
+    @StartedAt
     public abstract Timestamp getStartedAt();
     public abstract void setStartedAt(Timestamp startedAt);
 
 
-    public static class CompletedAtDomainEvent extends PropertyDomainEvent<Timestamp> { }
+
     @Property(
-            domainEvent = CompletedAtDomainEvent.class
+            domainEvent = CompletedAt.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = CompletedAt.MAX_LENGTH
     )
+    @PropertyLayout(
+            typicalLength = CompletedAt.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = CompletedAt.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = CompletedAt.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface CompletedAt {
+        int MAX_LENGTH = 32;
+        int TYPICAL_LENGTH = 32;
+
+        class DomainEvent extends PropertyDomainEvent<Timestamp> { }
+    }
+
+    @CompletedAt
     public abstract Timestamp getCompletedAt();
     public abstract void setCompletedAt(Timestamp completedAt);
 
 
-    public static class DurationDomainEvent extends PropertyDomainEvent<BigDecimal> { }
+
+    @javax.validation.constraints.Digits(
+            integer = Duration.DIGITS_INTEGER,
+            fraction = Duration.DIGITS_FRACTION
+    )
+    @Property(
+            domainEvent = Duration.DomainEvent.class,
+            maxLength = Duration.MAX_LENGTH
+    )
+    @PropertyLayout(
+            typicalLength = Duration.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = Duration.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = Duration.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface Duration {
+        int DIGITS_INTEGER = 5;
+        int DIGITS_FRACTION = 3;
+        int MAX_LENGTH = DIGITS_INTEGER + DIGITS_FRACTION + 1;
+        int TYPICAL_LENGTH = 5;
+
+        class DomainEvent extends PropertyDomainEvent<BigDecimal> { }
+    }
+
     /**
      * The number of seconds (to 3 decimal places) that this interaction lasted.
      *
      * <p>
      * Populated only if it has {@link #getCompletedAt() completed}.
      */
-    @javax.validation.constraints.Digits(integer=5, fraction=3)
-    @Property(
-            domainEvent = DurationDomainEvent.class
-    )
+    @Duration
     public BigDecimal getDuration() {
         return BigDecimalUtils.durationBetween(getStartedAt(), getCompletedAt());
     }
 
 
-    public static class IsCompleteDomainEvent extends PropertyDomainEvent<Boolean> { }
+
     @Property(
-            domainEvent = IsCompleteDomainEvent.class
+            domainEvent = IsComplete.DomainEvent.class,
+            editing = Editing.DISABLED
     )
     @PropertyLayout(
             hidden = Where.OBJECT_FORMS
     )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface IsComplete {
+        class DomainEvent extends PropertyDomainEvent<Boolean> { }
+    }
+
+    @IsComplete
     public boolean isComplete() {
         return getCompletedAt() != null;
     }
 
 
 
-    public static class ResultSummaryDomainEvent extends PropertyDomainEvent<String> { }
-    @Property(domainEvent = ResultSummaryDomainEvent.class)
-    @PropertyLayout(hidden = Where.OBJECT_FORMS, named = "Result")
+    @Property(
+            domainEvent = ResultSummary.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = ResultSummary.MAX_LENGTH
+    )
+    @PropertyLayout(
+            hidden = Where.OBJECT_FORMS,
+            named = "Result",
+            typicalLength = ResultSummary.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = ResultSummary.MAX_LENGTH
+    )
+    @ParameterLayout(
+            typicalLength = ResultSummary.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ResultSummary {
+        int MAX_LENGTH = 20;
+        int TYPICAL_LENGTH = 12;
+        class DomainEvent extends PropertyDomainEvent<String> { }
+    }
+
+    @ResultSummary
     public String getResultSummary() {
         if(getCompletedAt() == null) {
             return "";
@@ -403,19 +590,62 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
-    public static class ResultDomainEvent extends PropertyDomainEvent<String> { }
+
     @Property(
-            domainEvent = ResultDomainEvent.class
+            domainEvent = ResultMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            optionality = Optionality.OPTIONAL
     )
     @PropertyLayout(
             hidden = Where.ALL_TABLES,
-            named = "Result Bookmark"
+            named = "Result"
     )
+    @Parameter(
+            optionality = Optionality.OPTIONAL
+    )
+    @ParameterLayout(
+            named = "Result"
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ResultMeta {
+        class DomainEvent extends PropertyDomainEvent<Bookmark> { }
+    }
+
+    @ResultMeta
     public abstract Bookmark getResult();
     public abstract void setResult(Bookmark result);
 
 
-    public static class ExceptionDomainEvent extends PropertyDomainEvent<String> { }
+
+    @Property(
+            domainEvent = ExceptionMeta.DomainEvent.class,
+            editing = Editing.DISABLED,
+            maxLength = ExceptionMeta.MAX_LENGTH
+    )
+    @PropertyLayout(
+            hidden = Where.ALL_TABLES,
+            multiLine = ExceptionMeta.MULTI_LINE,
+            named = "Exception (if any)",
+            typicalLength = ExceptionMeta.TYPICAL_LENGTH
+    )
+    @Parameter(
+            maxLength = ExceptionMeta.MAX_LENGTH
+    )
+    @ParameterLayout(
+            multiLine = ExceptionMeta.MULTI_LINE,
+            typicalLength = ExceptionMeta.TYPICAL_LENGTH
+    )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface ExceptionMeta {
+        int MAX_LENGTH = Integer.MAX_VALUE;
+        int TYPICAL_LENGTH = 4000;
+        int MULTI_LINE = 5;
+
+        class DomainEvent extends PropertyDomainEvent<String> { }
+    }
+
     /**
      * Stack trace of any exception that might have occurred if this interaction/transaction aborted.
      *
@@ -423,13 +653,6 @@ public abstract class Command implements DomainChangeRecord {
      * Not part of the applib API, because the default implementation is not persistent
      * and so there's no object that can be accessed to be annotated.
      */
-    @Property(
-            domainEvent = ExceptionDomainEvent.class
-    )
-    @PropertyLayout(
-            hidden = Where.ALL_TABLES,
-            multiLine = 5, named = "Exception (if any)"
-    )
     public abstract String getException();
     public abstract void setException(final String exception);
 
@@ -438,29 +661,42 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
-    public static class IsCausedExceptionDomainEvent extends PropertyDomainEvent<Boolean> { }
+
     @Property(
-            domainEvent = IsCausedExceptionDomainEvent.class
+            domainEvent = CausedException.DomainEvent.class,
+            editing = Editing.DISABLED
     )
     @PropertyLayout(
             hidden = Where.OBJECT_FORMS
     )
+    @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
+    @Retention(RetentionPolicy.RUNTIME)
+    public @interface CausedException {
+        class DomainEvent extends PropertyDomainEvent<Boolean> { }
+    }
+
+    @CausedException
     public boolean isCausedException() {
         return getException() != null;
     }
 
 
+
+    @DomainChangeRecord.PreValue
     @Override
     public String getPreValue() {
         return null;
     }
 
+
+    @DomainChangeRecord.PostValue
     @Override
     public String getPostValue() {
         return null;
     }
 
 
+    @Programmatic
     public void saveAnalysis(final String analysis) {
         if (analysis == null) {
             setReplayState(ReplayState.OK);
@@ -509,7 +745,6 @@ public abstract class Command implements DomainChangeRecord {
                 Command.this.setResult(resultBookmark.getValue().orElse(null));
                 Command.this.setException(resultBookmark.getFailure().orElse(null));
             }
-
         };
     }
 
@@ -531,9 +766,16 @@ public abstract class Command implements DomainChangeRecord {
 
         private List<String> ordered(final List<String> propertyIds) {
             return Arrays.asList(
-                "timestamp", "target", "targetMember", "username", "complete", "resultSummary", "interactionIdStr"
+                "timestamp",
+                    "target",
+                    "targetMember",
+                    "username",
+                    "complete",
+                    "resultSummary",
+                    "interactionId"
             );
         }
     }
+
 }
 
