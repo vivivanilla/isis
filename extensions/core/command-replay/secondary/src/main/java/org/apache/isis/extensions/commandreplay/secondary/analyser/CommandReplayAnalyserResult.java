@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import org.apache.isis.applib.services.commanddto.conmap.UserDataKeys;
 import org.apache.isis.applib.util.schema.CommandDtoUtils;
 import org.apache.isis.core.config.IsisConfiguration;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
 import org.apache.isis.schema.common.v2.InteractionType;
 
 import lombok.RequiredArgsConstructor;

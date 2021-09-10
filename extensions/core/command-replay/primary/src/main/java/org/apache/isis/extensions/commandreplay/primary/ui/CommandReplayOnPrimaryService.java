@@ -40,8 +40,7 @@ import org.apache.isis.applib.services.commanddto.conmap.ContentMappingServiceFo
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Clob;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.primary.IsisModuleExtCommandReplayPrimary;
 import org.apache.isis.extensions.commandreplay.primary.restapi.CommandRetrievalService;
 import org.apache.isis.schema.cmd.v2.CommandDto;
@@ -69,7 +68,7 @@ public class CommandReplayOnPrimaryService {
 
     public static final String LOGICAL_TYPE_NAME = IsisModuleExtCommandReplayPrimary.NAMESPACE + ".CommandReplayOnPrimaryService";
 
-    @Inject final CommandModelRepository<? extends CommandModel> commandModelRepository;
+    @Inject final PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
     @Inject final JaxbService jaxbService;
     @Inject final MessageService messageService;
     @Inject final ContentMappingServiceForCommandsDto contentMappingServiceForCommandsDto;
@@ -141,7 +140,7 @@ public class CommandReplayOnPrimaryService {
                 @Nullable
                 final Integer batchSize,
                 final String filenamePrefix) {
-            final List<? extends CommandModel> commands = commandModelRepository.findSince(interactionId, batchSize);
+            final List<? extends CommandModel> commands = publishedCommandRepository.findSince(interactionId, batchSize);
             if(commands == null) {
                 messageService.informUser("No commands found");
             }
@@ -183,7 +182,7 @@ public class CommandReplayOnPrimaryService {
                 final UUID interactionId,
                 final String filenamePrefix) {
 
-            return commandModelRepository.findByInteractionId(interactionId)
+            return publishedCommandRepository.findByInteractionId(interactionId)
                     .map(commandJdo -> {
 
                         final CommandDto commandDto = commandJdo.getCommandDto();

@@ -28,8 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.services.command.CommandExecutorService;
 import org.apache.isis.applib.services.xactn.TransactionService;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandreplay.secondary.SecondaryStatus;
 import org.apache.isis.extensions.commandreplay.secondary.StatusException;
@@ -58,7 +57,8 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
     @Inject CommandExecutorService commandExecutorService;
     @Inject TransactionService transactionService;
     @Inject CommandFetcher commandFetcher;
-    @Inject CommandModelRepository<? extends CommandModel> commandModelRepository;
+    @Inject
+    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
     @Inject CommandReplayAnalysisService analysisService;
     @Inject Optional<ReplayCommandExecutionController> controller;
 
@@ -85,12 +85,12 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
 
             // is there a pending command already?
             // (we fetch several at a time, so we may not have processed them all yet)
-            commandsToReplay = commandModelRepository.findNotYetReplayed();
+            commandsToReplay = publishedCommandRepository.findNotYetReplayed();
 
             if(commandsToReplay.isEmpty()) {
 
                 // look for previously replayed on secondary
-                CommandModel hwm = commandModelRepository.findMostRecentReplayed().orElse(null);
+                CommandModel hwm = publishedCommandRepository.findMostRecentReplayed().orElse(null);
 
                 if (hwm != null) {
                     // give up if there was a failure; admin will need to fix issue and retry
@@ -103,7 +103,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
                     // after a DB restore from primary to secondary, there won't be
                     // any that have been replayed.  So instead we simply use
                     // latest completed (on primary) as the HWM.
-                    hwm = commandModelRepository.findMostRecentCompleted().orElse(null);
+                    hwm = publishedCommandRepository.findMostRecentCompleted().orElse(null);
                 }
 
                 // fetch next command(s) from primary (if any)
@@ -111,7 +111,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
                 commandsToReplay = commandDtos.stream()
                         .map(dto ->
                                 transactionService.callWithinCurrentTransactionElseCreateNew(
-                                    () -> commandModelRepository.saveForReplay(dto))
+                                    () -> publishedCommandRepository.saveForReplay(dto))
                                 .optionalElseFail()
                                 .orElse(null)
                         )
@@ -154,7 +154,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
 
             val childCommands =
                     transactionService.callWithinCurrentTransactionElseCreateNew(
-                            () -> commandModelRepository.findByParent(parent))
+                            () -> publishedCommandRepository.findByParent(parent))
                     .optionalElseFail()
                     .orElse(Collections.emptyList());
             for (val childCommand : childCommands) {

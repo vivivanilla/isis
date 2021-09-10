@@ -16,38 +16,40 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.entities;
+package org.apache.isis.extensions.commandlog.applib.dom.mixins;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 
 import lombok.RequiredArgsConstructor;
 
 
 @Collection(
-    domainEvent = CommandJdo_childCommands.CollectionDomainEvent.class
+    domainEvent = PublishedCommand_childCommands.DomainEvent.class
 )
 @CollectionLayout(
     defaultView = "table",
     sequence = "100.100"
 )
 @RequiredArgsConstructor
-public class CommandJdo_childCommands {
+public class PublishedCommand_childCommands {
 
-    public static class CollectionDomainEvent
-            extends IsisModuleExtCommandLogJdo.CollectionDomainEvent<CommandJdo_childCommands, CommandModel> { }
+    public static class DomainEvent
+            extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<PublishedCommand_childCommands, PublishedCommand> { }
 
-    private final CommandJdo commandJdo;
+    private final PublishedCommand publishedCommand;
 
-    public List<CommandJdo> coll() {
-        return commandJdoRepository.findByParent(commandJdo);
+    public List<PublishedCommand> coll() {
+        return repository.findByParent(publishedCommand);
     }
 
-    @javax.inject.Inject
-    private CommandJdoRepository commandJdoRepository;
+    @Inject PublishedCommandRepository repository;
 
 }

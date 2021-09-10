@@ -27,55 +27,55 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 import org.apache.isis.schema.cmd.v2.CommandsDto;
 
-public interface CommandModelRepository<C extends CommandModel> {
+public interface PublishedCommandRepository {
 
-    Optional<C> findByInteractionId(UUID interactionId);
+    Optional<PublishedCommand> findByInteractionId(UUID interactionId);
 
-    List<C> findByParent(CommandModel parent);
+    List<PublishedCommand> findByParent(PublishedCommand parent);
 
-    List<C> findByFromAndTo(LocalDate from, LocalDate to);
+    List<PublishedCommand> findByFromAndTo(LocalDate from, LocalDate to);
 
-    List<C> findCurrent();
+    List<PublishedCommand> findCurrent();
 
-    List<C> findCompleted();
+    List<PublishedCommand> findCompleted();
 
-    List<C> findByTargetAndFromAndTo(Bookmark target, LocalDate from, LocalDate to);
+    List<PublishedCommand> findByTargetAndFromAndTo(Bookmark target, LocalDate from, LocalDate to);
 
-    List<C> findRecentByUsername(String username);
+    List<PublishedCommand> findRecentByUsername(String username);
 
-    List<C> findRecentByTarget(Bookmark target);
+    List<PublishedCommand> findRecentByTarget(Bookmark target);
 
     /**
      * Intended to support the replay of commands on a secondary instance of
      * the application.
      *
-     * This finder returns all (completed) {@link CommandModel}s started after
+     * This finder returns all (completed) {@link PublishedCommand}s started after
      * the command with the specified interactionId.  The number of commands
      * returned can be limited so that they can be applied in batches.
      *
      * If the provided interactionId is null, then only a single
-     * {@link CommandModel command} is returned.  This is intended to support
+     * {@link PublishedCommand command} is returned.  This is intended to support
      * the case when the secondary does not yet have any
-     * {@link CommandModel command}s replicated.  In practice this is unlikely;
+     * {@link PublishedCommand command}s replicated.  In practice this is unlikely;
      * typically we expect that the secondary will be set up to run against a
      * copy of the primary instance's DB (restored from a backup), in which
-     * case there will already be a {@link CommandModel command} representing the
+     * case there will already be a {@link PublishedCommand command} representing the
      * current high water mark on the secondary system.
      *
      * If the interactionId is not null but the corresponding
-     * {@link CommandModel command} is not found, then <tt>null</tt> is returned.
+     * {@link PublishedCommand command} is not found, then <tt>null</tt> is returned.
      * In the replay scenario the caller will probably interpret this as an
      * error because it means that the high water mark on the secondary is
-     * inaccurate, referring to a non-existent {@link CommandModel command} on
+     * inaccurate, referring to a non-existent {@link PublishedCommand command} on
      * the primary.
      *
-     * @param interactionId - the identifier of the {@link CommandModel command} being
+     * @param interactionId - the identifier of the {@link PublishedCommand command} being
      *                   the replay hwm (using {@link #findMostRecentReplayed()} on the
      *                   secondary), or null if no HWM was found there.
      * @param batchSize - to restrict the number returned (so that replay
      *                   commands can be batched).
      */
-    List<C> findSince(UUID interactionId, Integer batchSize);
+    List<PublishedCommand> findSince(UUID interactionId, Integer batchSize);
 
     /**
      * The most recent replayed command previously replicated from primary to
@@ -86,7 +86,7 @@ public interface CommandModelRepository<C extends CommandModel> {
      * (after restored the prod DB to secondary).
      * </p>
      */
-    Optional<C> findMostRecentReplayed();
+    Optional<PublishedCommand> findMostRecentReplayed();
 
     /**
      * The most recent completed command, as queried on the
@@ -99,20 +99,19 @@ public interface CommandModelRepository<C extends CommandModel> {
      *     secondary.
      * </p>
      */
-    Optional<C> findMostRecentCompleted();
+    Optional<PublishedCommand> findMostRecentCompleted();
 
-    List<C> findNotYetReplayed();
+    List<PublishedCommand> findNotYetReplayed();
 
-    List<C> findReplayedOnSecondary();
+    List<PublishedCommand> findReplayedOnSecondary();
 
-    C saveForReplay(CommandDto dto);
+    PublishedCommand saveForReplay(CommandDto dto);
 
-    List<C> saveForReplay(CommandsDto commandsDto);
+    List<PublishedCommand> saveForReplay(CommandsDto commandsDto);
 
-    void persist(C commandJdo);
+    void persist(PublishedCommand commandJdo);
 
     void truncateLog();
-
 
 
 }

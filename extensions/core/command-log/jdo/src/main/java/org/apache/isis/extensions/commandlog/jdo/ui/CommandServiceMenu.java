@@ -43,7 +43,7 @@ import org.apache.isis.applib.annotation.RestrictTo;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -81,7 +81,7 @@ public class CommandServiceMenu {
     public static class ActiveCommandsDomainEvent extends ActionDomainEvent { }
     @Action(domainEvent = ActiveCommandsDomainEvent.class, semantics = SemanticsOf.SAFE)
     @ActionLayout(bookmarking = BookmarkPolicy.AS_ROOT, cssClassFa = "fa-bolt", sequence="10")
-    public List<CommandJdo> activeCommands() {
+    public List<PublishedCommandForJdo> activeCommands() {
         return commandServiceRepository.findCurrent();
     }
     @MemberSupport public boolean hideActiveCommands() {
@@ -92,7 +92,7 @@ public class CommandServiceMenu {
     public static class FindCommandsDomainEvent extends ActionDomainEvent { }
     @Action(domainEvent = FindCommandsDomainEvent.class, semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-search", sequence="20")
-    public List<CommandJdo> findCommands(
+    public List<PublishedCommandForJdo> findCommands(
             @Parameter(optionality= Optionality.OPTIONAL)
             @ParameterLayout(named="From")
             final LocalDate from,
@@ -115,7 +115,7 @@ public class CommandServiceMenu {
     public static class FindCommandByIdDomainEvent extends ActionDomainEvent { }
     @Action(domainEvent = FindCommandByIdDomainEvent.class, semantics = SemanticsOf.SAFE)
     @ActionLayout(cssClassFa = "fa-crosshairs", sequence="30")
-    public CommandJdo findCommandById(
+    public PublishedCommandForJdo findCommandById(
             @ParameterLayout(named="Transaction Id")
             final UUID transactionId) {
         return commandServiceRepository.findByInteractionId(transactionId).orElse(null);

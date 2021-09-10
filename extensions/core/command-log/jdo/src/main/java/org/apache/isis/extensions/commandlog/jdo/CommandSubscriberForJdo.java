@@ -21,14 +21,14 @@ package org.apache.isis.extensions.commandlog.jdo;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.command.Command;
 import org.apache.isis.applib.services.publishing.spi.CommandSubscriber;
 import org.apache.isis.applib.util.JaxbUtil;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -39,7 +39,7 @@ import lombok.extern.log4j.Log4j2;
  * @since 2.0 {@index}
  */
 @Service
-@Named("isis.ext.commandLog.CommandCompletionHook")
+@Named("isis.ext.commandLog.CommandSubscriberForJdo")
 @javax.annotation.Priority(PriorityPrecedence.MIDPOINT) // after JdoPersistenceLifecycleService
 @Qualifier("Jdo")
 @Log4j2
@@ -69,7 +69,7 @@ public class CommandSubscriberForJdo implements CommandSubscriber {
                 log.debug("proposed: \n{}", commandDtoXml);
             }
         } else {
-            val commandJdo = new CommandJdo(command);
+            val commandJdo = new PublishedCommandForJdo(command);
             val parent = command.getParent();
             val parentJdo =
                 parent != null

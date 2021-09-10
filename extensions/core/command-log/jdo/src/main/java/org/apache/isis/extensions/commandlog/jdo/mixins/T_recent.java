@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 
 @Collection(
@@ -40,18 +40,18 @@ import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 public abstract class T_recent<T> {
 
     public static class CollectionDomainEvent
-            extends IsisModuleExtCommandLogJdo.CollectionDomainEvent<T_recent, CommandJdo> { }
+            extends IsisModuleExtCommandLogJdo.CollectionDomainEvent<T_recent, PublishedCommandForJdo> { }
 
     private final T domainObject;
     public T_recent(final T domainObject) {
         this.domainObject = domainObject;
     }
 
-    public List<CommandJdo> coll() {
+    public List<PublishedCommandForJdo> coll() {
         return findRecent();
     }
 
-    private List<CommandJdo> findRecent() {
+    private List<PublishedCommandForJdo> findRecent() {
         return bookmarkService.bookmarkFor(domainObject)
         .map(bookmark->queryResultsCache.execute(
                 () -> commandJdoRepository.findRecentByTarget(bookmark)

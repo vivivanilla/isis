@@ -35,8 +35,9 @@ import java.util.function.Consumer;
 import javax.annotation.Nullable;
 
 import org.springframework.context.event.EventListener;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
+import org.apache.isis.applib.annotation.BookmarkPolicy;
 import org.apache.isis.applib.annotation.Domain;
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
@@ -53,12 +54,12 @@ import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.jaxb.JavaSqlXMLGregorianCalendarMarshalling;
 import org.apache.isis.applib.mixins.system.DomainChangeRecord;
 import org.apache.isis.applib.services.bookmark.Bookmark;
+import org.apache.isis.applib.services.command.Command;
 import org.apache.isis.applib.services.command.CommandOutcomeHandler;
 import org.apache.isis.applib.services.commanddto.conmap.UserDataKeys;
 import org.apache.isis.applib.services.tablecol.TableColumnOrderForCollectionTypeAbstract;
 import org.apache.isis.applib.util.ObjectContracts;
 import org.apache.isis.applib.util.TitleBuffer;
-import org.apache.isis.commons.functional.Result;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.commons.internal.exceptions._Exceptions;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
@@ -67,33 +68,87 @@ import org.apache.isis.extensions.commandlog.applib.util.StringUtils;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 import org.apache.isis.schema.cmd.v2.MapDto;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.val;
 
+/**
+ * A persistent representation of a {@link Command}.
+ *
+ * <p>
+ *     Use cases requiring persistence including auditing, and for replay of
+ *     commands for regression testing purposes.
+ * </p>
+ *
+ * @since 2.0 {@index}
+ */
 @DomainObject(
-        logicalTypeName = Command.LOGICAL_TYPE_NAME,
-        editing = Editing.DISABLED
+        editing = Editing.DISABLED,
+        logicalTypeName = PublishedCommand.LOGICAL_TYPE_NAME
 )
 @DomainObjectLayout(
-        titleUiEvent = Command.TitleUiEvent.class,
-        iconUiEvent = Command.IconUiEvent.class,
-        cssClassUiEvent = Command.CssClassUiEvent.class,
-        layoutUiEvent = Command.LayoutUiEvent.class
+        bookmarking = BookmarkPolicy.AS_ROOT,
+        cssClassUiEvent = PublishedCommand.CssClassUiEvent.class,
+        iconUiEvent = PublishedCommand.IconUiEvent.class,
+        layoutUiEvent = PublishedCommand.LayoutUiEvent.class,
+        titleUiEvent = PublishedCommand.TitleUiEvent.class
 )
-public abstract class Command implements DomainChangeRecord {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public abstract class PublishedCommand implements DomainChangeRecord {
 
-    public final static String LOGICAL_TYPE_NAME = IsisModuleExtCommandLogApplib.NAMESPACE + ".Command";
+    public final static String LOGICAL_TYPE_NAME = IsisModuleExtCommandLogApplib.NAMESPACE + ".PublishedCommand";
 
-    public static class TitleUiEvent extends IsisModuleExtCommandLogApplib.TitleUiEvent<Command> { }
-    public static class IconUiEvent extends IsisModuleExtCommandLogApplib.IconUiEvent<Command> { }
-    public static class CssClassUiEvent extends IsisModuleExtCommandLogApplib.CssClassUiEvent<Command> { }
-    public static class LayoutUiEvent extends IsisModuleExtCommandLogApplib.LayoutUiEvent<Command> { }
+    public static final String NAMED_QUERY_FIND_BY_INTERACTION_ID = "PublishedCommand.findByInteractionId";
+    public static final String NAMED_QUERY_FIND_BY_PARENT = "PublishedCommand.findByParent";
+    public static final String NAMED_QUERY_FIND_CURRENT = "PublishedCommand.findCurrent";
+    public static final String NAMED_QUERY_FIND_COMPLETED = "PublishedCommand.findCompleted";
+    public static final String NAMED_QUERY_FIND_RECENT_BY_TARGET = "PublishedCommand.findRecentByTarget";
+    public static final String NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BETWEEEN = "PublishedCommand.findByTargetAndTimestampBetween";
+    public static final String NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_AFTER = "PublishedCommand.findByTargetAndTimestampAfter";
+    public static final String NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BEFORE = "PublishedCommand.findByTargetAndTimestampBefore";
+    public static final String NAMED_QUERY_FIND_BY_TARGET = "PublishedCommand.findByTarget";
+    public static final String NAMED_QUERY_FIND_BY_TIMESTAMP_BETWEEN = "PublishedCommand.findByTimestampBetween";
+    public static final String NAMED_QUERY_FIND_BY_TIMESTAMP_AFTER = "PublishedCommand.findByTimestampAfter";
+    public static final String NAMED_QUERY_FIND_BY_TIMESTAMP_BEFORE = "PublishedCommand.findByTimestampBefore";
+    public static final String NAMED_QUERY_FIND = "PublishedCommand.find";
+    public static final String NAMED_QUERY_FIND_BY_USERNAME = "PublishedCommand.findRecentByUsername";
+    public static final String NAMED_QUERY_FIND_FIRST = "PublishedCommand.findFirst";
+    public static final String NAMED_QUERY_FIND_SINCE = "PublishedCommand.findSince";
+    /**
+     * most recent (replayed) command previously replicated from primary to secondary.
+     *
+     * This should always exist except for the very first times (after restored the prod DB to secondary).
+     */
+    public static final String NAMED_QUERY_FIND_MOST_RECENT_REPLAYED = "PublishedCommand.findMostRecentReplayed";
+    /**
+     *  the most recent completed command, as queried on the secondary, corresponding to the
+     *  last command run on primary before the production database was restored to the secondary
+     */
+    public static final String NAMED_QUERY_FIND_MOST_RECENT_COMPLETED = "PublishedCommand.findMostRecentCompleted";
+    public static final String NAMED_QUERY_FIND_NOT_YET_REPLAYED = "PublishedCommand.findNotYetReplayed";
 
-    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtCommandLogApplib.PropertyDomainEvent<Command, T> { }
-    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<Command, T> { }
+
+    // EVENTS
+
+    public static class TitleUiEvent extends IsisModuleExtCommandLogApplib.TitleUiEvent<PublishedCommand> { }
+    public static class IconUiEvent extends IsisModuleExtCommandLogApplib.IconUiEvent<PublishedCommand> { }
+    public static class CssClassUiEvent extends IsisModuleExtCommandLogApplib.CssClassUiEvent<PublishedCommand> { }
+    public static class LayoutUiEvent extends IsisModuleExtCommandLogApplib.LayoutUiEvent<PublishedCommand> { }
+
+    public static abstract class PropertyDomainEvent<T> extends IsisModuleExtCommandLogApplib.PropertyDomainEvent<PublishedCommand, T> { }
+    public static abstract class CollectionDomainEvent<T> extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<PublishedCommand, T> { }
 
 
-    public Command(final org.apache.isis.applib.services.command.Command command) {
+
+    // CONSTRUCTORS
+
+    /**
+     * Intended for use on primary system.
+     *
+     * @param command
+     */
+    public PublishedCommand(final Command command) {
 
         setInteractionId(command.getInteractionId());
         setUsername(command.getUsername());
@@ -120,7 +175,7 @@ public abstract class Command implements DomainChangeRecord {
      * @param replayState - controls whether this is to be replayed
      * @param targetIndex - if the command represents a bulk action, then it is flattened out when replayed; this indicates which target to execute against.
      */
-    public Command(
+    public PublishedCommand(
             final CommandDto commandDto,
             final ReplayState replayState,
             final int targetIndex) {
@@ -158,7 +213,11 @@ public abstract class Command implements DomainChangeRecord {
                 .ifPresent(consume);
     }
 
-    @Service
+
+    // TITLE
+
+    @Component
+    @javax.annotation.Priority(PriorityPrecedence.LATE)
     public static class TitleProvider {
 
         @EventListener(TitleUiEvent.class)
@@ -169,7 +228,7 @@ public abstract class Command implements DomainChangeRecord {
             ev.setTitle(title(ev.getSource()));
         }
 
-        private static String title(final @Nullable Command source) {
+        private static String title(final @Nullable PublishedCommand source) {
             if(source == null) {
                 return "???"; // shouldn't happen.
             }
@@ -185,6 +244,8 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+    // (CHANGE) TYPE
+
     @DomainChangeRecord.ChangeTypeMeta
     @Override
     public DomainChangeRecord.ChangeType getType() {
@@ -192,11 +253,15 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+    // INTERACTION ID
+
     @DomainChangeRecord.InteractionId
     @Override
     public abstract UUID getInteractionId();
     public abstract void setInteractionId(UUID interactionId);
 
+
+    // USER NAME
 
     @DomainChangeRecord.Username
     @Override
@@ -204,12 +269,15 @@ public abstract class Command implements DomainChangeRecord {
     public abstract void setUsername(String username);
 
 
+    // TIMESTAMP
+
     @DomainChangeRecord.TimestampMeta
     @Override
     public abstract java.sql.Timestamp getTimestamp();
     public abstract void setTimestamp(java.sql.Timestamp timestamp);
 
 
+    // REPLAY STATE
 
     @Property(
             domainEvent = ReplayStateMeta.DomainEvent.class,
@@ -244,11 +312,13 @@ public abstract class Command implements DomainChangeRecord {
     /**
      * For a replayed command, what the outcome was.
      */
-    @Command.ReplayStateMeta
+    @ReplayStateMeta
     public abstract org.apache.isis.extensions.commandlog.applib.dom.ReplayState getReplayState();
     public abstract void setReplayState(org.apache.isis.extensions.commandlog.applib.dom.ReplayState replayState);
 
 
+
+    // REPLAY STATE FAILURE REASON
 
     @Property(
             domainEvent = ReplayStateFailureReason.DomainEvent.class,
@@ -274,8 +344,8 @@ public abstract class Command implements DomainChangeRecord {
     public @interface ReplayStateFailureReason {
         int MAX_LENGTH = Integer.MAX_VALUE;
         int TYPICAL_LENGTH = 4000;
-
         int MULTI_LINE = 5;
+
         class DomainEvent extends PropertyDomainEvent<String> {}
     }
 
@@ -292,6 +362,7 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+    // PARENT
 
     @Property(
             domainEvent = Parent.DomainEvent.class
@@ -302,19 +373,20 @@ public abstract class Command implements DomainChangeRecord {
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Parent {
-        class DomainEvent extends PropertyDomainEvent<org.apache.isis.applib.services.command.Command> { }
+        class DomainEvent extends PropertyDomainEvent<Command> { }
     }
 
     @Parent
-    public abstract Command getParent();
-    public abstract void setParent(Command parent);
+    public abstract PublishedCommand getParent();
+    public abstract void setParent(PublishedCommand parent);
 
 
+
+    // TARGET
 
     @DomainChangeRecord.TargetMeta
     public abstract Bookmark getTarget();
     public abstract void setTarget(Bookmark target);
-
 
 
     @Domain.Exclude
@@ -323,6 +395,7 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+    // TARGET MEMBER
 
     @DomainChangeRecord.TargetMember
     @Override
@@ -331,6 +404,8 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+
+    // LOCAL MEMBER
 
     @Property(
             domainEvent = LocalMember.DomainEvent.class,
@@ -362,6 +437,8 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+
+    // LOGICAL MEMBER IDENTIFIER
 
     @Property(
             domainEvent = LogicalMemberIdentifier.DomainEvent.class,
@@ -395,6 +472,7 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // COMMAND DTO
 
     @Property(
             domainEvent = CommandDtoMeta.DomainEvent.class,
@@ -430,6 +508,7 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // STARTED AT
 
     @Property(
             domainEvent = StartedAt.DomainEvent.class,
@@ -460,6 +539,8 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // COMPLETED AT
+
     @Property(
             domainEvent = CompletedAt.DomainEvent.class,
             editing = Editing.DISABLED,
@@ -488,6 +569,8 @@ public abstract class Command implements DomainChangeRecord {
     public abstract void setCompletedAt(Timestamp completedAt);
 
 
+
+    // DURATION
 
     @javax.validation.constraints.Digits(
             integer = Duration.DIGITS_INTEGER,
@@ -530,8 +613,10 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // COMPLETE
+
     @Property(
-            domainEvent = IsComplete.DomainEvent.class,
+            domainEvent = Complete.DomainEvent.class,
             editing = Editing.DISABLED
     )
     @PropertyLayout(
@@ -539,16 +624,18 @@ public abstract class Command implements DomainChangeRecord {
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface IsComplete {
+    public @interface Complete {
         class DomainEvent extends PropertyDomainEvent<Boolean> { }
     }
 
-    @IsComplete
+    @Complete
     public boolean isComplete() {
         return getCompletedAt() != null;
     }
 
 
+
+    // RESULT SUMMARY
 
     @Property(
             domainEvent = ResultSummary.DomainEvent.class,
@@ -591,8 +678,10 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // RESULT
+
     @Property(
-            domainEvent = ResultMeta.DomainEvent.class,
+            domainEvent = Result.DomainEvent.class,
             editing = Editing.DISABLED,
             optionality = Optionality.OPTIONAL
     )
@@ -608,15 +697,17 @@ public abstract class Command implements DomainChangeRecord {
     )
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
-    public @interface ResultMeta {
+    public @interface Result {
         class DomainEvent extends PropertyDomainEvent<Bookmark> { }
     }
 
-    @ResultMeta
+    @Result
     public abstract Bookmark getResult();
     public abstract void setResult(Bookmark result);
 
 
+
+    // EXCEPTION
 
     @Property(
             domainEvent = ExceptionMeta.DomainEvent.class,
@@ -662,6 +753,8 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // CAUSED EXCEPTION
+
     @Property(
             domainEvent = CausedException.DomainEvent.class,
             editing = Editing.DISABLED
@@ -682,6 +775,8 @@ public abstract class Command implements DomainChangeRecord {
 
 
 
+    // PRE VALUE
+
     @DomainChangeRecord.PreValue
     @Override
     public String getPreValue() {
@@ -689,12 +784,18 @@ public abstract class Command implements DomainChangeRecord {
     }
 
 
+
+    // POST VALUE
+
     @DomainChangeRecord.PostValue
     @Override
     public String getPostValue() {
         return null;
     }
 
+
+
+    // PROGRAMMATIC
 
     @Programmatic
     public void saveAnalysis(final String analysis) {
@@ -706,6 +807,36 @@ public abstract class Command implements DomainChangeRecord {
         }
     }
 
+    @Programmatic
+    public CommandOutcomeHandler outcomeHandler() {
+        return new CommandOutcomeHandler() {
+            @Override
+            public Timestamp getStartedAt() {
+                return PublishedCommand.this.getStartedAt();
+            }
+
+            @Override
+            public void setStartedAt(final Timestamp startedAt) {
+                PublishedCommand.this.setStartedAt(startedAt);
+            }
+
+            @Override
+            public void setCompletedAt(final Timestamp completedAt) {
+                PublishedCommand.this.setCompletedAt(completedAt);
+            }
+
+            @Override
+            public void setResult(final org.apache.isis.commons.functional.Result resultBookmark) {
+                PublishedCommand.this.setResult(resultBookmark.getValue().orElse(null));
+                PublishedCommand.this.setException(resultBookmark.getFailure().orElse(null));
+            }
+        };
+    }
+
+
+
+    // TO STRING etc
+
     @Override
     public String toString() {
         return toFriendlyString();
@@ -713,46 +844,22 @@ public abstract class Command implements DomainChangeRecord {
 
     String toFriendlyString() {
         return ObjectContracts
-                .toString("interactionId", Command::getInteractionId)
-                .thenToString("username", Command::getUsername)
-                .thenToString("timestamp", Command::getTimestamp)
-                .thenToString("target", Command::getTarget)
-                .thenToString("logicalMemberIdentifier", Command::getLogicalMemberIdentifier)
-                .thenToStringOmitIfAbsent("startedAt", Command::getStartedAt)
-                .thenToStringOmitIfAbsent("completedAt", Command::getCompletedAt)
+                .toString("interactionId", PublishedCommand::getInteractionId)
+                .thenToString("username", PublishedCommand::getUsername)
+                .thenToString("timestamp", PublishedCommand::getTimestamp)
+                .thenToString("target", PublishedCommand::getTarget)
+                .thenToString("logicalMemberIdentifier", PublishedCommand::getLogicalMemberIdentifier)
+                .thenToStringOmitIfAbsent("startedAt", PublishedCommand::getStartedAt)
+                .thenToStringOmitIfAbsent("completedAt", PublishedCommand::getCompletedAt)
                 .toString(this);
     }
 
-    public CommandOutcomeHandler outcomeHandler() {
-        return new CommandOutcomeHandler() {
-            @Override
-            public Timestamp getStartedAt() {
-                return Command.this.getStartedAt();
-            }
 
-            @Override
-            public void setStartedAt(final Timestamp startedAt) {
-                Command.this.setStartedAt(startedAt);
-            }
-
-            @Override
-            public void setCompletedAt(final Timestamp completedAt) {
-                Command.this.setCompletedAt(completedAt);
-            }
-
-            @Override
-            public void setResult(final Result<Bookmark> resultBookmark) {
-                Command.this.setResult(resultBookmark.getValue().orElse(null));
-                Command.this.setException(resultBookmark.getFailure().orElse(null));
-            }
-        };
-    }
-
-    @Service
+    @Component
     @javax.annotation.Priority(PriorityPrecedence.LATE - 10)
-    public static class TableColumnOrderDefault extends TableColumnOrderForCollectionTypeAbstract<Command> {
+    public static class TableColumnOrderDefault extends TableColumnOrderForCollectionTypeAbstract<PublishedCommand> {
 
-        public TableColumnOrderDefault() { super(Command.class); }
+        public TableColumnOrderDefault() { super(PublishedCommand.class); }
 
         @Override
         protected List<String> orderParented(final Object parent, final String collectionId, final List<String> propertyIds) {
@@ -776,6 +883,5 @@ public abstract class Command implements DomainChangeRecord {
             );
         }
     }
-
 }
 

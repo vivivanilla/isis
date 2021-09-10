@@ -69,10 +69,10 @@ import org.apache.isis.persistence.jpa.applib.integration.IsisEntityListener;
         logicalTypeName = ApplicationRole.LOGICAL_TYPE_NAME,
         autoCompleteRepository = ApplicationRoleRepository.class,
         autoCompleteMethod = "findMatching"
-        )
+)
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
-        )
+)
 public class ApplicationRole
     extends org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole {
 

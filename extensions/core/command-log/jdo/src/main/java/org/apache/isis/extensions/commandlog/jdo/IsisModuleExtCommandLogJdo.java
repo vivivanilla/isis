@@ -22,11 +22,10 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 import org.apache.isis.extensions.commandlog.jdo.ui.CommandServiceMenu;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
 import org.apache.isis.testing.fixtures.applib.fixturescripts.FixtureScript;
 import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAbstract;
 
@@ -40,10 +39,10 @@ import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAb
         , CommandServiceMenu.class
 
         // @Service's
-        , CommandJdo.TableColumnOrderDefault.class
+        , PublishedCommandForJdo.TableColumnOrderDefault.class
 
         // entities
-        , CommandJdo.class
+        , PublishedCommandForJdo.class
 })
 @ComponentScan(
         basePackageClasses= {

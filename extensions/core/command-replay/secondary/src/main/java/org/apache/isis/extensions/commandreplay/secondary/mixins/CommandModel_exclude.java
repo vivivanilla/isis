@@ -26,7 +26,6 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;
 

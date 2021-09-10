@@ -33,7 +33,7 @@ import org.apache.isis.applib.mixins.layout.LayoutMixinConstants;
 import org.apache.isis.applib.mixins.system.HasInteractionId;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -65,7 +65,7 @@ public class Object_recentCommands {
 
     private final Object domainObject; // mixee
 
-    @MemberSupport public List<CommandJdo> act() {
+    @MemberSupport public List<PublishedCommandForJdo> act() {
         return bookmarkService.bookmarkFor(domainObject)
         .map(commandServiceRepository::findRecentByTarget)
         .orElse(Collections.emptyList());

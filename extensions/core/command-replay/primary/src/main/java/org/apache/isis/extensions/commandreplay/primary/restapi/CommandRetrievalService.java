@@ -28,8 +28,7 @@ import javax.inject.Named;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.exceptions.RecoverableException;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.primary.IsisModuleExtCommandReplayPrimary;
 
 import lombok.Getter;
@@ -78,7 +77,7 @@ public class CommandRetrievalService {
             @ParameterLayout(named="Batch size")
             final Integer batchSize)
             throws NotFoundException {
-        final List<? extends CommandModel> commands = commandModelRepository.findSince(interactionId, batchSize);
+        final List<? extends CommandModel> commands = publishedCommandRepository.findSince(interactionId, batchSize);
         if(commands == null) {
             throw new NotFoundException(interactionId);
         }
@@ -88,6 +87,7 @@ public class CommandRetrievalService {
         return 25;
     }
 
-    @Inject CommandModelRepository<? extends CommandModel> commandModelRepository;
+    @Inject
+    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
 }
 

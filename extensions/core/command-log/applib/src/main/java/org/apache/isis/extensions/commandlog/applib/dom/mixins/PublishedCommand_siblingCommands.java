@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.entities;
+package org.apache.isis.extensions.commandlog.applib.dom.mixins;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,36 +25,39 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 
 import lombok.RequiredArgsConstructor;
+import lombok.val;
 
 @Collection(
-    domainEvent = CommandJdo_siblingCommands.CollectionDomainEvent.class
+    domainEvent = PublishedCommand_siblingCommands.CollectionDomainEvent.class
 )
 @CollectionLayout(
     defaultView = "table",
     sequence = "100.110"
 )
 @RequiredArgsConstructor
-public class CommandJdo_siblingCommands {
+public class PublishedCommand_siblingCommands {
 
     public static class CollectionDomainEvent
-            extends IsisModuleExtCommandLogJdo.CollectionDomainEvent<CommandJdo_siblingCommands, CommandJdo> { }
+            extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<PublishedCommand_siblingCommands, PublishedCommand> { }
 
-    private final CommandJdo commandJdo;
+    private final PublishedCommand publishedCommand;
 
-    public List<CommandJdo> coll() {
-        final CommandJdo parentJdo = commandJdo.getParent();
-        if(parentJdo == null) {
+    public List<PublishedCommand> coll() {
+        val parentCommand = publishedCommand.getParent();
+        if(parentCommand == null) {
             return Collections.emptyList();
         }
-        final List<CommandJdo> siblingCommands = commandJdoRepository.findByParent(parentJdo);
-        siblingCommands.remove(commandJdo);
+        val siblingCommands = repository.findByParent(parentCommand);
+        siblingCommands.remove(publishedCommand);
         return siblingCommands;
     }
 
 
-    @Inject CommandJdoRepository commandJdoRepository;
+    @Inject PublishedCommandRepository repository;
 
 }

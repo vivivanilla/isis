@@ -71,10 +71,10 @@ import org.apache.isis.extensions.secman.applib.user.dom.ApplicationUser;
         logicalTypeName = ApplicationRole.LOGICAL_TYPE_NAME,
         autoCompleteRepository = ApplicationRoleRepository.class,
         autoCompleteMethod = "findMatching"
-        )
+)
 @DomainObjectLayout(
         bookmarking = BookmarkPolicy.AS_ROOT
-        )
+)
 public class ApplicationRole
     extends org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole {
 

@@ -35,7 +35,7 @@ import org.apache.isis.schema.cmd.v2.CommandsDto;
 import lombok.val;
 
 
-public class CommandFetcher_Test {
+public class PublishedCommandFetcher_Test {
 
     @Disabled // intended only for manual verification.
     @Test

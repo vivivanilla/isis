@@ -18,32 +18,50 @@
  */
 package org.apache.isis.extensions.commandlog.applib;
 
-import org.apache.isis.testing.fixtures.applib.modules.ModuleWithFixtures;
 
-public interface IsisModuleExtCommandLogApplib
-extends ModuleWithFixtures {
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 
-    String NAMESPACE = "isis.ext.commandLog";
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.testing.fixtures.applib.IsisModuleTestingFixturesApplib;
 
-    abstract class TitleUiEvent<S>
+/**
+ * @since 2.0 {@index}
+ */
+@Configuration
+@Import({
+        // modules
+        IsisModuleTestingFixturesApplib.class,
+
+
+        // @Services
+        PublishedCommand.TitleProvider.class,
+        PublishedCommand.TableColumnOrderDefault.class,
+
+})
+public class IsisModuleExtCommandLogApplib {
+
+    public static final String NAMESPACE = "isis.ext.commandLog";
+
+    public static abstract class TitleUiEvent<S>
         extends org.apache.isis.applib.events.ui.TitleUiEvent<S> { }
 
-    abstract class IconUiEvent<S>
+    public static abstract class IconUiEvent<S>
         extends org.apache.isis.applib.events.ui.IconUiEvent<S> { }
 
-    abstract class CssClassUiEvent<S>
+    public static abstract class CssClassUiEvent<S>
         extends org.apache.isis.applib.events.ui.CssClassUiEvent<S> { }
 
-    abstract class LayoutUiEvent<S>
+    public static abstract class LayoutUiEvent<S>
         extends org.apache.isis.applib.events.ui.LayoutUiEvent<S> { }
 
-    abstract class ActionDomainEvent<S>
+    public static abstract class ActionDomainEvent<S>
         extends org.apache.isis.applib.events.domain.ActionDomainEvent<S> { }
 
-    abstract class CollectionDomainEvent<S,T>
+    public static abstract class CollectionDomainEvent<S,T>
         extends org.apache.isis.applib.events.domain.CollectionDomainEvent<S,T> { }
 
-    abstract class PropertyDomainEvent<S,T>
+    public static abstract class PropertyDomainEvent<S,T>
         extends org.apache.isis.applib.events.domain.PropertyDomainEvent<S,T> { }
 
 }

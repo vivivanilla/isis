@@ -34,7 +34,6 @@ import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
@@ -43,7 +42,6 @@ import org.apache.isis.applib.annotation.Property;
 import org.apache.isis.applib.annotation.PropertyLayout;
 import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.jaxb.JavaSqlXMLGregorianCalendarMarshalling;
-import org.apache.isis.applib.mixins.system.DomainChangeRecord;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.command.Command;
 import org.apache.isis.applib.services.command.CommandOutcomeHandler;
@@ -53,8 +51,8 @@ import org.apache.isis.applib.util.TitleBuffer;
 import org.apache.isis.commons.functional.Result;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.commons.internal.exceptions._Exceptions;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.jpa.IsisModuleExtCommandLogJpa;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandlog.applib.util.BigDecimalUtils;
 import org.apache.isis.extensions.commandlog.applib.util.StringUtils;
@@ -231,19 +229,9 @@ import lombok.val;
         logicalTypeName = CommandJpa.LOGICAL_TYPE_NAME,
         editing = Editing.DISABLED
 )
-@DomainObjectLayout(
-        named = "Command",
-        titleUiEvent = CommandModel.TitleUiEvent.class,
-        iconUiEvent = CommandModel.IconUiEvent.class,
-        cssClassUiEvent = CommandModel.CssClassUiEvent.class,
-        layoutUiEvent = CommandModel.LayoutUiEvent.class
-)
 //@Log4j2
 @NoArgsConstructor
-public class CommandJpa
-implements
-    CommandModel,
-    DomainChangeRecord {
+public class CommandJpa extends PublishedCommand {
 
     public final static String LOGICAL_TYPE_NAME = IsisModuleExtCommandLogJpa.NAMESPACE + ".Command";
     protected final static String FQCN = "org.apache.isis.extensions.commandlog.jpa.entities.CommandJpa";

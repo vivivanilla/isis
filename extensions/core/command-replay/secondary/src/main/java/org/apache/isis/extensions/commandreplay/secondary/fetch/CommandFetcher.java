@@ -34,7 +34,6 @@ import org.springframework.stereotype.Service;
 
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.jaxb.JaxbService.Simple;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
 import org.apache.isis.extensions.commandreplay.secondary.SecondaryStatus;
 import org.apache.isis.extensions.commandreplay.secondary.StatusException;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;

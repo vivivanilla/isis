@@ -24,8 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModel;
-import org.apache.isis.extensions.commandlog.applib.dom.CommandModelRepository;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.secondary.IsisModuleExtCommandReplaySecondary;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;
 
@@ -50,13 +49,14 @@ public class CommandJdo_replayQueue {
     final CommandModel commandModel;
 
     public List<? extends CommandModel> coll() {
-        return commandModelRepository.findReplayedOnSecondary();
+        return publishedCommandRepository.findReplayedOnSecondary();
     }
     public boolean hideColl() {
         return !secondaryConfig.isConfigured();
     }
 
     @Inject SecondaryConfig secondaryConfig;
-    @Inject CommandModelRepository<? extends CommandModel> commandModelRepository;
+    @Inject
+    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
 
 }

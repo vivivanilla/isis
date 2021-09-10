@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.mixins.system.HasInteractionId;
 import org.apache.isis.applib.services.command.Command;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
 
 import lombok.RequiredArgsConstructor;
@@ -54,7 +54,7 @@ public class HasInteractionId_command {
 
     private final HasInteractionId hasInteractionId;
 
-    public CommandJdo act() {
+    public PublishedCommandForJdo act() {
         return findCommand();
     }
     /**
@@ -62,13 +62,13 @@ public class HasInteractionId_command {
      * {@link Command#getParent() parent} property.
      */
     public boolean hideAct() {
-        return (hasInteractionId instanceof CommandJdo);
+        return (hasInteractionId instanceof PublishedCommandForJdo);
     }
     public String disableAct() {
         return findCommand() == null ? "No command found for unique Id": null;
     }
 
-    private CommandJdo findCommand() {
+    private PublishedCommandForJdo findCommand() {
         final UUID transactionId = hasInteractionId.getInteractionId();
         return commandServiceRepository
                 .findByInteractionId(transactionId)

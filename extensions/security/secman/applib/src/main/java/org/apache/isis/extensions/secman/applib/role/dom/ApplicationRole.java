@@ -71,7 +71,7 @@ public abstract class ApplicationRole implements Comparable<ApplicationRole> {
 
     // -- MODEL
 
-    @Title
+    @ObjectSupport
     public String title() {
         return getName();
     }
