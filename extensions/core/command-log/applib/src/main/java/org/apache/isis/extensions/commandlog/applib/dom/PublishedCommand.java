@@ -826,7 +826,7 @@ public abstract class PublishedCommand implements DomainChangeRecord {
             }
 
             @Override
-            public void setResult(final org.apache.isis.commons.functional.Result resultBookmark) {
+            public void setResult(final org.apache.isis.commons.functional.Result<Bookmark> resultBookmark) {
                 PublishedCommand.this.setResult(resultBookmark.getValue().orElse(null));
                 PublishedCommand.this.setException(resultBookmark.getFailure().orElse(null));
             }
