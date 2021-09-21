@@ -44,7 +44,7 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.services.clock.ClockService;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -75,7 +75,7 @@ public class CommandServiceMenu {
             extends IsisModuleExtCommandLogJdo.ActionDomainEvent<CommandServiceMenu> {
     }
 
-    final CommandJdoRepository commandServiceRepository;
+    final PublishedCommandForJdoRepository commandServiceRepository;
     final ClockService clockService;
 
     public static class ActiveCommandsDomainEvent extends ActionDomainEvent { }

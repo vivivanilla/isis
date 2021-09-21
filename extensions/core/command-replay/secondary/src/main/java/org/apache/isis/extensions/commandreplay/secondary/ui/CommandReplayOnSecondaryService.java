@@ -28,6 +28,7 @@ import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.value.Clob;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.secondary.IsisModuleExtCommandReplaySecondary;
 import org.apache.isis.schema.cmd.v2.CommandDto;
@@ -56,7 +57,7 @@ public class CommandReplayOnSecondaryService {
     public static final String LOGICAL_TYPE_NAME = IsisModuleExtCommandReplaySecondary.NAMESPACE + ".CommandReplayOnSecondaryService";
 
     @Inject
-    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
+    PublishedCommandRepository publishedCommandRepository;
     @Inject final JaxbService jaxbService;
 
     public static abstract class ActionDomainEvent<T> extends IsisModuleExtCommandReplaySecondary.ActionDomainEvent<T> { }
@@ -67,7 +68,7 @@ public class CommandReplayOnSecondaryService {
 
         public class ActionEvent extends ActionDomainEvent<findMostRecentReplayed> { }
 
-        @MemberSupport public CommandModel act() {
+        @MemberSupport public PublishedCommand act() {
             return publishedCommandRepository.findMostRecentReplayed().orElse(null);
         }
     }

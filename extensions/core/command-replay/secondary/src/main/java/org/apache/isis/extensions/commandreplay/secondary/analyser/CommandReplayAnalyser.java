@@ -18,6 +18,8 @@
  */
 package org.apache.isis.extensions.commandreplay.secondary.analyser;
 
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+
 /**
  * @since 2.0 {@index}
  */
@@ -25,9 +27,9 @@ public interface CommandReplayAnalyser {
 
     /**
      *
-     * @param commandJdo
+     * @param publishedCommand
      * @return - if not <code>null</code>, indicates the reason that there was an issue replaying the command.
      */
-    String analyzeReplay(final CommandModel commandJdo);
+    String analyzeReplay(final PublishedCommand publishedCommand);
 
 }

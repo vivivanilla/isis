@@ -29,7 +29,7 @@ import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.applib.services.queryresultscache.QueryResultsCache;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 
 @Collection(
     domainEvent = T_recent.CollectionDomainEvent.class
@@ -61,7 +61,7 @@ public abstract class T_recent<T> {
         .orElse(Collections.emptyList());
     }
 
-    @Inject CommandJdoRepository commandJdoRepository;
+    @Inject PublishedCommandForJdoRepository commandJdoRepository;
     @Inject BookmarkService bookmarkService;
     @Inject QueryResultsCache queryResultsCache;
 

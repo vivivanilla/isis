@@ -24,6 +24,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.secondary.IsisModuleExtCommandReplaySecondary;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;
@@ -34,21 +35,21 @@ import lombok.RequiredArgsConstructor;
  * @since 2.0 {@index}
  */
 @Collection(
-    domainEvent = CommandJdo_replayQueue.CollectionDomainEvent.class
+    domainEvent = PublishedCommand_replayQueue.CollectionDomainEvent.class
 )
 @CollectionLayout(
     defaultView = "table",
     sequence = "100.100"
 )
 @RequiredArgsConstructor
-public class CommandJdo_replayQueue {
+public class PublishedCommand_replayQueue {
 
     public static class CollectionDomainEvent
-            extends IsisModuleExtCommandReplaySecondary.CollectionDomainEvent<CommandJdo_replayQueue, CommandModel> { }
+            extends IsisModuleExtCommandReplaySecondary.CollectionDomainEvent<PublishedCommand_replayQueue, PublishedCommand> { }
 
-    final CommandModel commandModel;
+    final PublishedCommand publishedCommand;
 
-    public List<? extends CommandModel> coll() {
+    public List<PublishedCommand> coll() {
         return publishedCommandRepository.findReplayedOnSecondary();
     }
     public boolean hideColl() {
@@ -56,7 +57,6 @@ public class CommandJdo_replayQueue {
     }
 
     @Inject SecondaryConfig secondaryConfig;
-    @Inject
-    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
+    @Inject PublishedCommandRepository publishedCommandRepository;
 
 }

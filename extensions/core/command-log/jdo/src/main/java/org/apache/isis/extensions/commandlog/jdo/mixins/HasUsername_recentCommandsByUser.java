@@ -28,7 +28,7 @@ import org.apache.isis.applib.annotation.CollectionLayout;
 import org.apache.isis.applib.mixins.security.HasUsername;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 
 
 /**
@@ -61,5 +61,5 @@ public class HasUsername_recentCommandsByUser {
         return hasUsername.getUsername() == null;
     }
 
-    @Inject CommandJdoRepository commandServiceRepository;
+    @Inject PublishedCommandForJdoRepository commandServiceRepository;
 }

@@ -28,6 +28,7 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.services.command.CommandExecutorService;
 import org.apache.isis.applib.services.xactn.TransactionService;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandreplay.secondary.SecondaryStatus;
@@ -57,8 +58,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
     @Inject CommandExecutorService commandExecutorService;
     @Inject TransactionService transactionService;
     @Inject CommandFetcher commandFetcher;
-    @Inject
-    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
+    @Inject PublishedCommandRepository publishedCommandRepository;
     @Inject CommandReplayAnalysisService analysisService;
     @Inject Optional<ReplayCommandExecutionController> controller;
 
@@ -79,7 +79,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
             return;
         }
 
-        List<? extends CommandModel> commandsToReplay;
+        List<PublishedCommand> commandsToReplay;
 
         while(isRunning()) {
 
@@ -90,7 +90,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
             if(commandsToReplay.isEmpty()) {
 
                 // look for previously replayed on secondary
-                CommandModel hwm = publishedCommandRepository.findMostRecentReplayed().orElse(null);
+                PublishedCommand hwm = publishedCommandRepository.findMostRecentReplayed().orElse(null);
 
                 if (hwm != null) {
                     // give up if there was a failure; admin will need to fix issue and retry
@@ -131,16 +131,16 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
      * @param commandsToReplay
      * @apiNote could return, whether there was a command to process (and so continue)
      */
-    private void replay(List<? extends CommandModel> commandsToReplay) {
+    private void replay(List<PublishedCommand> commandsToReplay) {
 
-        commandsToReplay.forEach(commandModel -> {
+        commandsToReplay.forEach(publishedCommand -> {
 
-            log.info("replaying {}", commandModel.getInteractionId());
+            log.info("replaying {}", publishedCommand.getInteractionId());
 
             //
             // run command
             //
-            val replayState = executeCommandInTranAndAnalyse(commandModel);
+            val replayState = executeCommandInTranAndAnalyse(publishedCommand);
             if(replayState.isFailed()) {
                 // will effectively block the running of any further commands
                 // until the issue is fixed.
@@ -150,7 +150,7 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
             //
             // find child commands, and run them
             //
-            val parent = commandModel;
+            val parent = publishedCommand;
 
             val childCommands =
                     transactionService.callWithinCurrentTransactionElseCreateNew(
@@ -170,18 +170,18 @@ public class ReplicateAndRunCommands implements Callable<SecondaryStatus> {
 
     }
 
-    private ReplayState executeCommandInTranAndAnalyse(final CommandModel commandJdo) {
+    private ReplayState executeCommandInTranAndAnalyse(final PublishedCommand publishedCommand) {
         transactionService.runWithinCurrentTransactionElseCreateNew(
                 () -> {
                     commandExecutorService.executeCommand(
-                        CommandExecutorService.InteractionContextPolicy.SWITCH_USER_AND_TIME, commandJdo.getCommandDto(), commandJdo.outcomeHandler());
+                        CommandExecutorService.InteractionContextPolicy.SWITCH_USER_AND_TIME, publishedCommand.getCommandDto(), publishedCommand.outcomeHandler());
                 });
 
         transactionService.runWithinCurrentTransactionElseCreateNew(() -> {
-            analysisService.analyse(commandJdo);
+            analysisService.analyse(publishedCommand);
         });
 
-        return commandJdo.getReplayState();
+        return publishedCommand.getReplayState();
 
     }
 

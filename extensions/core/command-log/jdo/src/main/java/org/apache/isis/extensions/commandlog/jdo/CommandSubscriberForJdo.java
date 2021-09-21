@@ -29,7 +29,7 @@ import org.apache.isis.applib.services.command.Command;
 import org.apache.isis.applib.services.publishing.spi.CommandSubscriber;
 import org.apache.isis.applib.util.JaxbUtil;
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -46,7 +46,7 @@ import lombok.extern.log4j.Log4j2;
 @RequiredArgsConstructor
 public class CommandSubscriberForJdo implements CommandSubscriber {
 
-    @Inject final CommandJdoRepository commandJdoRepository;
+    @Inject final PublishedCommandForJdoRepository commandJdoRepository;
 
     @Override
     public void onCompleted(Command command) {

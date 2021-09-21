@@ -23,7 +23,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 import org.apache.isis.extensions.commandlog.jdo.ui.CommandServiceMenu;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
 import org.apache.isis.testing.fixtures.applib.fixturescripts.FixtureScript;
@@ -35,7 +35,7 @@ import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAb
 @Configuration
 @Import({
         // @DomainService's
-        CommandJdoRepository.class
+        PublishedCommandForJdoRepository.class
         , CommandServiceMenu.class
 
         // @Service's
@@ -61,7 +61,7 @@ implements IsisModuleExtCommandLogApplib {
         return new TeardownFixtureJdoAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(CommandModel.class);
+                deleteFrom(PublishedCommandForJdo.class);
             }
         };
     }

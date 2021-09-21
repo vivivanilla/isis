@@ -28,6 +28,7 @@ import javax.inject.Named;
 import org.apache.isis.applib.annotation.*;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.exceptions.RecoverableException;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.primary.IsisModuleExtCommandReplayPrimary;
 
@@ -69,7 +70,7 @@ public class CommandRetrievalService {
      * @throws NotFoundException - if the command with specified transaction cannot be found.
      */
     @Action(domainEvent = FindCommandsOnPrimaryFromDomainEvent.class, semantics = SemanticsOf.SAFE)
-    public List<? extends CommandModel> findCommandsOnPrimaryFrom(
+    public List<PublishedCommand> findCommandsOnPrimaryFrom(
             @Nullable
             @ParameterLayout(named="Interaction Id")
             final UUID interactionId,
@@ -77,7 +78,7 @@ public class CommandRetrievalService {
             @ParameterLayout(named="Batch size")
             final Integer batchSize)
             throws NotFoundException {
-        final List<? extends CommandModel> commands = publishedCommandRepository.findSince(interactionId, batchSize);
+        final List<PublishedCommand> commands = publishedCommandRepository.findSince(interactionId, batchSize);
         if(commands == null) {
             throw new NotFoundException(interactionId);
         }
@@ -88,6 +89,6 @@ public class CommandRetrievalService {
     }
 
     @Inject
-    PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
+    PublishedCommandRepository publishedCommandRepository;
 }
 

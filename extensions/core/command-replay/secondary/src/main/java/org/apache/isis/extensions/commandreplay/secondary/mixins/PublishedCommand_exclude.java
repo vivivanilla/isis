@@ -26,6 +26,7 @@ import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;
 
@@ -37,21 +38,20 @@ import lombok.RequiredArgsConstructor;
  */
 @Action(
     semantics = SemanticsOf.NON_IDEMPOTENT_ARE_YOU_SURE,
-    domainEvent = CommandModel_exclude.ActionDomainEvent.class
+    domainEvent = PublishedCommand_exclude.ActionDomainEvent.class
 )
 @ActionLayout(associateWith = "executeIn", sequence = "2")
 @RequiredArgsConstructor
-//@Log4j2
-public class CommandModel_exclude {
+public class PublishedCommand_exclude {
 
     public static class ActionDomainEvent
-            extends IsisModuleExtCommandLogApplib.ActionDomainEvent<CommandModel_exclude> { }
+            extends IsisModuleExtCommandLogApplib.ActionDomainEvent<PublishedCommand_exclude> { }
 
-    final CommandModel commandModel;
+    final PublishedCommand publishedCommand;
 
-    public CommandModel act() {
-        commandModel.setReplayState(ReplayState.EXCLUDED);
-        return commandModel;
+    public PublishedCommand act() {
+        publishedCommand.setReplayState(ReplayState.EXCLUDED);
+        return publishedCommand;
     }
 
     public boolean hideAct() {
@@ -59,7 +59,7 @@ public class CommandModel_exclude {
     }
     public String disableAct() {
         final boolean notInError =
-                commandModel.getReplayState() == null || !commandModel.getReplayState().isFailed();
+                publishedCommand.getReplayState() == null || !publishedCommand.getReplayState().isFailed();
         return notInError
                 ? "This command is not in error, so cannot be excluded."
                 : null;

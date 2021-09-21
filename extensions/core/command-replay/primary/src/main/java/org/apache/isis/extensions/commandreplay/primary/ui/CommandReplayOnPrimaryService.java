@@ -40,6 +40,7 @@ import org.apache.isis.applib.services.commanddto.conmap.ContentMappingServiceFo
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.message.MessageService;
 import org.apache.isis.applib.value.Clob;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 import org.apache.isis.extensions.commandreplay.primary.IsisModuleExtCommandReplayPrimary;
 import org.apache.isis.extensions.commandreplay.primary.restapi.CommandRetrievalService;
@@ -68,7 +69,7 @@ public class CommandReplayOnPrimaryService {
 
     public static final String LOGICAL_TYPE_NAME = IsisModuleExtCommandReplayPrimary.NAMESPACE + ".CommandReplayOnPrimaryService";
 
-    @Inject final PublishedCommandRepository<? extends CommandModel> publishedCommandRepository;
+    @Inject final PublishedCommandRepository publishedCommandRepository;
     @Inject final JaxbService jaxbService;
     @Inject final MessageService messageService;
     @Inject final ContentMappingServiceForCommandsDto contentMappingServiceForCommandsDto;
@@ -101,7 +102,7 @@ public class CommandReplayOnPrimaryService {
          * @param batchSize - the maximum number of commands to return.  If not specified, all found will be returned.
          * @throws NotFoundException - if the command with specified transaction cannot be found.
          */
-        @MemberSupport public List<? extends CommandModel> act(
+        @MemberSupport public List<PublishedCommand> act(
                 @Nullable
                 @ParameterLayout(named="Interaction Id")
                 final UUID interactionId,
@@ -140,7 +141,7 @@ public class CommandReplayOnPrimaryService {
                 @Nullable
                 final Integer batchSize,
                 final String filenamePrefix) {
-            final List<? extends CommandModel> commands = publishedCommandRepository.findSince(interactionId, batchSize);
+            final List<PublishedCommand> commands = publishedCommandRepository.findSince(interactionId, batchSize);
             if(commands == null) {
                 messageService.informUser("No commands found");
             }

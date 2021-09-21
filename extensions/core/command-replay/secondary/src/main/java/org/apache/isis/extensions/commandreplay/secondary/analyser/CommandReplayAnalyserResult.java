@@ -29,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.apache.isis.applib.services.commanddto.conmap.UserDataKeys;
 import org.apache.isis.applib.util.schema.CommandDtoUtils;
 import org.apache.isis.core.config.IsisConfiguration;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.schema.common.v2.InteractionType;
 
 import lombok.RequiredArgsConstructor;
@@ -52,12 +53,12 @@ public class CommandReplayAnalyserResult implements CommandReplayAnalyser {
     }
 
     @Override
-    public String analyzeReplay(final CommandModel commandModel) {
+    public String analyzeReplay(final PublishedCommand publishedCommand) {
         if(!enabled) {
             return null;
         }
 
-        val dto = commandModel.getCommandDto();
+        val dto = publishedCommand.getCommandDto();
         if(dto.getMember().getInteractionType() == InteractionType.PROPERTY_EDIT) {
             return null;
         }
@@ -66,7 +67,7 @@ public class CommandReplayAnalyserResult implements CommandReplayAnalyser {
         // ... either the same result when replayed
         val primaryResultStr = CommandDtoUtils.getUserData(dto, UserDataKeys.RESULT);
 
-        val secondaryResult = commandModel.getResult();
+        val secondaryResult = publishedCommand.getResult();
         val secondaryResultStr =
                 secondaryResult != null ? secondaryResult.toString() : null;
         return Objects.equals(primaryResultStr, secondaryResultStr)

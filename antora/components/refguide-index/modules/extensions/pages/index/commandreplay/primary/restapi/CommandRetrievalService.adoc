@@ -8,7 +8,7 @@
 ----
 class CommandRetrievalService {
   public static final String LOGICAL_TYPE_NAME;
-  List<? extends CommandModel> findCommandsOnPrimaryFrom(final UUID interactionId, final Integer batchSize)     // <.>
+  List<PublishedCommand> findCommandsOnPrimaryFrom(final UUID interactionId, final Integer batchSize)     // <.>
   Integer default1FindCommandsOnPrimaryFrom()
 }
 ----
@@ -16,7 +16,7 @@ class CommandRetrievalService {
 <.> xref:#findCommandsOnPrimaryFrom__UUID_Integer[findCommandsOnPrimaryFrom(UUID, Integer)]
 +
 --
-These actions should be called with HTTP Accept Header set to: `application/xml;profile="urn:org.restfulobjects:repr-types/action-result";x-ro-domain-type="org.apache.isis.schema.cmd.v1.CommandsDto"` 
+These actions should be called with HTTP Accept Header set to: `application/xml;profile="urn:org.restfulobjects:repr-types/action-result";x-ro-domain-type="org.apache.isis.schema.cmd.v1.CommandsDto"`
 --
 
 == Members
@@ -24,4 +24,4 @@ These actions should be called with HTTP Accept Header set to: `application/xml;
 [#findCommandsOnPrimaryFrom__UUID_Integer]
 === findCommandsOnPrimaryFrom(UUID, Integer)
 
-These actions should be called with HTTP Accept Header set to: `application/xml;profile="urn:org.restfulobjects:repr-types/action-result";x-ro-domain-type="org.apache.isis.schema.cmd.v1.CommandsDto"` 
+These actions should be called with HTTP Accept Header set to: `application/xml;profile="urn:org.restfulobjects:repr-types/action-result";x-ro-domain-type="org.apache.isis.schema.cmd.v1.CommandsDto"`

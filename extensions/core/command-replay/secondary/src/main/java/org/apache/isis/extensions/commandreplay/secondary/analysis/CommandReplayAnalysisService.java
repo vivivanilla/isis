@@ -26,6 +26,7 @@ import javax.inject.Named;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.springframework.stereotype.Service;
 
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandreplay.secondary.analyser.CommandReplayAnalyser;
 
 import lombok.extern.log4j.Log4j2;
@@ -44,17 +45,17 @@ public class CommandReplayAnalysisService {
      * as in error.
      * This will effectively block the running of any further commands until the administrator fixes the issue.
      */
-    public void analyse(final CommandModel commandModel) {
-        final String analysis = analyseReplay(commandModel);
+    public void analyse(final PublishedCommand publishedCommand) {
+        final String analysis = analyseReplay(publishedCommand);
 
-        commandModel.saveAnalysis(analysis);
+        publishedCommand.saveAnalysis(analysis);
     }
 
-    private String analyseReplay(final CommandModel commandJdo) {
+    private String analyseReplay(final PublishedCommand publishedCommand) {
 
         for (final CommandReplayAnalyser analyser : analysers) {
             try {
-                String reason = analyser.analyzeReplay(commandJdo);
+                String reason = analyser.analyzeReplay(publishedCommand);
                 if (reason != null) {
                     return reason;
                 }

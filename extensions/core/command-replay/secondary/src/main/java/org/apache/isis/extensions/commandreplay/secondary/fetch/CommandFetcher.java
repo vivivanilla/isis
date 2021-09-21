@@ -34,6 +34,7 @@ import org.springframework.stereotype.Service;
 
 import org.apache.isis.applib.services.jaxb.JaxbService;
 import org.apache.isis.applib.services.jaxb.JaxbService.Simple;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandreplay.secondary.SecondaryStatus;
 import org.apache.isis.extensions.commandreplay.secondary.StatusException;
 import org.apache.isis.extensions.commandreplay.secondary.config.SecondaryConfig;
@@ -66,7 +67,7 @@ public class CommandFetcher {
      * @throws StatusException
      */
     public List<CommandDto> fetchCommand(
-            final @Nullable CommandModel previousHwmIfAny)
+            final @Nullable PublishedCommand previousHwmIfAny)
             throws StatusException {
 
         log.debug("finding command on primary ...");
@@ -82,7 +83,7 @@ public class CommandFetcher {
      * @param previousHwmIfAny
      * @throws StatusException
      */
-    private CommandsDto fetchCommands(final CommandModel previousHwmIfAny)
+    private CommandsDto fetchCommands(final PublishedCommand previousHwmIfAny)
             throws StatusException {
 
         final UUID transactionId = previousHwmIfAny != null ? previousHwmIfAny.getInteractionId() : null;

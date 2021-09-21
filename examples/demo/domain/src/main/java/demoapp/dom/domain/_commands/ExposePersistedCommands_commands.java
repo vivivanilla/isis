@@ -38,7 +38,7 @@ public class ExposePersistedCommands_commands {
     private final ExposePersistedCommands exposePersistedCommands;
 
     //tag::class[]
-    public List<? extends CommandModel> coll() {
+    public List<PublishedCommand> coll() {
         return commandJdoRepository.findCompleted();
     }
 

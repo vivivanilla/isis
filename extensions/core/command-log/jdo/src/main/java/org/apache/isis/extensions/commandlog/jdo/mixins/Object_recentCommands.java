@@ -34,7 +34,7 @@ import org.apache.isis.applib.mixins.system.HasInteractionId;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
 import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
 import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.CommandJdoRepository;
+import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -79,7 +79,7 @@ public class Object_recentCommands {
         return (domainObject instanceof HasInteractionId);
     }
 
-    @Inject CommandJdoRepository commandServiceRepository;
+    @Inject PublishedCommandForJdoRepository commandServiceRepository;
     @Inject BookmarkService bookmarkService;
 
 }
