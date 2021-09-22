@@ -42,12 +42,9 @@ import lombok.RequiredArgsConstructor;
 public class PublishedCommandForJdoRepository
 extends PublishedCommandRepositoryAbstract<PublishedCommandForJdo> {
 
-    @Inject JdoSupportService jdoSupport;
-
     public PublishedCommandForJdoRepository() {
         super(PublishedCommandForJdo.class);
     }
-
 
     @Override protected PublishedCommand newPublishedCommand() {
         return new PublishedCommandForJdo();

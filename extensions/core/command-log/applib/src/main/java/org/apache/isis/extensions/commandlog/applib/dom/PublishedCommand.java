@@ -112,7 +112,7 @@ public abstract class PublishedCommand implements DomainChangeRecord {
     public static final String NAMED_QUERY_FIND_BY_TIMESTAMP_AFTER = "PublishedCommand.findByTimestampAfter";
     public static final String NAMED_QUERY_FIND_BY_TIMESTAMP_BEFORE = "PublishedCommand.findByTimestampBefore";
     public static final String NAMED_QUERY_FIND = "PublishedCommand.find";
-    public static final String NAMED_QUERY_FIND_BY_USERNAME = "PublishedCommand.findRecentByUsername";
+    public static final String NAMED_QUERY_FIND_RECENT_BY_USERNAME = "PublishedCommand.findRecentByUsername";
     public static final String NAMED_QUERY_FIND_FIRST = "PublishedCommand.findFirst";
     public static final String NAMED_QUERY_FIND_SINCE = "PublishedCommand.findSince";
     /**
@@ -127,6 +127,7 @@ public abstract class PublishedCommand implements DomainChangeRecord {
      */
     public static final String NAMED_QUERY_FIND_MOST_RECENT_COMPLETED = "PublishedCommand.findMostRecentCompleted";
     public static final String NAMED_QUERY_FIND_NOT_YET_REPLAYED = "PublishedCommand.findNotYetReplayed";
+    // public static final String NAMED_QUERY_FIND_REPLAYABLE_MOST_RECENT_STARTED = "PublishedCommand.findReplayableMostRecentStarted";
 
 
     // EVENTS

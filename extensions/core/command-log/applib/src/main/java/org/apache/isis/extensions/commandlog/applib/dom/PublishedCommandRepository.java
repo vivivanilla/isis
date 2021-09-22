@@ -103,7 +103,7 @@ public interface PublishedCommandRepository {
 
     List<PublishedCommand> findNotYetReplayed();
 
-    List<PublishedCommand> findReplayedOnSecondary();
+    // List<PublishedCommand> findReplayedOnSecondary();
 
     PublishedCommand saveForReplay(CommandDto dto);
 

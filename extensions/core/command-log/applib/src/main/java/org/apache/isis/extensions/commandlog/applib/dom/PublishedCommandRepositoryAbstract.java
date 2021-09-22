@@ -35,12 +35,11 @@ import javax.inject.Provider;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Repository;
 
-import org.apache.isis.applib.annotation.Programmatic;
 import org.apache.isis.applib.jaxb.JavaSqlXMLGregorianCalendarMarshalling;
+import org.apache.isis.applib.query.NamedQuery;
 import org.apache.isis.applib.query.Query;
 import org.apache.isis.applib.query.QueryRange;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.iactn.InteractionProvider;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.schema.CommandDtoUtils;
 import org.apache.isis.commons.internal.base._Casts;
@@ -63,11 +62,9 @@ implements PublishedCommandRepository {
 
     private final Class<PC> publishedCommandClass;
 
-    @Inject Provider<InteractionProvider> interactionProviderProvider;
     @Inject Provider<RepositoryService> repositoryServiceProvider;
 
-    protected PublishedCommandRepositoryAbstract(
-            final Class<PC> publishedCommandClass) {
+    protected PublishedCommandRepositoryAbstract(final Class<PC> publishedCommandClass) {
         this.publishedCommandClass = publishedCommandClass;
     }
 
@@ -81,50 +78,64 @@ implements PublishedCommandRepository {
         final Query<PC> query;
         if(from != null) {
             if(to != null) {
-                query = Query.named(publishedCommandClass, "findByTimestampBetween")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BETWEEN)
                         .withParameter("from", fromTs)
                         .withParameter("to", toTs);
             } else {
-                query = Query.named(publishedCommandClass, "findByTimestampAfter")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_AFTER)
                         .withParameter("from", fromTs);
             }
         } else {
             if(to != null) {
-                query = Query.named(publishedCommandClass, "findByTimestampBefore")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BEFORE)
                         .withParameter("to", toTs);
             } else {
-                query = Query.named(publishedCommandClass, "find");
+                query = Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND);
             }
         }
         return _Casts.uncheckedCast(
-                repositoryService().allMatches(query));
+                repositoryService().allMatches(query)
+        );
     }
 
     @Override
     public Optional<PublishedCommand> findByInteractionId(final UUID interactionId) {
         return _Casts.uncheckedCast(
                 repositoryService().firstMatch(
-                Query.named(publishedCommandClass, "findByInteractionIdStr")
-                    .withParameter("interactionIdStr", interactionId.toString())));
+                Query.named(publishedCommandClass,
+                            PublishedCommand.NAMED_QUERY_FIND_BY_INTERACTION_ID)
+                    .withParameter("interactionId", interactionId.toString()))
+        );
     }
+
 
     @Override
     public List<PublishedCommand> findByParent(final PublishedCommand parent) {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findByParent")
-                    .withParameter("parent", parent));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass,
+                            PublishedCommand.NAMED_QUERY_FIND_BY_PARENT)
+                    .withParameter("parent", parent))
+        );
     }
 
     @Override
     public List<PublishedCommand> findCurrent() {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findCurrent"));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_CURRENT))
+        );
     }
 
     @Override
     public List<PublishedCommand> findCompleted() {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findCompleted"));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_COMPLETED))
+        );
     }
 
     @Override
@@ -136,29 +147,34 @@ implements PublishedCommandRepository {
         final Timestamp fromTs = toTimestampStartOfDayWithOffset(from, 0);
         final Timestamp toTs = toTimestampStartOfDayWithOffset(to, 1);
 
-        final Query<PublishedCommand> query;
+        final Query<PC> query;
         if(from != null) {
             if(to != null) {
-                query = Query.named(publishedCommandClass, "findByTargetAndTimestampBetween")
+                query = Query.named(publishedCommandClass,
+                                PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BETWEEEN)
                         .withParameter("target", target)
                         .withParameter("from", fromTs)
                         .withParameter("to", toTs);
             } else {
-                query = Query.named(publishedCommandClass, "findByTargetAndTimestampAfter")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_AFTER)
                         .withParameter("target", target)
                         .withParameter("from", fromTs);
             }
         } else {
             if(to != null) {
-                query = Query.named(publishedCommandClass, "findByTargetAndTimestampBefore")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BEFORE)
                         .withParameter("target", target)
                         .withParameter("to", toTs);
             } else {
-                query = Query.named(publishedCommandClass, "findByTarget")
+                query = Query.named(publishedCommandClass,
+                                    PublishedCommand.NAMED_QUERY_FIND_BY_TARGET)
                         .withParameter("target", target);
             }
         }
-        return repositoryService().allMatches(query);
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(query));
     }
 
     private static Timestamp toTimestampStartOfDayWithOffset(
@@ -174,16 +190,22 @@ implements PublishedCommandRepository {
 
     @Override
     public List<PublishedCommand> findRecentByUsername(final String username) {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findRecentByUsername")
-                    .withParameter("username", username));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass,
+                            PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_USERNAME)
+                    .withParameter("username", username))
+        );
     }
 
     @Override
     public List<PublishedCommand> findRecentByTarget(final Bookmark target) {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findRecentByTarget")
-                    .withParameter("target", target));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass,
+                            PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_TARGET)
+                    .withParameter("target", target))
+        );
     }
 
     @Override
@@ -191,31 +213,21 @@ implements PublishedCommandRepository {
         if(interactionId == null) {
             return findFirst();
         }
-        final PublishedCommand from = findByInteractionIdElseNull(interactionId);
-        if(from == null) {
-            return Collections.emptyList();
-        }
-        return findSince(from.getTimestamp(), batchSize);
-    }
-
-    private List<PublishedCommand> findFirst() {
-        Optional<PublishedCommand> firstCommandIfAny = repositoryService().firstMatch(
-                Query.named(publishedCommandClass, "findFirst"));
-        return firstCommandIfAny
-                .map(Collections::singletonList)
+        return findByInteractionId(interactionId)
+                .map(from -> findSince(from.getTimestamp(), batchSize))
                 .orElse(Collections.emptyList());
     }
 
-
-    private PublishedCommand findByInteractionIdElseNull(final UUID interactionId) {
-        val tsq = jdoSupport.newTypesafeQuery(publishedCommandClass);
-        val cand = QCommandJdo.candidate();
-        val q = tsq.filter(
-                cand.interactionIdStr.eq(tsq.parameter("interactionId", String.class))
+    private List<PublishedCommand> findFirst() {
+        Optional<PC> firstCommandIfAny = repositoryService().firstMatch(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_FIRST));
+        return _Casts.uncheckedCast(
+                    firstCommandIfAny
+                    .map(Collections::singletonList)
+                    .orElse(Collections.emptyList())
         );
-        q.setParameter("interactionId", interactionId);
-        return q.executeUnique();
     }
+
 
     private List<PublishedCommand> findSince(
             final Timestamp timestamp,
@@ -225,43 +237,55 @@ implements PublishedCommandRepository {
         // XXX that's a historic workaround, should rather be fixed upstream
         val needsTrimFix = batchSize != null && batchSize == 1;
 
-        val q = Query.named(publishedCommandClass, "findSince")
-                .withParameter("timestamp", timestamp)
-                .withRange(QueryRange.limit(
-                        needsTrimFix ? 2L : batchSize
-                ));
+        NamedQuery<PC> q = Query.named(publishedCommandClass,
+                                       PublishedCommand.NAMED_QUERY_FIND_SINCE)
+                                .withParameter("timestamp", timestamp);
+        if(batchSize != null) {
+            q = q.withRange(QueryRange.limit(
+                    needsTrimFix ? 2L : batchSize
+            ));
+        }
 
-        final List<PublishedCommand> publishedCommands = repositoryService().allMatches(q);
-        return needsTrimFix && publishedCommands.size() > 1
-                    ? publishedCommands.subList(0,1)
-                    : publishedCommands;
+        final List<PC> publishedCommands = repositoryService().allMatches(q);
+        return _Casts.uncheckedCast(
+                    needsTrimFix && publishedCommands.size() > 1
+                        ? publishedCommands.subList(0,1)
+                        : publishedCommands
+                );
     }
 
 
     @Override
     public Optional<PublishedCommand> findMostRecentReplayed() {
 
-        return repositoryService().firstMatch(
-                Query.named(publishedCommandClass, "findMostRecentReplayed"));
+        return _Casts.uncheckedCast(
+                repositoryService().firstMatch(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_REPLAYED))
+        );
     }
 
     @Override
     public Optional<PublishedCommand> findMostRecentCompleted() {
-        return repositoryService().firstMatch(
-                Query.named(publishedCommandClass, "findMostRecentCompleted"));
+        return _Casts.uncheckedCast(
+                repositoryService().firstMatch(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_COMPLETED))
+        );
     }
 
     @Override
     public List<PublishedCommand> findNotYetReplayed() {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findNotYetReplayed"));
+        return _Casts.uncheckedCast(
+                repositoryService().allMatches(
+                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_NOT_YET_REPLAYED))
+        );
     }
 
-    @Override
-    public List<PublishedCommand> findReplayedOnSecondary() {
-        return repositoryService().allMatches(
-                Query.named(publishedCommandClass, "findReplayableMostRecentStarted"));
-    }
+//    @Override
+//    public List<PublishedCommand> findReplayedOnSecondary() {
+//        return _Casts.uncheckedCast( repositoryService().allMatches(
+//                Query.named(publishedCommandClass, PublishedCommand.NAMED_QUERY_FIND_REPLAYABLE_MOST_RECENT_STARTED))
+//        );
+//    }
 
     @Override
     public List<PublishedCommand> saveForReplay(final CommandsDto commandsDto) {
@@ -273,7 +297,6 @@ implements PublishedCommandRepository {
         return commands;
     }
 
-    @Programmatic
     @Override
     public PublishedCommand saveForReplay(final CommandDto dto) {
 

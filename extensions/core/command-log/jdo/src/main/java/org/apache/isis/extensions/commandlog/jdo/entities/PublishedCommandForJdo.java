@@ -128,7 +128,7 @@ import lombok.Setter;
                     + "FROM " + PublishedCommandForJdo.FQCN
                     + " ORDER BY this.timestamp DESC"),
     @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_USERNAME,
+            name = PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_USERNAME,
             value = "SELECT "
                     + "FROM " + PublishedCommandForJdo.FQCN
                     + " WHERE username == :username "
