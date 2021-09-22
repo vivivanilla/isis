@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.mixins;
+package org.apache.isis.extensions.commandlog.applib.contributions;
 
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +25,11 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Collection;
 import org.apache.isis.applib.annotation.CollectionLayout;
+import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.mixins.security.HasUsername;
-import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 
 
 /**
@@ -44,22 +45,22 @@ import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo
 public class HasUsername_recentCommandsByUser {
 
     public static class CollectionDomainEvent
-            extends IsisModuleExtCommandLogJdo.CollectionDomainEvent<HasUsername_recentCommandsByUser, PublishedCommandForJdo> { }
+            extends IsisModuleExtCommandLogApplib.CollectionDomainEvent<HasUsername_recentCommandsByUser, PublishedCommand> { }
 
     private final HasUsername hasUsername;
     public HasUsername_recentCommandsByUser(final HasUsername hasUsername) {
         this.hasUsername = hasUsername;
     }
 
-    public List<PublishedCommandForJdo> coll() {
+    public List<PublishedCommand> coll() {
         final String username = hasUsername.getUsername();
         return username != null
-                ? commandServiceRepository.findRecentByUsername(username)
+                ? publishedCommandRepository.findRecentByUsername(username)
                 : Collections.emptyList();
     }
-    public boolean hideColl() {
+    @MemberSupport public boolean hideColl() {
         return hasUsername.getUsername() == null;
     }
 
-    @Inject PublishedCommandForJdoRepository commandServiceRepository;
+    @Inject PublishedCommandRepository publishedCommandRepository;
 }

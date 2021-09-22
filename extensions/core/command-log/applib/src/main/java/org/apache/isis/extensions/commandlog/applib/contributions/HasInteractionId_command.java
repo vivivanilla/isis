@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.mixins;
+package org.apache.isis.extensions.commandlog.applib.contributions;
 
 import java.util.UUID;
 
@@ -24,12 +24,13 @@ import javax.inject.Inject;
 
 import org.apache.isis.applib.annotation.Action;
 import org.apache.isis.applib.annotation.ActionLayout;
+import org.apache.isis.applib.annotation.MemberSupport;
 import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.mixins.system.HasInteractionId;
 import org.apache.isis.applib.services.command.Command;
-import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,30 +51,30 @@ import lombok.RequiredArgsConstructor;
 public class HasInteractionId_command {
 
     public static class ActionDomainEvent
-            extends IsisModuleExtCommandLogJdo.ActionDomainEvent<HasInteractionId_command> { }
+            extends IsisModuleExtCommandLogApplib.ActionDomainEvent<HasInteractionId_command> { }
 
     private final HasInteractionId hasInteractionId;
 
-    public PublishedCommandForJdo act() {
+    public PublishedCommand act() {
         return findCommand();
     }
     /**
      * Hide if the contributee is a {@link Command}, because {@link Command}s already have a
      * {@link Command#getParent() parent} property.
      */
-    public boolean hideAct() {
-        return (hasInteractionId instanceof PublishedCommandForJdo);
+    @MemberSupport public boolean hideAct() {
+        return (hasInteractionId instanceof PublishedCommand);
     }
-    public String disableAct() {
+    @MemberSupport public String disableAct() {
         return findCommand() == null ? "No command found for unique Id": null;
     }
 
-    private PublishedCommandForJdo findCommand() {
+    private PublishedCommand findCommand() {
         final UUID transactionId = hasInteractionId.getInteractionId();
-        return commandServiceRepository
+        return publishedCommandRepository
                 .findByInteractionId(transactionId)
                 .orElse(null);
     }
 
-    @Inject PublishedCommandForJdoRepository commandServiceRepository;
+    @Inject PublishedCommandRepository publishedCommandRepository;
 }

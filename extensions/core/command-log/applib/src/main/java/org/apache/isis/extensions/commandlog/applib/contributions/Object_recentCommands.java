@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.mixins;
+package org.apache.isis.extensions.commandlog.applib.contributions;
 
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +32,9 @@ import org.apache.isis.applib.annotation.SemanticsOf;
 import org.apache.isis.applib.mixins.layout.LayoutMixinConstants;
 import org.apache.isis.applib.mixins.system.HasInteractionId;
 import org.apache.isis.applib.services.bookmark.BookmarkService;
-import org.apache.isis.extensions.commandlog.jdo.IsisModuleExtCommandLogJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepository;
 
 import lombok.RequiredArgsConstructor;
 
@@ -61,13 +61,13 @@ import lombok.RequiredArgsConstructor;
 public class Object_recentCommands {
 
     public static class ActionDomainEvent
-            extends IsisModuleExtCommandLogJdo.ActionDomainEvent<Object_recentCommands> { }
+            extends IsisModuleExtCommandLogApplib.ActionDomainEvent<Object_recentCommands> { }
 
     private final Object domainObject; // mixee
 
-    @MemberSupport public List<PublishedCommandForJdo> act() {
+    @MemberSupport public List<PublishedCommand> act() {
         return bookmarkService.bookmarkFor(domainObject)
-        .map(commandServiceRepository::findRecentByTarget)
+        .map(publishedCommandRepository::findRecentByTarget)
         .orElse(Collections.emptyList());
     }
 
@@ -79,7 +79,7 @@ public class Object_recentCommands {
         return (domainObject instanceof HasInteractionId);
     }
 
-    @Inject PublishedCommandForJdoRepository commandServiceRepository;
+    @Inject PublishedCommandRepository publishedCommandRepository;
     @Inject BookmarkService bookmarkService;
 
 }
