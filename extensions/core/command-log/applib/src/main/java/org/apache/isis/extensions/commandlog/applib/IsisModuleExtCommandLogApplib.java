@@ -22,7 +22,9 @@ package org.apache.isis.extensions.commandlog.applib;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
+import org.apache.isis.extensions.commandlog.applib.app.CommandServiceMenu;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.applib.subscriptions.PublishedCommandSubscriber;
 import org.apache.isis.testing.fixtures.applib.IsisModuleTestingFixturesApplib;
 
 /**
@@ -33,8 +35,9 @@ import org.apache.isis.testing.fixtures.applib.IsisModuleTestingFixturesApplib;
         // modules
         IsisModuleTestingFixturesApplib.class,
 
-
         // @Services
+        CommandServiceMenu.class,
+        PublishedCommandSubscriber.class,
         PublishedCommand.TitleProvider.class,
         PublishedCommand.TableColumnOrderDefault.class,
 

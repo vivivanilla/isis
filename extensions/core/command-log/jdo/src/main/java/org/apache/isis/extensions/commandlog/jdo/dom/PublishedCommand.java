@@ -16,20 +16,31 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.entities;
+package org.apache.isis.extensions.commandlog.jdo.dom;
 
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import javax.jdo.annotations.DatastoreIdentity;
+import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
+import javax.jdo.annotations.Index;
+import javax.jdo.annotations.Indices;
+import javax.jdo.annotations.Inheritance;
+import javax.jdo.annotations.InheritanceStrategy;
+import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Queries;
+import javax.jdo.annotations.Query;
+import javax.jdo.annotations.Unique;
+import javax.jdo.annotations.Uniques;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.DomainObjectLayout;
+import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.mixins.system.DomainChangeRecord;
 import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.types.MemberIdentifierType;
 import org.apache.isis.commons.internal.base._Casts;
-import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 
@@ -38,162 +49,176 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@javax.jdo.annotations.PersistenceCapable(
+@PersistenceCapable(
         identityType=IdentityType.APPLICATION,
         schema = "isisExtensionsCommandLog",
-        table = "PublishedCommand")
-
+        table = "PublishedCommand"
+)
+@Uniques({
+        @Unique(
+                name = "PublishedCommand__interactionId__UNQ",
+                members = {
+                        "interactionId"
+                })
+})
+@Indices({
+        @Index(
+                name = "PublishedCommand__startedAt__timestamp__IDX",
+                members = {"startedAt", "timestamp"}),
+        @Index(
+                name = "PublishedCommand__timestamp__IDX",
+                members = {"timestamp"}
+        ),
+})
+@Inheritance(
+        strategy = InheritanceStrategy.NEW_TABLE)
+@DatastoreIdentity(
+        strategy = IdGeneratorStrategy.NATIVE, column = "id")
 // queries that use RANGE 0,2 should instead be RANGE 0,1, however this results in DataNucleus submitting "FETCH NEXT ROW ONLY"
 // which SQL Server doesn't understand.  However, as workaround, SQL Server *does* understand FETCH NEXT 2 ROWS ONLY
-@javax.jdo.annotations.Queries( {
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_INTERACTION_ID,
+@Queries( {
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_INTERACTION_ID,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE interactionId == :interactionId "),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_PARENT,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_PARENT,
             value="SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE parent == :parent "),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_CURRENT,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_CURRENT,
             value="SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE completedAt == null "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_COMPLETED,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_COMPLETED,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE completedAt != null "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_TARGET,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_TARGET,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE target == :target "
                     + "ORDER BY this.timestamp DESC "
                     + "RANGE 0,30"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BETWEEEN,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BETWEEEN,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE target == :target "
                     + "&& timestamp >= :from "
                     + "&& timestamp <= :to "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_AFTER,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_AFTER,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE target == :target "
                     + "&& timestamp >= :from "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BEFORE,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TARGET_AND_TIMESTAMP_BEFORE,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE target == :target "
                     + "&& timestamp <= :to "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TARGET,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TARGET,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE target == :target "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BETWEEN,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BETWEEN,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE timestamp >= :from "
                     + "&&    timestamp <= :to "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_AFTER,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_AFTER,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE timestamp >= :from "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BEFORE,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_TIMESTAMP_BEFORE,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE timestamp <= :to "
                     + "ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " ORDER BY this.timestamp DESC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_USERNAME,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_RECENT_BY_USERNAME,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE username == :username "
                     + "ORDER BY this.timestamp DESC "
                     + "RANGE 0,30"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_FIRST,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_FIRST,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
-                    + " WHERE startedAt   != null "
+                    + "FROM " + PublishedCommand.FQCN
+                    + " WHERE startedAt  != null "
                     + "   && completedAt != null "
                     + "ORDER BY this.timestamp ASC "
                     + "RANGE 0,2"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_SINCE,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_SINCE,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE timestamp > :timestamp "
                     + "   && startedAt != null "
                     + "   && completedAt != null "
                     + "ORDER BY this.timestamp ASC"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_REPLAYED,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_REPLAYED,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE (replayState == 'OK' || replayState == 'FAILED') "
                     + "ORDER BY this.timestamp DESC "
                     + "RANGE 0,2"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_COMPLETED,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_MOST_RECENT_COMPLETED,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE startedAt   != null "
                     + "   && completedAt != null "
                     + "ORDER BY this.timestamp DESC "
                     + "RANGE 0,2"),
-    @javax.jdo.annotations.Query(
-            name = PublishedCommand.NAMED_QUERY_FIND_NOT_YET_REPLAYED,
+    @Query(
+            name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_NOT_YET_REPLAYED,
             value = "SELECT "
-                    + "FROM " + PublishedCommandForJdo.FQCN
+                    + "FROM " + PublishedCommand.FQCN
                     + " WHERE replayState == 'PENDING' "
                     + "ORDER BY this.timestamp ASC "
                     + "RANGE 0,10"),    // same as batch size
 })
-@javax.jdo.annotations.Indices({
-        @javax.jdo.annotations.Index(name = "CommandJdo__startedAt__timestamp__IDX", members = { "startedAt", "timestamp" }),
-        @javax.jdo.annotations.Index(name = "CommandJdo__timestamp__IDX", members = { "timestamp" }),
-})
 @DomainObject(
-        logicalTypeName = PublishedCommand.LOGICAL_TYPE_NAME
-)
-@DomainObjectLayout(
-        named = "Published Command"
+        logicalTypeName = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.LOGICAL_TYPE_NAME,
+        editing = Editing.DISABLED
 )
 @NoArgsConstructor(access = AccessLevel.PACKAGE)
-public class PublishedCommandForJdo extends PublishedCommand {
+public class PublishedCommand extends org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand {
 
-    protected final static String FQCN = "org.apache.isis.extensions.commandlog.jdo.entities.CommandJdo";
+    protected final static String FQCN = "org.apache.isis.extensions.commandlog.jdo.dom.PublishedCommand";
 
     // EVENTS
     // (see superclass)
 
     // CONSTRUCTORS
 
-    public PublishedCommandForJdo(
+    public PublishedCommand(
             final CommandDto commandDto,
             final ReplayState replayState,
             final int targetIndex) {
@@ -294,15 +319,15 @@ public class PublishedCommandForJdo extends PublishedCommand {
 
     @javax.jdo.annotations.Persistent
     @javax.jdo.annotations.Column(name="parentId", allowsNull="true")
-    private PublishedCommandForJdo parent;
+    private PublishedCommand parent;
 
     @Parent
     @Override
-    public PublishedCommand getParent() {
+    public org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand getParent() {
         return parent;
     }
     @Override
-    public void setParent(PublishedCommand parent) {
+    public void setParent(org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand parent) {
         this.parent = _Casts.uncheckedCast(parent);
     }
 
@@ -338,7 +363,6 @@ public class PublishedCommandForJdo extends PublishedCommand {
     // LOGICAL MEMBER IDENTIFIER
 
     @javax.jdo.annotations.Column(allowsNull="false", length = MemberIdentifierType.Meta.MAX_LEN)
-    @Getter @Setter
     private String logicalMemberIdentifier;
 
     @LogicalMemberIdentifier

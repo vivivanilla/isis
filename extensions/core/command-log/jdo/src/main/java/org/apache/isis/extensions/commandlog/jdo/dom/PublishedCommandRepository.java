@@ -16,37 +16,28 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.extensions.commandlog.jdo.entities;
+package org.apache.isis.extensions.commandlog.jdo.dom;
 
-import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand;
+import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.extensions.commandlog.applib.dom.PublishedCommandRepositoryAbstract;
-import org.apache.isis.persistence.jdo.applib.services.JdoSupportService;
 
-import lombok.RequiredArgsConstructor;
-
-/**
- * Provides supporting functionality for querying and persisting
- * {@link PublishedCommandForJdo command} entities.
- */
 @Service
 @Named("isis.ext.commandLog.PublishedCommandRepository")
 @javax.annotation.Priority(PriorityPrecedence.MIDPOINT)
 @Qualifier("Jdo")
-public class PublishedCommandForJdoRepository
-extends PublishedCommandRepositoryAbstract<PublishedCommandForJdo> {
+public class PublishedCommandRepository
+extends PublishedCommandRepositoryAbstract<PublishedCommand> {
 
-    public PublishedCommandForJdoRepository() {
-        super(PublishedCommandForJdo.class);
+    public PublishedCommandRepository() {
+        super(PublishedCommand.class);
     }
 
-    @Override protected PublishedCommand newPublishedCommand() {
-        return new PublishedCommandForJdo();
+    @Override public PublishedCommand newPublishedCommand() {
+        return new PublishedCommand();
     }
 }

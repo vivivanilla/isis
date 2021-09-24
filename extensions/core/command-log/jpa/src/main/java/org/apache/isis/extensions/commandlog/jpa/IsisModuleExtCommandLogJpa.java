@@ -22,23 +22,26 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import org.apache.isis.extensions.commandlog.jpa.entities.CommandJpa;
-import org.apache.isis.extensions.commandlog.jpa.entities.CommandJpaRepository;
+import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.jpa.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.jpa.dom.PublishedCommandRepository;
+import org.apache.isis.testing.fixtures.applib.fixturescripts.FixtureScript;
+import org.apache.isis.testing.fixtures.applib.modules.ModuleWithFixtures;
+import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAbstract;
 
 /**
  * @since 2.0 {@index}
  */
 @Configuration
 @Import({
-        // @DomainService's
-        CommandJpaRepository.class
-//TODO        , CommandServiceMenu.class
+        // module dependencies
+        IsisModuleExtCommandLogApplib.class
 
-        // @Service's
-        , CommandJpa.TableColumnOrderDefault.class
+        // @DomainService's
+        , PublishedCommandRepository.class
 
         // entities
-        , CommandJpa.class
+        , PublishedCommand.class
 })
 @ComponentScan(
         basePackageClasses= {
@@ -46,6 +49,21 @@ import org.apache.isis.extensions.commandlog.jpa.entities.CommandJpaRepository;
         })
 public class IsisModuleExtCommandLogJpa {
 
-    public static final String NAMESPACE = "isis.ext.commandLog";
+    /**
+     * For tests that need to delete the command table first.
+     * Should be run in the <code>@Before</code> of the test.
+     *
+     * <p>
+     *     NOTE: this class deliberately does <i>not</i> implement {@link ModuleWithFixtures}.
+     * </p>
+     */
+    public FixtureScript getTeardownFixture() {
+        return new TeardownFixtureJdoAbstract() {
+            @Override
+            protected void execute(final ExecutionContext executionContext) {
+                deleteFrom(PublishedCommand.class);
+            }
+        };
+    }
 
 }

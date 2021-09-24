@@ -41,30 +41,28 @@ import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.commons.internal.base._Casts;
 import org.apache.isis.extensions.secman.applib.user.dom.ApplicationUser;
 
-
 @PersistenceCapable(
         identityType = IdentityType.DATASTORE,
         schema = "isisExtensionsSecman",
         table = "ApplicationRole")
-@Inheritance(
-        strategy = InheritanceStrategy.NEW_TABLE)
-@DatastoreIdentity(
-        strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Uniques({
-    @Unique(
-            name = "ApplicationRole_name_UNQ", members = { "name" })
+        @Unique(
+                name = "ApplicationRole_name_UNQ",
+                members = { "name" })
 })
+@Inheritance(strategy = InheritanceStrategy.NEW_TABLE)
+@DatastoreIdentity(strategy = IdGeneratorStrategy.NATIVE, column = "id")
 @Queries({
-    @Query(
-            name = org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole.NAMED_QUERY_FIND_BY_NAME,
-            value = "SELECT "
-                    + "FROM " + ApplicationRole.FQCN
-                    + " WHERE name == :name"),
-    @Query(
-            name = org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole.NAMED_QUERY_FIND_BY_NAME_CONTAINING,
-            value = "SELECT "
-                    + "FROM " + ApplicationRole.FQCN
-                    + " WHERE name.matches(:regex) ")
+        @Query(
+                name = org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole.NAMED_QUERY_FIND_BY_NAME,
+                value = "SELECT "
+                        + "FROM " + ApplicationRole.FQCN
+                        + " WHERE name == :name"),
+        @Query(
+                name = org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole.NAMED_QUERY_FIND_BY_NAME_CONTAINING,
+                value = "SELECT "
+                        + "FROM " + ApplicationRole.FQCN
+                        + " WHERE name.matches(:regex) ")
 })
 @DomainObject(
         bounding = Bounding.BOUNDED,
@@ -76,7 +74,7 @@ import org.apache.isis.extensions.secman.applib.user.dom.ApplicationUser;
         bookmarking = BookmarkPolicy.AS_ROOT
 )
 public class ApplicationRole
-    extends org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole {
+        extends org.apache.isis.extensions.secman.applib.role.dom.ApplicationRole {
 
     protected final static String FQCN = "org.apache.isis.extensions.secman.jdo.role.dom.ApplicationRole";
 
@@ -131,3 +129,4 @@ public class ApplicationRole
 
 
 }
+

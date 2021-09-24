@@ -22,11 +22,11 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdo;
-import org.apache.isis.extensions.commandlog.jdo.entities.PublishedCommandForJdoRepository;
-import org.apache.isis.extensions.commandlog.jdo.ui.CommandServiceMenu;
 import org.apache.isis.extensions.commandlog.applib.IsisModuleExtCommandLogApplib;
+import org.apache.isis.extensions.commandlog.jdo.dom.PublishedCommand;
+import org.apache.isis.extensions.commandlog.jdo.dom.PublishedCommandRepository;
 import org.apache.isis.testing.fixtures.applib.fixturescripts.FixtureScript;
+import org.apache.isis.testing.fixtures.applib.modules.ModuleWithFixtures;
 import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAbstract;
 
 /**
@@ -34,34 +34,34 @@ import org.apache.isis.testing.fixtures.applib.teardown.jdo.TeardownFixtureJdoAb
  */
 @Configuration
 @Import({
-        // @DomainService's
-        PublishedCommandForJdoRepository.class
-        , CommandServiceMenu.class
+        // module dependencies
+        IsisModuleExtCommandLogApplib.class
 
-        // @Service's
-        , PublishedCommandForJdo.TableColumnOrderDefault.class
+        // @DomainService's
+        , PublishedCommandRepository.class
 
         // entities
-        , PublishedCommandForJdo.class
+        , PublishedCommand.class
 })
 @ComponentScan(
         basePackageClasses= {
                 IsisModuleExtCommandLogJdo.class
         })
-public class IsisModuleExtCommandLogJdo
-implements IsisModuleExtCommandLogApplib {
-
-    public static final String NAMESPACE = "isis.ext.commandLog";
+public class IsisModuleExtCommandLogJdo {
 
     /**
      * For tests that need to delete the command table first.
-     * Should be run in the @Before of the test.
+     * Should be run in the <code>@Before</code> of the test.
+     *
+     * <p>
+     *     NOTE: this class deliberately does <i>not</i> implement {@link ModuleWithFixtures}.
+     * </p>
      */
-    public FixtureScript getTeardownFixtureWillDelete() {
+    public FixtureScript getTeardownFixture() {
         return new TeardownFixtureJdoAbstract() {
             @Override
             protected void execute(final ExecutionContext executionContext) {
-                deleteFrom(PublishedCommandForJdo.class);
+                deleteFrom(PublishedCommand.class);
             }
         };
     }

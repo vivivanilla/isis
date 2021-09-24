@@ -43,6 +43,7 @@ import org.apache.isis.applib.services.bookmark.Bookmark;
 import org.apache.isis.applib.services.repository.RepositoryService;
 import org.apache.isis.applib.util.schema.CommandDtoUtils;
 import org.apache.isis.commons.internal.base._Casts;
+import org.apache.isis.commons.internal.factory._InstanceUtil;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 import org.apache.isis.schema.cmd.v2.CommandsDto;
 import org.apache.isis.schema.cmd.v2.MapDto;
@@ -327,8 +328,6 @@ implements PublishedCommandRepository {
         return publishedCommand;
     }
 
-    protected abstract PublishedCommand newPublishedCommand();
-
     @Override
     public void persist(final PublishedCommand publishedCommand) {
         repositoryService().persist(publishedCommand);
@@ -337,6 +336,10 @@ implements PublishedCommandRepository {
     @Override
     public void truncateLog() {
         repositoryService().removeAll(PublishedCommand.class);
+    }
+
+    public PublishedCommand newPublishedCommand() {
+        return _InstanceUtil.createInstance(publishedCommandClass, PublishedCommand.class);
     }
 
     private RepositoryService repositoryService() {
