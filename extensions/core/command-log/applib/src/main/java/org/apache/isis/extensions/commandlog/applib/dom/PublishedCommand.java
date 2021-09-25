@@ -684,6 +684,7 @@ public abstract class PublishedCommand implements DomainChangeRecord {
     @Property(
             domainEvent = Result.DomainEvent.class,
             editing = Editing.DISABLED,
+            maxLength = Result.MAX_LENGTH,
             optionality = Optionality.OPTIONAL
     )
     @PropertyLayout(
@@ -691,6 +692,7 @@ public abstract class PublishedCommand implements DomainChangeRecord {
             named = "Result"
     )
     @Parameter(
+            maxLength = Result.MAX_LENGTH,
             optionality = Optionality.OPTIONAL
     )
     @ParameterLayout(
@@ -699,6 +701,8 @@ public abstract class PublishedCommand implements DomainChangeRecord {
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     public @interface Result {
+        int MAX_LENGTH = 2000;
+
         class DomainEvent extends PropertyDomainEvent<Bookmark> { }
     }
 

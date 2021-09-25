@@ -16,26 +16,33 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.applib.types;
+package org.apache.isis.persistence.jpa.integration.typeconverters.applib;
 
-import org.apache.isis.applib.services.command.Command;
+import javax.persistence.AttributeConverter;
+import javax.persistence.Converter;
 
-import lombok.experimental.UtilityClass;
+import org.apache.isis.applib.value.Password;
 
 /**
- * As per {@link Command#getLogicalMemberIdentifier()}
- * and
- * {@link org.apache.isis.applib.services.publishing.spi.EntityPropertyChangeSubscriber#onChanging(org.apache.isis.applib.services.publishing.spi.EntityPropertyChange)}.
- *
  * @since 2.0 {@index}
  */
-public class MemberIdentifierType {
+@Converter(autoApply = true)
+public class IsisPasswordConverter implements AttributeConverter<Password, String> {
 
-    private MemberIdentifierType() {
+    private static final long serialVersionUID = 1L;
+
+    @Override
+    public String convertToDatabaseColumn(final Password memberValue) {
+        return memberValue != null
+                ? memberValue.getPassword()
+                : null;
     }
 
-    @UtilityClass
-    public static class Meta {
-        public static final int MAX_LENGTH = 255;
+    @Override
+    public Password convertToEntityAttribute(final String datastoreValue) {
+        return datastoreValue != null
+                ? new Password(datastoreValue)
+                : null;
     }
+
 }

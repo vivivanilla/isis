@@ -18,51 +18,40 @@
  */
 package org.apache.isis.extensions.commandlog.jpa.dom;
 
-import java.math.BigDecimal;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
+import javax.persistence.Basic;
+import javax.persistence.Column;
+import javax.persistence.Convert;
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.Id;
 import javax.persistence.Index;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.stereotype.Service;
+import javax.persistence.Version;
 
 import org.apache.isis.applib.annotation.DomainObject;
 import org.apache.isis.applib.annotation.Editing;
-import org.apache.isis.applib.annotation.MemberSupport;
-import org.apache.isis.applib.annotation.PriorityPrecedence;
-import org.apache.isis.applib.annotation.Programmatic;
-import org.apache.isis.applib.annotation.Property;
-import org.apache.isis.applib.annotation.PropertyLayout;
-import org.apache.isis.applib.annotation.Where;
 import org.apache.isis.applib.mixins.system.DomainChangeRecord;
 import org.apache.isis.applib.services.bookmark.Bookmark;
-import org.apache.isis.applib.services.command.Command;
-import org.apache.isis.applib.services.command.CommandOutcomeHandler;
-import org.apache.isis.applib.services.tablecol.TableColumnOrderForCollectionTypeAbstract;
 import org.apache.isis.applib.types.MemberIdentifierType;
 import org.apache.isis.commons.internal.base._Casts;
-import org.apache.isis.commons.internal.base._Strings;
-import org.apache.isis.commons.internal.exceptions._Exceptions;
 import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
-import org.apache.isis.extensions.commandlog.applib.util.BigDecimalUtils;
-import org.apache.isis.extensions.commandlog.applib.util.StringUtils;
 import org.apache.isis.persistence.jpa.applib.integration.IsisEntityListener;
+import org.apache.isis.persistence.jpa.integration.typeconverters.v2.IsisCommandDtoConverter;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.val;
 
 @Entity
 @Table(
@@ -221,7 +210,8 @@ import lombok.val;
 @NoArgsConstructor
 public class PublishedCommand extends org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand {
 
-    protected final static String FQCN = "org.apache.isis.extensions.commandlog.jpa.dom.PublishedCommand";
+    @Version
+    private Long version;
 
     // EVENTS
     // (see superclass)
@@ -247,7 +237,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // INTERACTION ID
 
-    // TODO
+    @Id
+    @Column(nullable = false, length = DomainChangeRecord.InteractionId.MAX_LENGTH)
     private UUID interactionId;
 
     @DomainChangeRecord.InteractionId
@@ -263,7 +254,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // USER NAME
 
-    // TODO
+    @Column(nullable = false, length = DomainChangeRecord.Username.MAX_LENGTH)
     private String username;
 
     @DomainChangeRecord.Username
@@ -275,7 +266,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // TIMESTAMP
 
-    // TODO
+    @Basic
+    @Column(nullable = false, length = DomainChangeRecord.TimestampMeta.MAX_LENGTH)
     private Timestamp timestamp;
 
     @DomainChangeRecord.TimestampMeta
@@ -292,7 +284,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // REPLAY STATE
 
-    // TODO
+    @Column(nullable = false, length = ReplayStateMeta.MAX_LENGTH)
+    @Enumerated(EnumType.STRING)
     private ReplayState replayState;
 
     @ReplayStateMeta
@@ -308,7 +301,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // REPLAY STATE FAILURE REASON
 
-    // TODO
+    @Column(nullable = true, length = ReplayStateFailureReason.MAX_LENGTH)
     private String replayStateFailureReason;
 
     @ReplayStateFailureReason
@@ -324,12 +317,13 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // PARENT
 
-    // TODO
+    @ManyToOne
+    @JoinColumn(name = "parentId", nullable = true)
     private PublishedCommand parent;
 
     @Parent
     @Override
-    public org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand getParent() {
+    public PublishedCommand getParent() {
         return parent;
     }
     @Override
@@ -341,7 +335,11 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // TARGET
 
-    // TODO
+    /**
+     * Optional in case the serialized bookmark exceeds length (if a view model)
+     */
+    @Basic
+    @Column(nullable = true, length = DomainChangeRecord.TargetMeta.MAX_LENGTH)
     private Bookmark target;
 
     @DomainChangeRecord.TargetMeta
@@ -367,7 +365,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // LOGICAL MEMBER IDENTIFIER
 
-    // TODO
+    @Column(nullable = false, length = MemberIdentifierType.Meta.MAX_LENGTH)
     private String logicalMemberIdentifier;
 
     @LogicalMemberIdentifier
@@ -383,7 +381,9 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // COMMAND DTO
 
-    // TODO
+    @Lob
+    @Convert(converter = IsisCommandDtoConverter.class) // hmm, shouldn't be necessary as this is converter has autoApply=true
+    @Column(nullable = true)
     private CommandDto commandDto;
 
     @CommandDtoMeta
@@ -399,7 +399,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // STARTED AT
 
-    // TODO
+    @Basic
+    @Column(nullable = true, length = StartedAt.MAX_LENGTH)
     private Timestamp startedAt;
 
     @StartedAt
@@ -415,7 +416,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // COMPLETED AT
 
-    // TODO
+    @Basic
+    @Column(nullable = true, length = CompletedAt.MAX_LENGTH)
     private Timestamp completedAt;
 
     @CompletedAt
@@ -447,7 +449,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // RESULT
 
-    // TODO
+    @Basic
+    @Column(nullable = true, length = Result.MAX_LENGTH)
     private Bookmark result;
 
     @Result
@@ -463,7 +466,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // EXCEPTION
 
-    // TODO
+    @Lob
+    @Column(nullable = true)
     private String exception;
 
     @ExceptionMeta

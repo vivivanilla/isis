@@ -21,6 +21,7 @@ package org.apache.isis.extensions.commandlog.jdo.dom;
 import java.sql.Timestamp;
 import java.util.UUID;
 
+import javax.jdo.annotations.Column;
 import javax.jdo.annotations.DatastoreIdentity;
 import javax.jdo.annotations.IdGeneratorStrategy;
 import javax.jdo.annotations.IdentityType;
@@ -29,13 +30,14 @@ import javax.jdo.annotations.Indices;
 import javax.jdo.annotations.Inheritance;
 import javax.jdo.annotations.InheritanceStrategy;
 import javax.jdo.annotations.PersistenceCapable;
+import javax.jdo.annotations.Persistent;
+import javax.jdo.annotations.PrimaryKey;
 import javax.jdo.annotations.Queries;
 import javax.jdo.annotations.Query;
 import javax.jdo.annotations.Unique;
 import javax.jdo.annotations.Uniques;
 
 import org.apache.isis.applib.annotation.DomainObject;
-import org.apache.isis.applib.annotation.DomainObjectLayout;
 import org.apache.isis.applib.annotation.Editing;
 import org.apache.isis.applib.mixins.system.DomainChangeRecord;
 import org.apache.isis.applib.services.bookmark.Bookmark;
@@ -45,9 +47,7 @@ import org.apache.isis.extensions.commandlog.applib.dom.ReplayState;
 import org.apache.isis.schema.cmd.v2.CommandDto;
 
 import lombok.AccessLevel;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @PersistenceCapable(
         identityType=IdentityType.APPLICATION,
@@ -84,12 +84,12 @@ import lombok.Setter;
                     + " WHERE interactionId == :interactionId "),
     @Query(
             name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_BY_PARENT,
-            value="SELECT "
+            value = "SELECT "
                     + "FROM " + PublishedCommand.FQCN
                     + " WHERE parent == :parent "),
     @Query(
             name = org.apache.isis.extensions.commandlog.applib.dom.PublishedCommand.NAMED_QUERY_FIND_CURRENT,
-            value="SELECT "
+            value = "SELECT "
                     + "FROM " + PublishedCommand.FQCN
                     + " WHERE completedAt == null "
                     + "ORDER BY this.timestamp DESC"),
@@ -237,9 +237,9 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // INTERACTION ID
 
-    @javax.jdo.annotations.PrimaryKey
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="false", name = "interactionId", length = 36)
+    @PrimaryKey
+    @Persistent
+    @Column(allowsNull = "false", length = DomainChangeRecord.InteractionId.MAX_LENGTH)
     private UUID interactionId;
 
     @DomainChangeRecord.InteractionId
@@ -255,7 +255,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // USER NAME
 
-    @javax.jdo.annotations.Column(allowsNull="false", length = 50)
+    @Column(allowsNull = "false", length = DomainChangeRecord.Username.MAX_LENGTH)
     private String username;
 
     @DomainChangeRecord.Username
@@ -267,8 +267,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // TIMESTAMP
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="false")
+    @Persistent
+    @Column(allowsNull = "false", length = DomainChangeRecord.TimestampMeta.MAX_LENGTH)
     private Timestamp timestamp;
 
     @DomainChangeRecord.TimestampMeta
@@ -285,7 +285,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // REPLAY STATE
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=10)
+    @Column(allowsNull="true", length = ReplayStateMeta.MAX_LENGTH)
     private ReplayState replayState;
 
     @ReplayStateMeta
@@ -301,7 +301,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // REPLAY STATE FAILURE REASON
 
-    @javax.jdo.annotations.Column(allowsNull="true", length=255)
+    @Column(allowsNull = "true", length = ReplayStateFailureReason.MAX_LENGTH)
     private String replayStateFailureReason;
 
     @ReplayStateFailureReason
@@ -317,8 +317,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // PARENT
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(name="parentId", allowsNull="true")
+    @Persistent
+    @Column(name = "parentId", allowsNull = "true")
     private PublishedCommand parent;
 
     @Parent
@@ -335,8 +335,11 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // TARGET
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="true", length = 2000, name="target")
+    /**
+     * Optional in case the serialized bookmark exceeds length (if a view model)
+     */
+    @Persistent
+    @Column(allowsNull = "true", length = DomainChangeRecord.TargetMeta.MAX_LENGTH)
     private Bookmark target;
 
     @DomainChangeRecord.TargetMeta
@@ -362,7 +365,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // LOGICAL MEMBER IDENTIFIER
 
-    @javax.jdo.annotations.Column(allowsNull="false", length = MemberIdentifierType.Meta.MAX_LEN)
+    @Column(allowsNull = "false", length = MemberIdentifierType.Meta.MAX_LENGTH)
     private String logicalMemberIdentifier;
 
     @LogicalMemberIdentifier
@@ -378,8 +381,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // COMMAND DTO
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="true", jdbcType="CLOB")
+    @Persistent
+    @Column(allowsNull = "true", jdbcType="CLOB")
     private CommandDto commandDto;
 
     @CommandDtoMeta
@@ -395,8 +398,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // STARTED AT
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @Persistent
+    @Column(allowsNull = "true", length = StartedAt.MAX_LENGTH)
     private Timestamp startedAt;
 
     @StartedAt
@@ -412,8 +415,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // COMPLETED AT
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="true")
+    @Persistent
+    @Column(allowsNull = "true", length = CompletedAt.MAX_LENGTH)
     private Timestamp completedAt;
 
     @CompletedAt
@@ -445,8 +448,8 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // RESULT
 
-    @javax.jdo.annotations.Persistent
-    @javax.jdo.annotations.Column(allowsNull="true", length = 2000, name="result")
+    @Persistent
+    @Column(allowsNull = "true", length = Result.MAX_LENGTH)
     private Bookmark result;
 
     @Result
@@ -462,7 +465,7 @@ public class PublishedCommand extends org.apache.isis.extensions.commandlog.appl
 
     // EXCEPTION
 
-    @javax.jdo.annotations.Column(allowsNull="true", jdbcType="CLOB")
+    @Column(allowsNull = "true", jdbcType = "CLOB")
     private String exception;
 
     @ExceptionMeta

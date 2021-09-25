@@ -16,7 +16,7 @@
  *  specific language governing permissions and limitations
  *  under the License.
  */
-package org.apache.isis.persistence.jpa.integration.typeconverters;
+package org.apache.isis.persistence.jpa.integration.typeconverters.image;
 
 import java.awt.image.BufferedImage;
 

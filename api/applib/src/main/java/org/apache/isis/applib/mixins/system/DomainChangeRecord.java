@@ -249,6 +249,7 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     @Property(
             domainEvent = TargetMeta.DomainEvent.class,
             editing = Editing.DISABLED,
+            maxLength = TargetMeta.MAX_LENGTH,
             optionality = Optionality.MANDATORY
     )
     @PropertyLayout(
@@ -257,6 +258,7 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
             sequence = "30"
     )
     @Parameter(
+            maxLength = TargetMeta.MAX_LENGTH,
             optionality = Optionality.MANDATORY
     )
     @ParameterLayout(
@@ -265,6 +267,8 @@ public interface DomainChangeRecord extends HasInteractionId, HasUsername {
     @Target({ ElementType.METHOD, ElementType.FIELD, ElementType.PARAMETER, ElementType.ANNOTATION_TYPE })
     @Retention(RetentionPolicy.RUNTIME)
     @interface TargetMeta {
+        int MAX_LENGTH = 2000; // serialized bookmark
+
         class DomainEvent extends PropertyDomainEvent<DomainChangeRecord, Bookmark> { }
     }
 
