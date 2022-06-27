@@ -37,7 +37,7 @@ import javax.persistence.*;
 public class E1 implements TestEntity, Comparable {
 
     @Id
-    @GeneratedValue
+    @Setter
     private Long id;
 
     @Getter @Setter

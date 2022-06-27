@@ -22,6 +22,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.apache.isis.applib.annotation.*;
 
+import javax.annotation.Nullable;
 import javax.inject.Inject;
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,7 +39,7 @@ import java.util.stream.Collectors;
 public class E2 implements TestEntity{
 
     @Id
-    @GeneratedValue
+    @Setter
     private Long id;
 
     @Getter @Setter
@@ -89,11 +90,11 @@ public class E2 implements TestEntity{
     private List<Integer> zintList = new ArrayList<>();
 
     @Action(semantics = SemanticsOf.SAFE)
-    public List<TestEntity> otherEntities(){
+    public List<TestEntity> otherEntities(@Nullable final String name){
         List<TestEntity> result = new ArrayList<>();
         result.addAll(testEntityRepository.findAllE1());
         result.addAll(testEntityRepository.findAllE2().stream().filter(e2->e2!=this).collect(Collectors.toList()));
-        return result;
+        return name == null ? result : result.stream().filter(e->e.getName().contains(name)).collect(Collectors.toList());
     }
 
     @Inject
