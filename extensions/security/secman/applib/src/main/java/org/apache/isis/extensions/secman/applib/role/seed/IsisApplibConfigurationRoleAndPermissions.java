@@ -20,7 +20,7 @@ package org.apache.isis.extensions.secman.applib.role.seed;
 
 import org.apache.isis.applib.IsisModuleApplib;
 import org.apache.isis.applib.services.appfeat.ApplicationFeatureId;
-import org.apache.isis.applib.services.appfeatui.ApplicationFeatureMenu;
+import org.apache.isis.applib.services.confview.ConfigurationMenu;
 import org.apache.isis.commons.collections.Can;
 import org.apache.isis.extensions.secman.applib.permission.dom.ApplicationPermissionMode;
 import org.apache.isis.extensions.secman.applib.permission.dom.ApplicationPermissionRule;
@@ -29,13 +29,13 @@ import org.apache.isis.extensions.secman.applib.role.fixtures.AbstractRoleAndPer
 /**
  * @since 2.0 {@index}
  */
-public class IsisAppFeatureRoleAndPermissions
+public class IsisApplibConfigurationRoleAndPermissions
 extends AbstractRoleAndPermissionsFixtureScript {
 
-    public static final String ROLE_NAME = ApplicationFeatureMenu.LOGICAL_TYPE_NAME.replace(".","-");
+    public static final String ROLE_NAME = ConfigurationMenu.LOGICAL_TYPE_NAME.replace(".","-");
 
-    public IsisAppFeatureRoleAndPermissions() {
-        super(ROLE_NAME, "Access application features");
+    public IsisApplibConfigurationRoleAndPermissions() {
+        super(ROLE_NAME, "Access configuration properties");
     }
 
     @Override
@@ -44,8 +44,8 @@ extends AbstractRoleAndPermissionsFixtureScript {
                 ApplicationPermissionRule.ALLOW,
                 ApplicationPermissionMode.CHANGING,
                 Can.of(
-                        ApplicationFeatureId.newNamespace(IsisModuleApplib.NAMESPACE_FEAT)
-                        )
+                        ApplicationFeatureId.newNamespace(IsisModuleApplib.NAMESPACE_CONF)
+                )
         );
     }
 }

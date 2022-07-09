@@ -44,4 +44,5 @@ import org.apache.isis.security.shiro.webmodule.WebModuleShiro;
 })
 public class IsisModuleSecurityShiro {
 
+    public static final String NAMESPACE = "isis.security.shiro";
 }

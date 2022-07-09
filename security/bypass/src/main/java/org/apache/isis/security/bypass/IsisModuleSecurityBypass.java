@@ -42,4 +42,5 @@ import org.apache.isis.security.bypass.authorization.AuthorizorBypass;
 })
 public class IsisModuleSecurityBypass {
 
+    public static final String NAMESPACE = "isis.security.bypass";
 }

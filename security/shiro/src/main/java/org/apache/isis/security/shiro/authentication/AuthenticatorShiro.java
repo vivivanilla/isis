@@ -54,6 +54,7 @@ import org.apache.isis.core.security.authentication.AuthenticationRequest;
 import org.apache.isis.core.security.authentication.AuthenticationRequestPassword;
 import org.apache.isis.core.security.authentication.Authenticator;
 import org.apache.isis.core.security.authorization.Authorizor;
+import org.apache.isis.security.shiro.IsisModuleSecurityShiro;
 import org.apache.isis.security.shiro.context.ShiroSecurityContext;
 
 import lombok.val;
@@ -71,11 +72,13 @@ import lombok.extern.log4j.Log4j2;
  * @since 1.x {@index}
  */
 @Service
-@Named("isis.security.AuthenticatorShiro")
+@Named(AuthenticatorShiro.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.EARLY)
 @Qualifier("Shiro")
 @Log4j2
 public class AuthenticatorShiro implements Authenticator {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecurityShiro.NAMESPACE + ".AuthenticatorShiro";
 
     private final IsisConfiguration configuration;
     private final boolean autoLogout;

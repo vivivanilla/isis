@@ -28,12 +28,12 @@ import org.apache.isis.extensions.secman.applib.role.fixtures.AbstractRoleAndPer
 /**
  * @since 2.0 {@index}
  */
-public class IsisSudoImpersonateRoleAndPermissions
+public class IsisApplibSudoImpersonateRoleAndPermissions
 extends AbstractRoleAndPermissionsFixtureScript {
 
     public static final String ROLE_NAME = ImpersonateMenu.LOGICAL_TYPE_NAME.replace(".","-");
 
-    public IsisSudoImpersonateRoleAndPermissions() {
+    public IsisApplibSudoImpersonateRoleAndPermissions() {
         super(ROLE_NAME, "Access to the ImpersonateMenu (ability to impersonate other users, for testing purposes)");
     }
 

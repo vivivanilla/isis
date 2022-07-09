@@ -49,6 +49,7 @@ import org.apache.isis.commons.internal._Constants;
 import org.apache.isis.commons.internal.base._Strings;
 import org.apache.isis.core.webapp.modules.WebModuleAbstract;
 import org.apache.isis.core.webapp.modules.WebModuleContext;
+import org.apache.isis.security.shiro.IsisModuleSecurityShiro;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -64,12 +65,13 @@ import lombok.extern.log4j.Log4j2;
  * @since 2.0 {@index}
  */
 @Service
-@Named("isis.security.WebModuleShiro")
+@Named(WebModuleShiro.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.FIRST + 100)
 @Qualifier("Shiro")
 @Log4j2
 public class WebModuleShiro extends WebModuleAbstract {
 
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecurityShiro.NAMESPACE + ".WebModuleShiro";
 
     private static final String SHIRO_FILTER_NAME = "ShiroFilter";
 

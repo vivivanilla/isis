@@ -23,6 +23,7 @@ import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.iactnlayer.InteractionContext;
 import org.apache.isis.applib.services.sudo.SudoService;
+import org.apache.isis.core.security.IsisModuleCoreSecurity;
 import org.apache.isis.core.security.authorization.Authorizor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -39,10 +40,12 @@ import java.util.List;
  * @since 1.x {@index}
  */
 @Service
-@Named("isis.security.AuthorizationManager")
+@Named(AuthorizationManager.LOGICAL_TYPE_NAME)
 @Priority(PriorityPrecedence.MIDPOINT)
 @Qualifier("Default")
 public class AuthorizationManager {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleCoreSecurity.NAMESPACE + ".AuthorizationManager";
 
     private final List<Authorizor> authorizors;
     private final Authorizor authorizor;

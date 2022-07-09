@@ -64,6 +64,8 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public class IsisModuleSecuritySpring {
 
+    public static final String NAMESPACE = "isis.security.spring";
+
     @Qualifier("springSecurityFilterChain")
     @Inject private Filter springSecurityFilterChain;
     @Inject private IsisConfiguration isisConfiguration;

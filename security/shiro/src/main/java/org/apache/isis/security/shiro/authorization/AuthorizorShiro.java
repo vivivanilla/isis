@@ -32,6 +32,7 @@ import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.iactnlayer.InteractionContext;
 import org.apache.isis.core.security.authentication.Authenticator;
 import org.apache.isis.core.security.authorization.Authorizor;
+import org.apache.isis.security.shiro.IsisModuleSecurityShiro;
 import org.apache.isis.security.shiro.context.ShiroSecurityContext;
 
 import lombok.val;
@@ -49,10 +50,12 @@ import lombok.val;
  * @since 1.x {@index}
  */
 @Service
-@Named("isis.security.AuthorizorShiro")
+@Named(AuthorizorShiro.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.EARLY)
 @Qualifier("Shiro")
 public class AuthorizorShiro implements Authorizor {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecurityShiro.NAMESPACE + ".AuthorizorShiro";
 
     @Override
     public boolean isVisible(final InteractionContext authentication, final Identifier identifier) {

@@ -31,6 +31,7 @@ import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.inject.ServiceInjector;
 import org.apache.isis.commons.collections.Can;
 import org.apache.isis.core.webapp.modules.WebModuleAbstract;
+import org.apache.isis.security.spring.IsisModuleSecuritySpring;
 
 import lombok.Getter;
 
@@ -40,10 +41,12 @@ import lombok.Getter;
  * @since 2.0 {@index}
  */
 @Service
-@Named("isis.security.WebModuleSpringSecurity")
+@Named(WebModuleSpringSecurity.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.FIRST + 100)
 @Qualifier("Spring")
 public final class WebModuleSpringSecurity extends WebModuleAbstract {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecuritySpring.NAMESPACE + ".WebModuleSpringSecurity";
 
     @Getter
     private final String name = "Spring Security Integration";

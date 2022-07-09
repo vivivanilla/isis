@@ -38,6 +38,7 @@ import org.apache.isis.applib.util.ToString;
 import org.apache.isis.commons.collections.Can;
 import org.apache.isis.commons.internal.base._Timing;
 import org.apache.isis.commons.internal.collections._Maps;
+import org.apache.isis.core.security.IsisModuleCoreSecurity;
 import org.apache.isis.core.security.authentication.AuthenticationRequest;
 import org.apache.isis.core.security.authentication.Authenticator;
 import org.apache.isis.core.security.authentication.standard.RandomCodeGenerator;
@@ -48,10 +49,12 @@ import lombok.NonNull;
 import lombok.val;
 
 @Service
-@Named("isis.security.AuthenticationManager")
+@Named(AuthenticationManager.LOGICAL_TYPE_NAME)
 @Priority(PriorityPrecedence.MIDPOINT)
 @Qualifier("Default")
 public class AuthenticationManager {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleCoreSecurity.NAMESPACE + ".AuthenticationManager";
 
     @Getter private final @NonNull Can<Authenticator> authenticators;
 

@@ -29,15 +29,18 @@ import org.apache.isis.applib.services.iactn.InteractionProvider;
 import org.apache.isis.applib.services.iactnlayer.InteractionContext;
 import org.apache.isis.core.security.authentication.AuthenticationRequest;
 import org.apache.isis.core.security.authentication.Authenticator;
+import org.apache.isis.security.spring.IsisModuleSecuritySpring;
 
 /**
  * @since 2.0 {@index}
  */
 @Service
-@Named("isis.security.AuthenticatorSpring")
+@Named(AuthenticatorSpring.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.EARLY)
 @Qualifier("Spring")
 public class AuthenticatorSpring implements Authenticator {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecuritySpring.NAMESPACE + ".AuthenticatorSpring";
 
     @Inject private InteractionProvider interactionProvider;
 

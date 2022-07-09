@@ -47,10 +47,10 @@ import lombok.val;
  * <p>
  * That said, it does <i>not</i> include the ability to impersonate other users
  * (for this, grant the
- * {@link IsisSudoImpersonateRoleAndPermissions}
+ * {@link IsisApplibSudoImpersonateRoleAndPermissions}
  * role), and also does <i>not</i> include the ability to access the
  * configuration properties (for this, grant the
- * {@link IsisSudoImpersonateRoleAndPermissions}
+ * {@link IsisApplibSudoImpersonateRoleAndPermissions}
  * role).
  * </p>
  *
@@ -59,8 +59,8 @@ import lombok.val;
  * the {@link MeService}, and for viewing and maintaining their user details.
  * </p>
  *
- * @see IsisSudoImpersonateRoleAndPermissions
- * @see IsisConfigurationRoleAndPermissions
+ * @see IsisApplibSudoImpersonateRoleAndPermissions
+ * @see IsisApplibConfigurationRoleAndPermissions
  *
  * @since 2.0 {@index}
  */

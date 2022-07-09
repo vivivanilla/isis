@@ -27,15 +27,18 @@ import org.apache.isis.applib.Identifier;
 import org.apache.isis.applib.annotation.PriorityPrecedence;
 import org.apache.isis.applib.services.iactnlayer.InteractionContext;
 import org.apache.isis.core.security.authorization.Authorizor;
+import org.apache.isis.security.bypass.IsisModuleSecurityBypass;
 
 /**
  * @since 1.x {@index}
  */
 @Service
-@Named("isis.security.AuthorizorBypass")
+@Named(AuthorizorBypass.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.LATE)
 @Qualifier("Bypass")
 public class AuthorizorBypass implements Authorizor {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecurityBypass.NAMESPACE + ".AuthorizorBypass";
 
     @Override
     public boolean isVisible(final InteractionContext authentication, final Identifier identifier) {

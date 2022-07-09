@@ -24,8 +24,10 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import org.apache.isis.applib.annotation.PriorityPrecedence;
+import org.apache.isis.core.security.IsisModuleCoreSecurity;
 import org.apache.isis.core.security.authentication.AuthenticationRequest;
 import org.apache.isis.core.security.authentication.standard.AuthenticatorAbstract;
+import org.apache.isis.security.bypass.IsisModuleSecurityBypass;
 
 /**
  * Implementation that bypasses authentication.
@@ -33,10 +35,12 @@ import org.apache.isis.core.security.authentication.standard.AuthenticatorAbstra
  * @since 1.x {@index}
  */
 @Service
-@Named("isis.security.AuthenticatorBypass")
+@Named(AuthenticatorBypass.LOGICAL_TYPE_NAME)
 @javax.annotation.Priority(PriorityPrecedence.LATE)
 @Qualifier("Bypass")
 public class AuthenticatorBypass extends AuthenticatorAbstract {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleSecurityBypass.NAMESPACE + ".AuthenticatorBypass";
 
     @Override
     public boolean isValid(final AuthenticationRequest request) {

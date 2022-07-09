@@ -27,12 +27,15 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 import org.apache.isis.applib.annotation.PriorityPrecedence;
+import org.apache.isis.core.security.IsisModuleCoreSecurity;
 
 @Component
-@Named("isis.security.RandomCodeGenerator10Chars")
+@Named(RandomCodeGeneratorDefault.LOGICAL_TYPE_NAME)
 @Priority(PriorityPrecedence.LATE)
 @Qualifier("Default")
 public class RandomCodeGeneratorDefault implements RandomCodeGenerator {
+
+    static final String LOGICAL_TYPE_NAME = IsisModuleCoreSecurity.NAMESPACE + ".RandomCodeGenerator10Chars";
 
     private static final int NUMBER_CHARACTERS = 10;
     private static final String CHARACTERS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

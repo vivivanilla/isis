@@ -58,7 +58,7 @@ implements TenantedAuthorizationFacet {
         this.queryResultsCacheProvider = queryResultsCacheProvider;
         this.userService = userService;
     }
-
+Mana
     @Override
     public String hides(final VisibilityContext ic) {
 
